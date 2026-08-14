@@ -37,7 +37,7 @@ export function Options({ Icons }: { Icons?: any }) {
                                     : "text-zinc-700 dark:text-zinc-200 hover:bg-red-50 dark:hover:bg-red-900/30"
                                     }`}
                             >
-                                {Icons && Array.isArray(Icons) && Icons.length > 0
+                                {/* {Icons && Array.isArray(Icons) && Icons.length > 0
                                     ? Icons.filter((icn: any) => icn.nombre === item.label)
                                         .map((icn: any, idx: number) => {
                                             try {
@@ -47,7 +47,7 @@ export function Options({ Icons }: { Icons?: any }) {
                                                 return <></>;
                                             }
                                         })
-                                    : null}                                                     
+                                    : null}                                                      */}
                                 {item.label}
                             </Link>
                         </li>

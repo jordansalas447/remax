@@ -13,10 +13,7 @@ export async function get_tabla() {
     const { data, error } = await supabase.from(TABLE_NAME).select("*");
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      throw new Error(error.message);
     }
 
     return data;

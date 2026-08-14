@@ -8,7 +8,7 @@ import { get_tabla } from "@/lib/crud/service";
 
 export async function Sidebar() {
 
-  const response = await get_tabla();
+ // const response = await get_tabla();
 
   return (
     <aside className="flex w-full flex-col min-h-screen border-b border-zinc-200 bg-gradient-to-b from-blue-50 via-white to-zinc-100 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-950 dark:border-zinc-800 lg:w-80 lg:border-b-0 lg:border-r shadow-lg">
@@ -34,7 +34,7 @@ export async function Sidebar() {
 
       <nav className="flex-1 flex flex-col gap-5 pb-8">
         {/* Colapsable para Tablas */}
-        <Options Icons={response}/>
+         <Options/> 
 
         {/* Colapsable para Herramientas */}
         <details className="group overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80">
