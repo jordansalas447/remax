@@ -14,7 +14,7 @@ export const asociadosConfig: TableConfig = {
       foreignKey: {
         table: "personas",
         valueField: "id",
-        labelField: "nombre",
+        labelField: "nombre_completo",
       },
     },
     {
@@ -28,6 +28,6 @@ export const asociadosConfig: TableConfig = {
       },
     },
     { name: "descripcion", label: "Descripción", type: "textarea" },
-    { name: "snap_asociado", label: "Snap asociado", type: "text", required: true },
+    { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true },
   ],
 };

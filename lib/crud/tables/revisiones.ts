@@ -25,7 +25,7 @@ export const revisionesConfig: TableConfig = {
       foreignKey: {
         table: "administrativos",
         valueField: "id",
-        labelField: "snap_nombre",
+        labelField: "nombre_completo",
       },
     },
     { name: "conformidad_descripcion", label: "Conformidad descripción", type: "text" },

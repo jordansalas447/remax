@@ -27,7 +27,7 @@ export const propiedadPropietarioConfig: TableConfig = {
       foreignKey: {
         table: "propietarios",
         valueField: "id_propietario",
-        labelField: "nombres",
+        labelField: "nombre_completo",
       },
     },
   ],

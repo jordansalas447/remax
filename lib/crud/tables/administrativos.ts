@@ -20,6 +20,6 @@ export const administrativosConfig: TableConfig = {
     { name: "cargo", label: "Cargo", type: "text" },
     { name: "area", label: "Área", type: "text" },
     { name: "descripcion", label: "Descripción", type: "text", required: true },
-    { name: "snap_nombre", label: "Nombre", type: "text" },
+    { name: "nombre_completo", label: "Nombre", type: "text" },
   ],
 };

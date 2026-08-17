@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { TABLE_CONFIGS, TABLE_NAMES } from "@/lib/crud/config";
 import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTable } from "@fortawesome/free-solid-svg-icons";
+import { faTable, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 
@@ -20,10 +20,10 @@ export function Options({ Icons }: { Icons?: any }) {
     const pathname = usePathname();
 
     return (
-        <details className="group overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80">
+        <details open className="group overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80">
             <summary className="flex items-center gap-2 cursor-pointer select-none px-4 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-400 group-open:text-blue-600 transition bg-zinc-50 dark:bg-zinc-900">
-                <FontAwesomeIcon icon={faTable} className="text-red-600 dark:text-red-400" />
-                Tablas
+                <FontAwesomeIcon icon={faUsersGear}  className="text-red-600 dark:text-red-400" />
+                Gestión
             </summary>
             <ul className="py-2 flex flex-col gap-2">
                 {navItems.map((item) => {
@@ -55,5 +55,6 @@ export function Options({ Icons }: { Icons?: any }) {
                 })}
             </ul>
         </details>
+
     );
 }

@@ -24,7 +24,7 @@ import {
 import { DatePicker } from "@/components/ui/date-picker";
 import { toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { getTableConfig, type FieldConfig, type TableConfig } from "@/lib/crud/config";
 import {
@@ -124,7 +124,7 @@ function FieldInput({
 
   if (field.type === "boolean") {
     return (
-      <Select
+      <NativeSelect
         id={field.name}
         name={field.name}
         value={inputValue}
@@ -134,14 +134,14 @@ function FieldInput({
       >
         <option value="false">No</option>
         <option value="true">Sí</option>
-      </Select>
+      </NativeSelect>
     );
   }
 
   if (field.type === "select") {
     const showQuickCreate = !disabled && Boolean(field.foreignKey) && Boolean(onQuickCreate);
     const selectElement = (
-      <Select
+      <NativeSelect
         id={field.name}
         name={field.name}
         value={inputValue}
@@ -156,7 +156,7 @@ function FieldInput({
             {option.label}
           </option>
         ))}
-      </Select>
+      </NativeSelect>
     );
 
     if (showQuickCreate) {

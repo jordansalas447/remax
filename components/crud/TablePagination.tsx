@@ -7,7 +7,13 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 /**
  * Interfaz mínima con solo los métodos que TablePagination necesita.
@@ -65,14 +71,18 @@ export function TablePagination({ table }: TablePaginationProps) {
           </label>
           <Select
             value={String(pageSize)}
-            onChange={(e) => table.setPageSize(Number(e.target.value))}
-            className="h-8 w-[80px] text-sm"
+            onValueChange={(value) => table.setPageSize(Number(value))}
           >
-            {[10, 25, 50, 100].map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
+            <SelectTrigger className="h-8 w-[80px] text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 25, 50, 100].map((size) => (
+                <SelectItem key={size} value={String(size)}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
 

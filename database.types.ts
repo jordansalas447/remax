@@ -21,7 +21,7 @@ export type Database = {
           descripcion: string
           id: number
           id_persona: number | null
-          snap_nombre: string | null
+          nombre_completo: string | null
         }
         Insert: {
           area?: string | null
@@ -29,7 +29,7 @@ export type Database = {
           descripcion: string
           id?: number
           id_persona?: number | null
-          snap_nombre?: string | null
+          nombre_completo?: string | null
         }
         Update: {
           area?: string | null
@@ -37,7 +37,7 @@ export type Database = {
           descripcion?: string
           id?: number
           id_persona?: number | null
-          snap_nombre?: string | null
+          nombre_completo?: string | null
         }
         Relationships: [
           {
@@ -49,27 +49,45 @@ export type Database = {
           },
         ]
       }
+      area: {
+        Row: {
+          area: string
+          id: number
+        }
+        Insert: {
+          area: string
+          id?: number
+        }
+        Update: {
+          area?: string
+          id?: number
+        }
+        Relationships: []
+      }
       asociados: {
         Row: {
           descripcion: string | null
+          fecha_creacion: string | null
           id_asociado: number
           id_detalle_asociado: number | null
           id_persona: number | null
-          snap_asociado: string
+          nombre_completo: string | null
         }
         Insert: {
           descripcion?: string | null
+          fecha_creacion?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
           id_persona?: number | null
-          snap_asociado: string
+          nombre_completo?: string | null
         }
         Update: {
           descripcion?: string | null
+          fecha_creacion?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
           id_persona?: number | null
-          snap_asociado?: string
+          nombre_completo?: string | null
         }
         Relationships: [
           {
@@ -87,6 +105,21 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cargo: {
+        Row: {
+          cargo: string
+          id: number
+        }
+        Insert: {
+          cargo: string
+          id?: number
+        }
+        Update: {
+          cargo?: string
+          id?: number
+        }
+        Relationships: []
       }
       checklist_estado: {
         Row: {
@@ -417,30 +450,36 @@ export type Database = {
           apellido_materno: string | null
           apellido_paterno: string | null
           direccion: string | null
+          documento_identidad: string | null
           fecha_nacimiento: string | null
           fecha_registro: string | null
           id: number
           nombre: string
+          nombre_completo: string | null
           numero_telefono: string | null
         }
         Insert: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
           direccion?: string | null
+          documento_identidad?: string | null
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
           id?: number
           nombre: string
+          nombre_completo?: string | null
           numero_telefono?: string | null
         }
         Update: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
           direccion?: string | null
+          documento_identidad?: string | null
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
           id?: number
           nombre?: string
+          nombre_completo?: string | null
           numero_telefono?: string | null
         }
         Relationships: []
@@ -541,20 +580,31 @@ export type Database = {
       propietarios: {
         Row: {
           contacto: string | null
+          id_personas: number | null
           id_propietario: number
-          nombres: string
+          nombre_completo: string | null
         }
         Insert: {
           contacto?: string | null
+          id_personas?: number | null
           id_propietario?: number
-          nombres: string
+          nombre_completo?: string | null
         }
         Update: {
           contacto?: string | null
+          id_personas?: number | null
           id_propietario?: number
-          nombres?: string
+          nombre_completo?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "propietarios_id_personas_fkey"
+            columns: ["id_personas"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       revisiones: {
         Row: {

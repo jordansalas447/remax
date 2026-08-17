@@ -26,7 +26,7 @@ export const contratosConfig: TableConfig = {
       foreignKey: {
         table: "asociados",
         valueField: "id_asociado",
-        labelField: "snap_asociado",
+        labelField: "nombre_completo",
       },
     },
     {
