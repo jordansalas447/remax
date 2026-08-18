@@ -6,7 +6,7 @@ export default function MainLayout({ children }: LayoutProps<"/">) {
 
     <SidebarProvider>
     <AppSidebar />
-    <main className="flex-1 bg-zinc-50 p-4 dark:bg-zinc-900/40 lg:p-8" style={{ maxWidth: "calc(100% - 256px)" }}>
+    <main className="flex-1 bg-zinc-50 p-2 dark:bg-zinc-900/40 lg:p-8" style={{ maxWidth: "calc(100% - 256px)" }}>
       <SidebarTrigger />
       {children}
     </main>

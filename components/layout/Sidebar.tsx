@@ -44,6 +44,14 @@ export async function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
+          <SidebarMenuItem>
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+              >
+                Dashboard
+              </Link>
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <Link
                 href="/asociado"

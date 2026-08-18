@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Search, UsersRound } from "lucide-react";
+import { Search, User, UsersRound } from "lucide-react";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
 import { AsociadoProfileCard } from "./_components/asociado-profile-card";
@@ -23,6 +23,7 @@ import {
   getPropietariosByPropiedadId,
   type PropietarioDetalle,
 } from "@/lib/supabase/queries/propietarios";
+import { InputSearch } from "@/components/input-search/input-search";
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -178,36 +179,33 @@ export default function AsociadoPage() {
         </p>
       </header>
 
-      <section className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="relative">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" />
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar por nombre o ID..."
-              className="pl-9"
-            />
-          </div>
-          <NativeSelect
-            value={selectedAsociadoId ?? ""}
-            onChange={(event) => {
-              const value = event.target.value;
-              setSelectedAsociadoId(value ? Number(value) : null);
-            }}
-            disabled={loadingAsociados}
-          >
-            <option value="">
-              {loadingAsociados ? "Cargando asociados..." : "Seleccionar asociado"}
-            </option>
-            {filteredAsociados.map((item) => (
-              <option key={item.id_asociado} value={item.id_asociado}>
-                {item.nombre_completo ?? `Asociado #${item.id_asociado}`}
-              </option>
-            ))}
-          </NativeSelect>
+      <section
+        className="rounded border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
+      >
+        <div className="flex items-center gap-2">
+          <User className="size-5 text-indigo-600 mb-2" />
+          <span className="block text-sm font-medium text-zinc-800 dark:text-zinc-200 mb-2 text-left">
+            Asociado
+          </span>
         </div>
+
+        <InputSearch
+          search={search}
+          setSearch={setSearch}
+          selectedId={selectedAsociadoId}
+          setSelectedId={setSelectedAsociadoId}
+          filteredItems={filteredAsociados}
+          loading={loadingAsociados}
+          getOptionLabel={(item) => item.nombre_completo ?? `Asociado #${item.id_asociado}`}
+          getOptionValue={(item) => item.id_asociado}
+          inputPlaceholder="Buscar por nombre o ID..."
+          selectPlaceholder="Seleccionar asociado"
+        />
       </section>
+
+
+
+
 
       <AsociadoProfileCard asociado={asociadoDetalle} loading={loadingDetalle} />
 
