@@ -3,6 +3,8 @@ import type { Database } from "@/database.types";
 type PublicTableMap = Database["public"]["Tables"];
 
 type SupportedTableName =
+  | "estados_revision"
+  | "operacion_inmobiliaria"
   | "asociados"
   | "personas"
   | "administrativos"
@@ -40,6 +42,8 @@ export type Conformidad = TableRow<"conformidad">;
 export type Revision = TableRow<"revisiones">;
 export type ItemChecklist = TableRow<"items_checklist">;
 export type ChecklistEstado = TableRow<"checklist_estado">;
+export type estados_revision = TableRow<"estados_revision">;
+export type operacion_inmobiliaria = TableRow<"operacion_inmobiliaria">;
 export type Tabla = TableRow<"tablas">;
 
 export type RowRecord = Record<string, string | number | boolean | null>;

@@ -62,7 +62,7 @@ export function PropiedadFicha({ propiedad, loading, contratoId }: PropiedadFich
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Home className="size-5 text-indigo-600" />
-          Propiedad #{propiedad.id_propiedad}
+          <p className="font-medium text-zinc-900 dark:text-zinc-50"> Propiedad  <span className="text-xs text-gray-400"> #{propiedad.id_propiedad}</span> </p>
         </CardTitle>
         <CardDescription className="flex items-center gap-1.5">
           <MapPin className="size-4" />

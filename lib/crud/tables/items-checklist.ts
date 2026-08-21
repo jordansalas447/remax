@@ -8,5 +8,15 @@ export const itemsChecklistConfig: TableConfig = {
   fields: [
     { name: "id_item", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "nombre_item", label: "Nombre del ítem", type: "text", required: true },
+    {
+      name: "id_operacion_inmobiliaria",
+      label: "Operacion Inmobiliaria",
+      type: "select",
+      foreignKey: {
+        table: "operacion_inmobiliaria",
+        valueField: "id",
+        labelField: "operacion",
+      },
+    },
   ],
 };

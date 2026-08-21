@@ -52,6 +52,5 @@ export async function getAsociadoDetalle(id_asociado: number): Promise<AsociadoD
   if (error) {
     throw new Error(error.message);
   }
-
   return data;
 }

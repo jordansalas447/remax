@@ -51,7 +51,7 @@ export function ContratosSection({
 
       {contratos.length > 0 && (
         <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {contratos.map((contrato) => {
+          {contratos.map((contrato,index) => {
             const propiedad = contrato.propiedades;
             const isSelected = selectedContratoId === contrato.id_contrato;
 
@@ -70,11 +70,13 @@ export function ContratosSection({
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <div>
                     <p className="font-medium text-zinc-900 dark:text-zinc-50">
-                      Contrato #{contrato.id_contrato}
+                      Contrato {index +1}
+                      <span className="text-xs text-gray-400"> #{contrato.id_contrato}</span>
+                 
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {contrato.tipo_contrato ?? "Tipo no definido"}
-                    </p>
+                      {contrato.tipo_contrato?.tipo_contrato ?? "No definido"}
+                    </p> 
                   </div>
                   <span
                     className={cn(
@@ -91,7 +93,11 @@ export function ContratosSection({
                 <dl className="grid gap-2 text-sm">
                   <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                     <HandCoins className="size-4 shrink-0" />
-                    <span>{formatCurrency(contrato.precio ?? contrato.precio_alquiler_venta)}</span>
+                    <span>P.P. {contrato.tipo_moneda?.simbolo} {contrato.precio}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                    <HandCoins className="size-4 shrink-0" />
+                    <span>P.F. {contrato.tipo_moneda?.simbolo} {contrato.precio_operacion}</span>
                   </div>
                   <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                     <Calendar className="size-4 shrink-0" />
@@ -103,15 +109,19 @@ export function ContratosSection({
                     <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                       <Building2 className="size-4 shrink-0" />
                       <span className="truncate">
-                        {propiedad.direccion ?? propiedad.captacion ?? `Propiedad #${propiedad.id_propiedad}`}
+                        {propiedad.captacion}
                       </span>
                     </div>
                   )}
                 </dl>
 
                 <div className="mt-3 grid grid-cols-2 gap-2 border-t border-zinc-100 pt-3 dark:border-zinc-800">
-                  <DetailField label="Operación" value={contrato.operacion} />
-                  <DetailField label="Comisión" value={formatCurrency(contrato.comision)} />
+                  <DetailField label="Operación" value={contrato.operacion?.operacion ?? "—"} />
+                  <DetailField
+                    label="Comisión"
+                    value={`${contrato.tipo_moneda_comision?.simbolo ?? "—"} ${contrato.comision}`}
+                  />
+            
                 </div>
               </button>
             );

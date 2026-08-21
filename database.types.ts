@@ -72,6 +72,7 @@ export type Database = {
           id_detalle_asociado: number | null
           id_persona: number | null
           nombre_completo: string | null
+          url_foto: string | null
         }
         Insert: {
           descripcion?: string | null
@@ -80,6 +81,7 @@ export type Database = {
           id_detalle_asociado?: number | null
           id_persona?: number | null
           nombre_completo?: string | null
+          url_foto?: string | null
         }
         Update: {
           descripcion?: string | null
@@ -88,6 +90,7 @@ export type Database = {
           id_detalle_asociado?: number | null
           id_persona?: number | null
           nombre_completo?: string | null
+          url_foto?: string | null
         }
         Relationships: [
           {
@@ -124,44 +127,29 @@ export type Database = {
       checklist_estado: {
         Row: {
           descripcion: string | null
-          estado_oficina: boolean | null
-          estado_sigi: boolean | null
           id_checklist_estado: number
+          id_estado_oficina: number | null
+          id_estado_sigi: number | null
           id_item: number
           id_revision: number
         }
         Insert: {
           descripcion?: string | null
-          estado_oficina?: boolean | null
-          estado_sigi?: boolean | null
           id_checklist_estado?: number
+          id_estado_oficina?: number | null
+          id_estado_sigi?: number | null
           id_item: number
           id_revision: number
         }
         Update: {
           descripcion?: string | null
-          estado_oficina?: boolean | null
-          estado_sigi?: boolean | null
           id_checklist_estado?: number
+          id_estado_oficina?: number | null
+          id_estado_sigi?: number | null
           id_item?: number
           id_revision?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "checklist_estado_id_item_fkey"
-            columns: ["id_item"]
-            isOneToOne: false
-            referencedRelation: "items_checklist"
-            referencedColumns: ["id_item"]
-          },
-          {
-            foreignKeyName: "checklist_estado_id_revision_fkey"
-            columns: ["id_revision"]
-            isOneToOne: false
-            referencedRelation: "revisiones"
-            referencedColumns: ["id_revision"]
-          },
-        ]
+        Relationships: []
       }
       conformidad: {
         Row: {
@@ -185,6 +173,7 @@ export type Database = {
         Row: {
           captacion: string | null
           comision: number | null
+          eliminado: boolean
           estado: boolean
           fecha_fin: string | null
           fecha_inicio: string | null
@@ -198,16 +187,21 @@ export type Database = {
           id_propiedad: number
           id_tipo_contrato: number | null
           id_tipo_moneda: number | null
+          id_tipo_moneda_comision: number | null
+          id_tipo_moneda_operacion: number | null
+          nro_contrato: number | null
           observaciones: string | null
           operacion: string | null
           precio: number | null
-          precio_alquiler_venta: number | null
+          precio_maximo: number | null
+          precio_operacion: number | null
           timestamp: string | null
           tipo_contrato: string | null
         }
         Insert: {
           captacion?: string | null
           comision?: number | null
+          eliminado?: boolean
           estado?: boolean
           fecha_fin?: string | null
           fecha_inicio?: string | null
@@ -221,16 +215,21 @@ export type Database = {
           id_propiedad: number
           id_tipo_contrato?: number | null
           id_tipo_moneda?: number | null
+          id_tipo_moneda_comision?: number | null
+          id_tipo_moneda_operacion?: number | null
+          nro_contrato?: number | null
           observaciones?: string | null
           operacion?: string | null
           precio?: number | null
-          precio_alquiler_venta?: number | null
+          precio_maximo?: number | null
+          precio_operacion?: number | null
           timestamp?: string | null
           tipo_contrato?: string | null
         }
         Update: {
           captacion?: string | null
           comision?: number | null
+          eliminado?: boolean
           estado?: boolean
           fecha_fin?: string | null
           fecha_inicio?: string | null
@@ -244,10 +243,14 @@ export type Database = {
           id_propiedad?: number
           id_tipo_contrato?: number | null
           id_tipo_moneda?: number | null
+          id_tipo_moneda_comision?: number | null
+          id_tipo_moneda_operacion?: number | null
+          nro_contrato?: number | null
           observaciones?: string | null
           operacion?: string | null
           precio?: number | null
-          precio_alquiler_venta?: number | null
+          precio_maximo?: number | null
+          precio_operacion?: number | null
           timestamp?: string | null
           tipo_contrato?: string | null
         }
@@ -309,6 +312,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "contratos_id_tipo_moneda_comision_fkey"
+            columns: ["id_tipo_moneda_comision"]
+            isOneToOne: false
+            referencedRelation: "tipo_moneda"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "contratos_id_tipo_moneda_fkey"
             columns: ["id_tipo_moneda"]
             isOneToOne: false
@@ -361,6 +371,27 @@ export type Database = {
         }
         Relationships: []
       }
+      documentos: {
+        Row: {
+          descripcion: string | null
+          documento: string
+          fecha_registro: string | null
+          id: number
+        }
+        Insert: {
+          descripcion?: string | null
+          documento: string
+          fecha_registro?: string | null
+          id?: number
+        }
+        Update: {
+          descripcion?: string | null
+          documento?: string
+          fecha_registro?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
       estado: {
         Row: {
           descripcion: string | null
@@ -379,20 +410,52 @@ export type Database = {
         }
         Relationships: []
       }
+      estados_revision: {
+        Row: {
+          color: string | null
+          descripcion: string
+          id: number
+        }
+        Insert: {
+          color?: string | null
+          descripcion: string
+          id?: number
+        }
+        Update: {
+          color?: string | null
+          descripcion?: string
+          id?: number
+        }
+        Relationships: []
+      }
       items_checklist: {
         Row: {
+          icon: string | null
           id_item: number
+          id_operacion_inmobiliaria: number | null
           nombre_item: string
         }
         Insert: {
+          icon?: string | null
           id_item?: number
+          id_operacion_inmobiliaria?: number | null
           nombre_item: string
         }
         Update: {
+          icon?: string | null
           id_item?: number
+          id_operacion_inmobiliaria?: number | null
           nombre_item?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "items_checklist_id_operacion_inmobiliaria_fkey"
+            columns: ["id_operacion_inmobiliaria"]
+            isOneToOne: false
+            referencedRelation: "operacion_inmobiliaria"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mes: {
         Row: {
@@ -411,6 +474,41 @@ export type Database = {
           mes?: string
         }
         Relationships: []
+      }
+      multas: {
+        Row: {
+          descripcion: string
+          fecha: string | null
+          fecha_creacion: string | null
+          id: number
+          id_asociados: number | null
+          monto: number | null
+        }
+        Insert: {
+          descripcion: string
+          fecha?: string | null
+          fecha_creacion?: string | null
+          id?: number
+          id_asociados?: number | null
+          monto?: number | null
+        }
+        Update: {
+          descripcion?: string
+          fecha?: string | null
+          fecha_creacion?: string | null
+          id?: number
+          id_asociados?: number | null
+          monto?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "multas_id_asociados_fkey"
+            columns: ["id_asociados"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+        ]
       }
       nivel_asociado: {
         Row: {
@@ -445,59 +543,111 @@ export type Database = {
         }
         Relationships: []
       }
+      operacion_inmobiliaria: {
+        Row: {
+          id: number
+          operacion: string
+        }
+        Insert: {
+          id?: number
+          operacion: string
+        }
+        Update: {
+          id?: number
+          operacion?: string
+        }
+        Relationships: []
+      }
       personas: {
         Row: {
           apellido_materno: string | null
           apellido_paterno: string | null
           direccion: string | null
           documento_identidad: string | null
+          fecha_creacion: string | null
           fecha_nacimiento: string | null
           fecha_registro: string | null
           id: number
           nombre: string
           nombre_completo: string | null
           numero_telefono: string | null
+          url_dni: string | null
+          url_foto: string | null
         }
         Insert: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
           direccion?: string | null
           documento_identidad?: string | null
+          fecha_creacion?: string | null
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
           id?: number
           nombre: string
           nombre_completo?: string | null
           numero_telefono?: string | null
+          url_dni?: string | null
+          url_foto?: string | null
         }
         Update: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
           direccion?: string | null
           documento_identidad?: string | null
+          fecha_creacion?: string | null
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
           id?: number
           nombre?: string
           nombre_completo?: string | null
           numero_telefono?: string | null
+          url_dni?: string | null
+          url_foto?: string | null
+        }
+        Relationships: []
+      }
+      precios: {
+        Row: {
+          id: number
+          precio: number
+        }
+        Insert: {
+          id?: number
+          precio: number
+        }
+        Update: {
+          id?: number
+          precio?: number
         }
         Relationships: []
       }
       propiedad_propietario: {
         Row: {
+          id: number
+          id_contrato: number | null
           id_propiedad: number
           id_propietario: number
         }
         Insert: {
+          id?: number
+          id_contrato?: number | null
           id_propiedad: number
           id_propietario: number
         }
         Update: {
+          id?: number
+          id_contrato?: number | null
           id_propiedad?: number
           id_propietario?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "propiedad_propietario_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id_contrato"]
+          },
           {
             foreignKeyName: "propiedad_propietario_id_propiedad_fkey"
             columns: ["id_propiedad"]
@@ -608,57 +758,85 @@ export type Database = {
       }
       revisiones: {
         Row: {
-          comentarios_docs: string | null
           conformidad_descripcion: string | null
-          correo_elab_eett: string | null
-          fecha_elab_eett: string | null
           fecha_entregado: string | null
           fecha_recibido: string | null
           fecha_sigi: string | null
-          id_propiedad: number
+          id_estado_oficina: number | null
+          id_estado_sigi: number | null
+          id_item: number | null
+          id_operacion_inmobiliaria: number | null
+          id_propiedad_propietario_contrato: number | null
           id_revision: number
           id_revisor: number | null
-          levant_observ: string | null
           observaciones: string | null
           timestamp: string | null
         }
         Insert: {
-          comentarios_docs?: string | null
           conformidad_descripcion?: string | null
-          correo_elab_eett?: string | null
-          fecha_elab_eett?: string | null
           fecha_entregado?: string | null
           fecha_recibido?: string | null
           fecha_sigi?: string | null
-          id_propiedad: number
+          id_estado_oficina?: number | null
+          id_estado_sigi?: number | null
+          id_item?: number | null
+          id_operacion_inmobiliaria?: number | null
+          id_propiedad_propietario_contrato?: number | null
           id_revision?: number
           id_revisor?: number | null
-          levant_observ?: string | null
           observaciones?: string | null
           timestamp?: string | null
         }
         Update: {
-          comentarios_docs?: string | null
           conformidad_descripcion?: string | null
-          correo_elab_eett?: string | null
-          fecha_elab_eett?: string | null
           fecha_entregado?: string | null
           fecha_recibido?: string | null
           fecha_sigi?: string | null
-          id_propiedad?: number
+          id_estado_oficina?: number | null
+          id_estado_sigi?: number | null
+          id_item?: number | null
+          id_operacion_inmobiliaria?: number | null
+          id_propiedad_propietario_contrato?: number | null
           id_revision?: number
           id_revisor?: number | null
-          levant_observ?: string | null
           observaciones?: string | null
           timestamp?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "revisiones_id_propiedad_fkey"
-            columns: ["id_propiedad"]
+            foreignKeyName: "revisiones_id_estado_oficina_fkey"
+            columns: ["id_estado_oficina"]
             isOneToOne: false
-            referencedRelation: "propiedades"
-            referencedColumns: ["id_propiedad"]
+            referencedRelation: "estados_revision"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revisiones_id_estado_sigi_fkey"
+            columns: ["id_estado_sigi"]
+            isOneToOne: false
+            referencedRelation: "estados_revision"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revisiones_id_item_fkey"
+            columns: ["id_item"]
+            isOneToOne: false
+            referencedRelation: "items_checklist"
+            referencedColumns: ["id_item"]
+          },
+          {
+            foreignKeyName: "revisiones_id_operacion_inmobiliaria_fkey"
+            columns: ["id_operacion_inmobiliaria"]
+            isOneToOne: false
+            referencedRelation: "operacion_inmobiliaria"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revisiones_id_propiedad_propietario_contrato_fkey"
+            columns: ["id_propiedad_propietario_contrato"]
+            isOneToOne: false
+            referencedRelation: "propiedad_propietario"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "revisiones_id_revisor_fkey"
@@ -752,44 +930,7 @@ export type Database = {
       }
     }
     Views: {
-      vw_reporte_contrato: {
-        Row: {
-          area_construida: number | null
-          area_terreno: number | null
-          comentarios_docs: string | null
-          comision: number | null
-          contacto: string | null
-          descripcion: string | null
-          direccion: string | null
-          distrito: string | null
-          estado: boolean | null
-          estado_oficina: boolean | null
-          estado_sigi: boolean | null
-          fecha_elab_eett: string | null
-          fecha_entregado: string | null
-          fecha_fin: string | null
-          fecha_inicio: string | null
-          fecha_recibido: string | null
-          fecha_sigi: string | null
-          id_remax: number | null
-          levant_observ: string | null
-          mes_captacion: string | null
-          mes_vencimiento: string | null
-          n_partida: string | null
-          nombre: string | null
-          nombre_item: string | null
-          nombres: string | null
-          observaciones: string | null
-          operacion: string | null
-          precio: number | null
-          precio_alquiler_venta: number | null
-          snap_asociado: string | null
-          tipo: string | null
-          tipo_contrato: string | null
-          tipo_propiedad: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       obtener_reporte_contrato: {

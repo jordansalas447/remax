@@ -29,8 +29,26 @@ export const checklistEstadoConfig: TableConfig = {
         labelField: "nombre_item",
       },
     },
-    { name: "estado_oficina", label: "Estado oficina", type: "boolean" },
-    { name: "estado_sigi", label: "Estado SIGI", type: "boolean" },
+    {
+      name: "id_estado_oficina",
+      label: "Id estado oficina",
+      type: "select",
+      foreignKey: {
+        table: "estados_revision",
+        valueField: "id",
+        labelField: "descripcion",
+      },
+    },
+    {
+      name: "id_estado_sigi",
+      label: "Id estado sigi",
+      type: "select",
+      foreignKey: {
+        table: "estados_revision",
+        valueField: "id",
+        labelField: "descripcion",
+      },
+    },
     { name: "descripcion", label: "Descripción", type: "textarea" },
   ],
 };

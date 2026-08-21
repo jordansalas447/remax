@@ -4,7 +4,7 @@ export const propiedadPropietarioConfig: TableConfig = {
   name: "propiedad_propietario",
   label: "Propiedad ↔ Propietario",
   description: "Relación entre inmuebles y propietarios",
-  primaryKey: ["id_propiedad", "id_propietario"],
+  primaryKey: ["id_propiedad", "id_propietario","id"],
   fields: [
     {
       name: "id_propiedad",
@@ -28,6 +28,18 @@ export const propiedadPropietarioConfig: TableConfig = {
         table: "propietarios",
         valueField: "id_propietario",
         labelField: "nombre_completo",
+      },
+    },
+    {
+      name: "id_contrato",
+      label: "Contrato",
+      type: "select",
+      required: true,
+      readOnlyOnEdit: true,
+      foreignKey: {
+        table: "contratos",
+        valueField: "id_contrato",
+        labelField: "nro_contrato",
       },
     },
   ],

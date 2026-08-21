@@ -19,6 +19,7 @@ export const contratosConfig: TableConfig = {
         labelField: "n_partida",
       },
     },
+    { name: "nro_contrato", label: "Nro Contrato", type: "text" },
     {
       name: "id_asociado",
       label: "Asociado",
@@ -91,8 +92,18 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
+    {
+      name: "id_tipo_moneda_comision",
+      label: "Tipo moneda comision",
+      type: "select",
+      foreignKey: {
+        table: "tipo_moneda",
+        valueField: "id",
+        labelField: "tipo_moneda",
+      },
+    },
     { name: "precio", label: "Precio", type: "number" },
-    { name: "precio_alquiler_venta", label: "Precio alquiler/venta", type: "number" },
+    { name: "precio_operacion", label: "Precio Operacion", type: "number" },
     { name: "comision", label: "Comisión", type: "number" },
     { name: "fecha_inicio", label: "Fecha inicio", type: "date" },
     { name: "fecha_fin", label: "Fecha fin", type: "date" },

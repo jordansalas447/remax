@@ -24,6 +24,11 @@ import {
   type PropietarioDetalle,
 } from "@/lib/supabase/queries/propietarios";
 import { InputSearch } from "@/components/input-search/input-search";
+import { PropiedadEstatusItem } from "./_components/propiedad-estatus-item";
+import { getRevisionesDetalleContrato, getRevisionesDetallePropiedad, getRevisionesDetallePropietario, RevisionDetalle } from "@/lib/supabase/queries/revisiones";
+import PropietariosEstatusItem from "./_components/propietarios-estatus-item";
+import ContratoEstatus from "./_components/contrato-estatus";
+import { getContratoRevisionesDetalleByContratoId, getRevisionesDetalleByPropiedadId, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -34,8 +39,17 @@ export default function AsociadoPage() {
 
   const [asociadoDetalle, setAsociadoDetalle] = useState<AsociadoDetalle | null>(null);
   const [contratos, setContratos] = useState<ContratoConPropiedad[]>([]);
+
   const [propiedad, setPropiedad] = useState<PropiedadDetalle | null>(null);
+  const [contrato, setContrato] = useState<PropiedadDetalle | null>(null);
+
   const [propietarios, setPropietarios] = useState<PropietarioDetalle[]>([]);
+
+  //const [Revisiones, setRevisiones] = useState<RevisionDetalle[]>([]);
+
+  const [ContratosData, setContratosData] = useState<PropiedadPropietarioDetalle[]>([]);
+  const [PropiedadesData, setPropiedadesData] = useState<PropiedadPropietarioDetalle[]>([]);
+  const [PropietariosData, setPropietariosData] = useState<PropiedadPropietarioDetalle[]>([]);
 
   const [loadingAsociados, setLoadingAsociados] = useState(true);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
@@ -124,6 +138,12 @@ export default function AsociadoPage() {
       return;
     }
 
+    if (selectedContratoId == null) {
+      setContrato(null);
+      setContratos([]);
+      return;
+    }
+
     let cancelled = false;
 
     (async () => {
@@ -131,15 +151,38 @@ export default function AsociadoPage() {
       setLoadingPropietarios(true);
 
       try {
-        const [propiedadData, propietariosData] = await Promise.all([
+        const [propiedadData, propietariosData, RevisionesPropiedades] = await Promise.all([
           getPropiedadDetalleById(selectedPropiedadId),
           getPropietariosByPropiedadId(selectedPropiedadId),
+          getRevisionesDetalleByPropiedadId(selectedPropiedadId),
+        //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
+
+        if (cancelled) return;
+
+        // Obtener los IDs de los propietarios
+        const propietariosIds = Array.isArray(propietariosData)
+          ? propietariosData.map((p) => p.id_propietario).filter(Boolean)
+          : [];
+
+        // Llama a getRevisionesDetallePropietario solo si hay IDs
+        let RevisionesPropietarios: any[] = [];
+        if (propietariosIds.length > 0) {
+          try {
+            //RevisionesPropietarios = await getRevisionesDetallePropietario(propietariosIds);
+          } catch (e) {
+            RevisionesPropietarios = [];
+          }
+        }
 
         if (cancelled) return;
 
         setPropiedad(propiedadData);
         setPropietarios(propietariosData);
+        setPropiedadesData(RevisionesPropiedades);
+       // setContratosData(RevisionesContratos);
+        setPropietariosData(RevisionesPropietarios);
+        console.log(RevisionesPropiedades)
       } finally {
         if (!cancelled) {
           setLoadingPropiedad(false);
@@ -151,7 +194,7 @@ export default function AsociadoPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedPropiedadId]);
+  }, [selectedPropiedadId,selectedContratoId]);
 
   const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number) => {
     setSelectedContratoId(id_contrato);
@@ -203,10 +246,6 @@ export default function AsociadoPage() {
         />
       </section>
 
-
-
-
-
       <AsociadoProfileCard asociado={asociadoDetalle} loading={loadingDetalle} />
 
       <ContratosSection
@@ -228,6 +267,28 @@ export default function AsociadoPage() {
           propiedadId={selectedPropiedadId}
         />
       </div>
+
+      {/* <div>
+        <ContratoEstatus
+        revisiones = {ContratosData}
+        loading={loadingPropietarios}
+        propiedadId={selectedPropiedadId}
+        />
+      </div> */}
+       <div>
+        <PropiedadEstatusItem
+        revisiones = {PropiedadesData}
+        loading={loadingPropietarios}
+        propiedadId={selectedPropiedadId}
+        />
+      </div>
+      {/* <div>
+        <PropietariosEstatusItem
+        revisiones = {PropietariosData}
+        loading={loadingPropietarios}
+        propiedadId={selectedPropiedadId}
+        />
+      </div>   */}
 
       {selectedContrato?.observaciones && (
         <section className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">

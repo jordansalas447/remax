@@ -53,10 +53,10 @@ export function InputSearch<T>({
       search.trim() === ""
         ? filteredItems
         : filteredItems.filter((item) =>
-            getOptionLabel(item)
-              .toLowerCase()
-              .includes(search.trim().toLowerCase())
-          ),
+          getOptionLabel(item)
+            .toLowerCase()
+            .includes(search.trim().toLowerCase())
+        ),
     [filteredItems, getOptionLabel, search]
   );
 
@@ -64,8 +64,8 @@ export function InputSearch<T>({
     filteredItems.find((item) => getOptionValue(item) === selectedId) ?? null;
 
   return (
-      <div>
-        {/* <div className="relative">
+    <div>
+      {/* <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" />
           <Input
             value={search}
@@ -75,66 +75,80 @@ export function InputSearch<T>({
             disabled={loading}
           />
         </div> */}
-        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-          <PopoverTrigger>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={popoverOpen}
-              className="w-full justify-between"
-              disabled={loading}
-            >
-              {loading
-                ? "Cargando..."
-                : selectedItem
-                ? getOptionLabel(selectedItem)
-                : selectPlaceholder}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
+      <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+        <PopoverTrigger 
+          disabled={loading}
+          className="
+          border-input
+          bg-background
+          hover:bg-accent
+          hover:text-accent-foreground
+          flex
+          h-9
+          w-full
+          items-center
+          justify-between
+          rounded-md
+          border
+          px-3
+          py-2
+          text-sm
+          shadow-xs
+        "
+          aria-expanded={popoverOpen}
+          role="combobox">
 
-          <PopoverContent className="w-[300px] p-0">
-            <Command>
-              <CommandInput
-                value={search}
-                onValueChange={setSearch}
-                placeholder={inputPlaceholder}
-                // Evitamos que sobreescriba el input general si ambos editan a la vez
-                // disabled={loading}
-              />
-              <CommandList>
-                <CommandEmpty>
-                  {loading ? "Cargando..." : "No se encontraron resultados."}
-                </CommandEmpty>
-                <CommandGroup>
-                  {options.map((item) => {
-                    const value = String(getOptionValue(item));
-                    return (
-                      <CommandItem
-                        key={value}
-                        value={getOptionLabel(item)}
-                        onSelect={() => {
-                          setSelectedId(getOptionValue(item));
-                          setPopoverOpen(false);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedId === getOptionValue(item)
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {getOptionLabel(item)}
-                      </CommandItem>
-                    );
-                  })}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
+          {loading
+            ? "Cargando..."
+            : selectedItem
+              ? getOptionLabel(selectedItem)
+              : selectPlaceholder}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+
+        </PopoverTrigger>
+
+        <PopoverContent className="w-[300px] p-0">
+          <Command>
+            <CommandInput
+              value={search}
+              onValueChange={setSearch}
+              placeholder={inputPlaceholder}
+            // Evitamos que sobreescriba el input general si ambos editan a la vez
+            // disabled={loading}
+            />
+            <CommandList>
+              <CommandEmpty>
+                {loading ? "Cargando..." : "No se encontraron resultados."}
+              </CommandEmpty>
+              <CommandGroup>
+                {options.map((item) => {
+                  const value = String(getOptionValue(item));
+                  return (
+                    <CommandItem
+                      key={value}
+                      value={getOptionLabel(item)}
+                      onSelect={() => {
+                        setSelectedId(getOptionValue(item));
+                        setPopoverOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedId === getOptionValue(item)
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {getOptionLabel(item)}
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
