@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { FileCheck2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import type { PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
 
 
 type DocumentsCheckProps = {
     revisiones: PropiedadPropietarioDetalle[];
     loading: boolean;
-    propiedadId: number | null;
+    propiedadId?: number | null;
 };
 
 export function ContratoEstatus({ revisiones, loading }: DocumentsCheckProps) {
@@ -36,14 +36,15 @@ export function ContratoEstatus({ revisiones, loading }: DocumentsCheckProps) {
     console.log(revisiones)
 
     // Aplanar los items checklist para mostrar como documentos pendientes o revisar
-    const allDocuments = revisiones.map((item) => ({
+    const allDocuments = revisiones.flatMap((prop) =>
+        prop.revisiones.map((item) => ({
             id: item.id_revision,
             descripcion: item.items_checklist?.nombre_item || "-",
             oficina: item.estado_oficina?.descripcion || "-",
-            oficina_color: item.estado_oficina?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
+            oficina_color: item.estado_oficina?.color || "#fde68a",
             sigi: item.estado_sigi?.descripcion || "-",
-            sigi_color: item.estado_sigi?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
-        })
+            sigi_color: item.estado_sigi?.color || "#fde68a",
+        }))
     );
 
     function getStatusStyles(descripcion: string, color?: string) {

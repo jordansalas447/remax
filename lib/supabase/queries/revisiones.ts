@@ -1,4 +1,26 @@
 import { createClient } from "@/lib/supabase/client";
+
+/**
+ * Update a revision record with given fields.
+ * @param id Revision ID to update.
+ * @param updates Partial fields to update. Expected keys: id_estado_oficina, id_estado_sigi, etc.
+ */
+export async function updateRevision(
+  id: number,
+  updates: Partial<RevisionRow>
+): Promise<RevisionRow> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('revisiones')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('Revision not found for update');
+  return data;
+}
+
 import type { Database } from "@/database.types";
 
 // Tipos para las filas de cada tabla relevante
@@ -14,14 +36,9 @@ export type RevisionDetalle = RevisionRow & {
     estado_sigi: EstadoRevisionRow | null;
 };
 
-/**
- * Obtiene las revisiones junto con los datos completos de checklist_estado, items_checklist,
- * estados_revision (oficina), y estados_revision (sigi).
- * Si se pasa id, filtra solo esa revisión.
- */
-export async function getRevisionesDetallePropiedad(id?: number): Promise<RevisionDetalle[]> {
-  const supabase = createClient();
 
+export async function getRevisionesDetallePropiedad(id?: number,operacion_inmobiliaria?:string): Promise<RevisionDetalle[]> {
+  const supabase = createClient();
   let query = supabase
     .from("revisiones")
     .select(`
@@ -31,9 +48,7 @@ export async function getRevisionesDetallePropiedad(id?: number): Promise<Revisi
         estado_sigi: id_estado_sigi (*)
     `)
     .eq("id_propiedad", id);
-
   const { data, error } = await query;
-
   if (error) {
     throw new Error(`Error consultando revisiones: ${error.message}`);
   }
@@ -41,56 +56,85 @@ export async function getRevisionesDetallePropiedad(id?: number): Promise<Revisi
   return data ?? [];
 }
 
-export async function getRevisionesDetallePropietario(ids?: number | number[]): Promise<RevisionDetalle[]> {
-    const supabase = createClient();
 
-    let query = supabase
-      .from("revisiones")
-      .select(`
-        *,
-          items_checklist: id_item (*),
-          estado_oficina: id_estado_oficina (*),
-          estado_sigi: id_estado_sigi (*)
-      `);
 
-    if (typeof ids === "number") {
-      query = query.in("id_propietario", [ids]);
-    } else if (Array.isArray(ids) && ids.length > 0) {
-      query = query.in("id_propietario", ids);
-    } else if (ids === undefined) {
-      // Si no se pasa ningún id, retornar vacío o considerar quitar el filtro
-      return [];
-    }
+// /**
+//  * Obtiene las revisiones junto con los datos completos de checklist_estado, items_checklist,
+//  * estados_revision (oficina), y estados_revision (sigi).
+//  * Si se pasa id, filtra solo esa revisión.
+//  */
+// export async function getRevisionesDetallePropiedad(id?: number): Promise<RevisionDetalle[]> {
+//   const supabase = createClient();
 
-    const { data, error } = await query;
+//   let query = supabase
+//     .from("revisiones")
+//     .select(`
+//       *,
+//         items_checklist: id_item (*),
+//         estado_oficina: id_estado_oficina (*),
+//         estado_sigi: id_estado_sigi (*)
+//     `)
+//     .eq("id_propiedad", id);
 
-    if (error) {
-      throw new Error(`Error consultando revisiones: ${error.message}`);
-    }
-    // data ya queda en la estructura RevisionDetalle[]
-    return data ?? [];
-  }
+//   const { data, error } = await query;
+
+//   if (error) {
+//     throw new Error(`Error consultando revisiones: ${error.message}`);
+//   }
+//   // data ya queda en la estructura RevisionDetalle[]
+//   return data ?? [];
+// }
+
+// export async function getRevisionesDetallePropietario(ids?: number | number[]): Promise<RevisionDetalle[]> {
+//     const supabase = createClient();
+
+//     let query = supabase
+//       .from("revisiones")
+//       .select(`
+//         *,
+//           items_checklist: id_item (*),
+//           estado_oficina: id_estado_oficina (*),
+//           estado_sigi: id_estado_sigi (*)
+//       `);
+
+//     if (typeof ids === "number") {
+//       query = query.in("id_propietario", [ids]);
+//     } else if (Array.isArray(ids) && ids.length > 0) {
+//       query = query.in("id_propietario", ids);
+//     } else if (ids === undefined) {
+//       // Si no se pasa ningún id, retornar vacío o considerar quitar el filtro
+//       return [];
+//     }
+
+//     const { data, error } = await query;
+
+//     if (error) {
+//       throw new Error(`Error consultando revisiones: ${error.message}`);
+//     }
+//     // data ya queda en la estructura RevisionDetalle[]
+//     return data ?? [];
+//   }
 
   
-  export async function getRevisionesDetalleContrato(id?: number): Promise<RevisionDetalle[]> {
-    const supabase = createClient();
+//   export async function getRevisionesDetalleContrato(id?: number): Promise<RevisionDetalle[]> {
+//     const supabase = createClient();
   
-    let query = supabase
-      .from("revisiones")
-      .select(`
-        *,
-          items_checklist: id_item (*),
-          estado_oficina: id_estado_oficina (*),
-          estado_sigi: id_estado_sigi (*)
-      `)
-      .eq("id_contrato", id);
+//     let query = supabase
+//       .from("revisiones")
+//       .select(`
+//         *,
+//           items_checklist: id_item (*),
+//           estado_oficina: id_estado_oficina (*),
+//           estado_sigi: id_estado_sigi (*)
+//       `)
+//       .eq("id_contrato", id);
   
-    const { data, error } = await query;
+//     const { data, error } = await query;
   
-    if (error) {
-      throw new Error(`Error consultando revisiones: ${error.message}`);
-    }
-    // data ya queda en la estructura RevisionDetalle[]
-    return data ?? [];
-  }
+//     if (error) {
+//       throw new Error(`Error consultando revisiones: ${error.message}`);
+//     }
+//     // data ya queda en la estructura RevisionDetalle[]
+//     return data ?? [];
+//   }
   

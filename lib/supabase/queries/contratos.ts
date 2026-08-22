@@ -29,6 +29,7 @@ export type ContratoConPropiedad = ContratoRow & {
   } | null;
 };
 
+// Obtener todos los contratos (READ)
 export async function getContratos(): Promise<Contrato[]> {
   const supabase = createClient();
 
@@ -41,11 +42,10 @@ export async function getContratos(): Promise<Contrato[]> {
   return data ?? [];
 }
 
+// Obtener contratos por asociado (READ + relaciones)
 export async function getContratosByAsociadoId(id_asociado: number): Promise<ContratoConPropiedad[]> {
   const supabase = createClient();
 
-  // Especificar explícitamente cada relación de tipo_moneda por el nombre de la clave foránea para evitar ambigüedad.
-  // Suponiendo los nombres de las FK según estructura del modelo: 'id_tipo_moneda' y 'id_tipo_moneda_comision'
   const { data, error } = await supabase
     .from("contratos")
     .select(
@@ -75,4 +75,69 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
     throw new Error(error.message);
   }
   return data ?? [];
+}
+
+// Obtener un contrato por ID (READ ONE)
+export async function getContratoById(id_contrato: number): Promise<Contrato | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("contratos")
+    .select("*")
+    .eq("id_contrato", id_contrato)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data ?? null;
+}
+
+// Crear un nuevo contrato (CREATE)
+export async function createContrato(contrato: Omit<Contrato, "id_contrato">): Promise<Contrato> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("contratos")
+    .insert([contrato])
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  if (!data) {
+    throw new Error("No se pudo crear el contrato");
+  }
+  return data;
+}
+
+// Actualizar un contrato existente (UPDATE)
+export async function updateContrato(id_contrato: number, updates: Partial<Contrato>): Promise<Contrato> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("contratos")
+    .update(updates)
+    .eq("id_contrato", id_contrato)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  if (!data) {
+    throw new Error("No se encontró el contrato para actualizar");
+  }
+  return data;
+}
+
+// Eliminar un contrato (DELETE)
+export async function deleteContrato(id_contrato: number): Promise<void> {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("contratos")
+    .delete()
+    .eq("id_contrato", id_contrato);
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }

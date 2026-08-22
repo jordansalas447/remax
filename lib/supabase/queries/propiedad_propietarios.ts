@@ -1,19 +1,22 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/database.types";
+import { operacion_inmobiliaria } from "@/lib/types/database";
 
 // Tipos para las filas de cada tabla relevante
 type RevisionRow = Database["public"]["Tables"]["revisiones"]["Row"];
 type ItemChecklistRow = Database["public"]["Tables"]["items_checklist"]["Row"];
 type EstadoRevisionRow = Database["public"]["Tables"]["estados_revision"]["Row"];
 type PropiedadPropietarioRow = Database["public"]["Tables"]["propiedad_propietario"]["Row"];
+type operacion_inmobiliariaRow = Database["public"]["Tables"]["operacion_inmobiliaria"]["Row"]
 
 // Tipo de detalle de relación según el join requerido
 export type PropiedadPropietarioDetalle = PropiedadPropietarioRow & {
-  revision: (RevisionRow & {
+  revisiones: Array<RevisionRow & {
     items_checklist: ItemChecklistRow | null;
     estado_oficina: EstadoRevisionRow | null;
     estado_sigi: EstadoRevisionRow | null;
-  }) | null;
+    operacion_inmobiliaria: operacion_inmobiliariaRow | null;
+  }>;
 };
 
 /**
@@ -68,11 +71,12 @@ export async function getRevisionesDetalleByPropiedadId(
     .from("propiedad_propietario")
     .select(`
       *,
-        revisiones (
+      revisiones (
         *,
         items_checklist: id_item (*),
         estado_oficina: id_estado_oficina (*),
-        estado_sigi: id_estado_sigi (*)
+        estado_sigi: id_estado_sigi (*),
+        operacion_inmobiliaria: id_operacion_inmobiliaria(*)
       )
     `);
 

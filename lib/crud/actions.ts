@@ -269,16 +269,16 @@ export async function fetchFieldOptions<T extends TableName>(
       const ids = Array.from(new Set(records.map((r) => r[nestedField.name]).filter(Boolean)));
 
       const refMap = new Map<any, Record<string, any>>();
-      if (ids.length > 0) {
-        const { data: refData, error: refError } = await supabase
-          .from(nestedFk.table)
-          .select("*")
-          .in(nestedFk.valueField, ids as any[]);
+      // if (ids.length > 0) {
+      //   const { data: refData, error: refError } = await supabase
+      //     .from(nestedFk.table)
+      //     .select("*")
+      //     .in(nestedFk.valueField, ids as any[]);
 
-        if (!refError && refData) {
-          refData.forEach((d) => refMap.set(d[nestedFk.valueField], d as Record<string, any>));
-        }
-      }
+      //   if (!refError && refData) {
+      //     refData.forEach((d) => refMap.set(d[nestedFk.valueField], d as Record<string, any>));
+      //   }
+      // }
 
       const refTableConfig = tableConfigsMap[nestedFk.table as string];
 

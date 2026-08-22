@@ -34,7 +34,7 @@ export function PropietariosEstatusItem({ revisiones, loading }: DocumentsCheckP
     }
 
     // Aplanar los items checklist para mostrar como documentos pendientes o revisar
-    const allDocuments = revisiones.map((item) => ({
+    const allDocuments = revisiones.revisiones.map((item) => ({
             id: item.id_revision,
             descripcion: item.items_checklist?.nombre_item || "-",
             oficina: item.estado_oficina?.descripcion || "-",

@@ -25,7 +25,6 @@ import {
 } from "@/lib/supabase/queries/propietarios";
 import { InputSearch } from "@/components/input-search/input-search";
 import { PropiedadEstatusItem } from "./_components/propiedad-estatus-item";
-import { getRevisionesDetalleContrato, getRevisionesDetallePropiedad, getRevisionesDetallePropietario, RevisionDetalle } from "@/lib/supabase/queries/revisiones";
 import PropietariosEstatusItem from "./_components/propietarios-estatus-item";
 import ContratoEstatus from "./_components/contrato-estatus";
 import { getContratoRevisionesDetalleByContratoId, getRevisionesDetalleByPropiedadId, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
@@ -155,7 +154,7 @@ export default function AsociadoPage() {
           getPropiedadDetalleById(selectedPropiedadId),
           getPropietariosByPropiedadId(selectedPropiedadId),
           getRevisionesDetalleByPropiedadId(selectedPropiedadId),
-        //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
+          //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
 
         if (cancelled) return;
@@ -180,9 +179,8 @@ export default function AsociadoPage() {
         setPropiedad(propiedadData);
         setPropietarios(propietariosData);
         setPropiedadesData(RevisionesPropiedades);
-       // setContratosData(RevisionesContratos);
+        // setContratosData(RevisionesContratos);
         setPropietariosData(RevisionesPropietarios);
-        console.log(RevisionesPropiedades)
       } finally {
         if (!cancelled) {
           setLoadingPropiedad(false);
@@ -194,7 +192,7 @@ export default function AsociadoPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedPropiedadId,selectedContratoId]);
+  }, [selectedPropiedadId, selectedContratoId]);
 
   const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number) => {
     setSelectedContratoId(id_contrato);
@@ -255,7 +253,7 @@ export default function AsociadoPage() {
         loading={loadingContratos}
       />
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6 grid-cols-2">
         <PropiedadFicha
           propiedad={propiedad}
           loading={loadingPropiedad}
@@ -275,11 +273,11 @@ export default function AsociadoPage() {
         propiedadId={selectedPropiedadId}
         />
       </div> */}
-       <div>
+      <div>
         <PropiedadEstatusItem
-        revisiones = {PropiedadesData}
-        loading={loadingPropietarios}
-        propiedadId={selectedPropiedadId}
+          revisiones={PropiedadesData}
+          loading={loadingPropietarios}
+          propiedadId={selectedPropiedadId}
         />
       </div>
       {/* <div>
