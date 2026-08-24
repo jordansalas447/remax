@@ -15,64 +15,64 @@ type DocumentsCheckProps = {
 
 export function PropietariosEstatusItem({ revisiones, loading }: DocumentsCheckProps) {
 
-    if (loading) {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <FileCheck2 className="size-5 text-indigo-600" />
-                        Revisión de documentos
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-3">
-                    {Array.from({ length: 2 }).map((_, index) => (
-                        <Skeleton key={index} className="h-16 w-full rounded-xl" />
-                    ))}
-                </CardContent>
-            </Card>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <Card>
+    //             <CardHeader>
+    //                 <CardTitle className="flex items-center gap-2">
+    //                     <FileCheck2 className="size-5 text-indigo-600" />
+    //                     Revisión de documentos
+    //                 </CardTitle>
+    //             </CardHeader>
+    //             <CardContent className="grid gap-3">
+    //                 {Array.from({ length: 2 }).map((_, index) => (
+    //                     <Skeleton key={index} className="h-16 w-full rounded-xl" />
+    //                 ))}
+    //             </CardContent>
+    //         </Card>
+    //     );
+    // }
 
-    // Aplanar los items checklist para mostrar como documentos pendientes o revisar
-    const allDocuments = revisiones.revisiones.map((item) => ({
-            id: item.id_revision,
-            descripcion: item.items_checklist?.nombre_item || "-",
-            oficina: item.estado_oficina?.descripcion || "-",
-            oficina_color: item.estado_oficina?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
-            sigi: item.estado_sigi?.descripcion || "-",
-            sigi_color: item.estado_sigi?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
-        })
-    );
+    // // Aplanar los items checklist para mostrar como documentos pendientes o revisar
+    // const allDocuments = revisiones.revisiones.map((item) => ({
+    //         id: item.id_revision,
+    //         descripcion: item.items_checklist?.nombre_item || "-",
+    //         oficina: item.estado_oficina?.descripcion || "-",
+    //         oficina_color: item.estado_oficina?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
+    //         sigi: item.estado_sigi?.descripcion || "-",
+    //         sigi_color: item.estado_sigi?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
+    //     })
+    // );
 
-    function getStatusStyles(descripcion: string, color?: string) {
-        if (descripcion === "-") {
-            return "bg-yellow-100 text-yellow-800 border border-yellow-200";
-        }
-        // Si hay color definido (hex u otro formato tailwind compatible)
-        return color
-            ? `border px-2 py-0.5 text-xs font-semibold`
-            : "bg-zinc-100 text-zinc-800";
-    }
+    // function getStatusStyles(descripcion: string, color?: string) {
+    //     if (descripcion === "-") {
+    //         return "bg-yellow-100 text-yellow-800 border border-yellow-200";
+    //     }
+    //     // Si hay color definido (hex u otro formato tailwind compatible)
+    //     return color
+    //         ? `border px-2 py-0.5 text-xs font-semibold`
+    //         : "bg-zinc-100 text-zinc-800";
+    // }
 
-    function getStatusInlineStyle(color?: string) {
-        // Si viene color hex, úsalo como fondo y busca un color adecuado para la fuente
-        if (!color) return undefined;
-        // Texto oscuro si fondo claro, texto blanco si fondo oscuro
-        let textColor = "#111";
-        // Simple darkness check (luma, asumimos #RRGGBB)
-        if (color.startsWith("#") && color.length === 7) {
-            const r = parseInt(color.slice(1, 3), 16);
-            const g = parseInt(color.slice(3, 5), 16);
-            const b = parseInt(color.slice(5, 7), 16);
-            const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-            textColor = luma < 180 ? "#fff" : "#111";
-        }
-        return { backgroundColor: color, color: textColor, border: `1px solid ${color}` };
-    }
+    // function getStatusInlineStyle(color?: string) {
+    //     // Si viene color hex, úsalo como fondo y busca un color adecuado para la fuente
+    //     if (!color) return undefined;
+    //     // Texto oscuro si fondo claro, texto blanco si fondo oscuro
+    //     let textColor = "#111";
+    //     // Simple darkness check (luma, asumimos #RRGGBB)
+    //     if (color.startsWith("#") && color.length === 7) {
+    //         const r = parseInt(color.slice(1, 3), 16);
+    //         const g = parseInt(color.slice(3, 5), 16);
+    //         const b = parseInt(color.slice(5, 7), 16);
+    //         const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    //         textColor = luma < 180 ? "#fff" : "#111";
+    //     }
+    //     return { backgroundColor: color, color: textColor, border: `1px solid ${color}` };
+    // }
 
     return (
         <Card>
-            <CardHeader>
+            {/* <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <FileCheck2 className="size-5 text-indigo-600" />
                     Propietarios
@@ -124,7 +124,7 @@ export function PropietariosEstatusItem({ revisiones, loading }: DocumentsCheckP
                         </div>
                     ))}
                 </CardContent>
-            )}
+            )} */}
         </Card>
     );
 }

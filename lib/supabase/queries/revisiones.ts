@@ -56,6 +56,49 @@ export async function getRevisionesDetallePropiedad(id?: number,operacion_inmobi
   return data ?? [];
 }
 
+export async function getRevisionesDetallePropietario(id_ref_propiedad_propietario_contrato: number): Promise<RevisionDetalle[]> {
+  const supabase = createClient();
+
+
+  const { data, error } = await supabase
+    .from("revisiones")
+    .select(`
+      *,
+      propiedad_propietario:id_propiedad_propietario_contrato (
+        *,
+        propietario: id_propietario (
+          *
+        )
+      ),
+      operacion_inmobiliaria: id_operacion_inmobiliaria (
+        *
+      ),
+      items_checklist: id_item (
+        *
+      ),
+      estado_oficina: id_estado_oficina (
+        *
+      ),
+      estado_sigi: id_estado_sigi (
+        *
+      )
+    `)
+    .eq("id_ref_propiedad_propietario_contrato", id_ref_propiedad_propietario_contrato);
+
+  if (error) {
+    throw new Error(`Error consultando revisiones y propietarios: ${error.message}`);
+  }
+
+  // Normalizamos salida: cada registro es una revisión ya enriquecida con todas las relaciones pedidas
+  // Se ajusta a tipo RevisionDetalle (que asume tener inner join con todo lo relevante)
+  const revisiones: RevisionDetalle[] = (data ?? []) as RevisionDetalle[];
+
+  console.log(revisiones);
+
+  return revisiones;
+}
+
+
 
 
 // /**

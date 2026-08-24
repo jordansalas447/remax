@@ -21,6 +21,8 @@ export function formatDate(value: string | null | undefined): string {
   if (!value) return "—";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
+  // Resta 5 horas (en milisegundos: 5 * 60 * 60 * 1000)
+  date.setHours(date.getHours() + 5);
   return date.toLocaleDateString("es-PE", {
     day: "2-digit",
     month: "short",

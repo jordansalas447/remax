@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/database.types";
 import { operacion_inmobiliaria } from "@/lib/types/database";
+import { da } from "date-fns/locale";
 
 // Tipos para las filas de cada tabla relevante
 type RevisionRow = Database["public"]["Tables"]["revisiones"]["Row"];
@@ -93,8 +94,34 @@ export async function getRevisionesDetalleByPropiedadId(
     throw new Error(`Error consultando propiedad_propietario y revisiones por propiedad/contrato: ${error.message}`);
   }
 
+ // console.log(data)
+
   return data ?? [];
 }
+
+// Obtiene revisiones detalle usando la vista 'vw_revisiones_detalle' por id_contrato
+export async function getRevisionesDetalleByContratoVista(idContrato?: number) {
+  const supabase = createClient();
+
+  let query = supabase
+    .from("vw_revisiones_detalle")
+    .select("*");
+
+  if (typeof idContrato === "number") {
+    query = query.eq("id_contrato", idContrato);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Error consultando vw_revisiones_detalle: ${error.message}`);
+  }
+
+ // console.log(data,idContrato)
+
+  return data ?? [];
+}
+
 
 // Por contrato (id_contrato)
 export async function getContratoRevisionesDetalleByContratoId(

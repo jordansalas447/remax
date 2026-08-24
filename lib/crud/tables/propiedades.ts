@@ -5,6 +5,12 @@ export const propiedadesConfig: TableConfig = {
   label: "Propiedades",
   description: "Inmuebles captados",
   primaryKey: "id_propiedad",
+
+  softDelete: {
+    enabled: true,
+    field: "eliminado",
+  },
+
   fields: [
     { name: "id_propiedad", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "captacion", label: "Captación", type: "date" },

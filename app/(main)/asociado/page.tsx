@@ -21,13 +21,15 @@ import {
 import { getPropiedadDetalleById, type PropiedadDetalle } from "@/lib/supabase/queries/propiedades";
 import {
   getPropietariosByPropiedadId,
+
   type PropietarioDetalle,
 } from "@/lib/supabase/queries/propietarios";
 import { InputSearch } from "@/components/input-search/input-search";
-import { PropiedadEstatusItem } from "./_components/propiedad-estatus-item";
+import { RevisionesEstatusItem } from "./_components/propiedad-estatus-item";
 import PropietariosEstatusItem from "./_components/propietarios-estatus-item";
 import ContratoEstatus from "./_components/contrato-estatus";
-import { getContratoRevisionesDetalleByContratoId, getRevisionesDetalleByPropiedadId, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import { getContratoRevisionesDetalleByContratoId, getRevisionesDetalleByContratoVista, getRevisionesDetalleByPropiedadId, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import { getRevisionesDetallePropietario } from "@/lib/supabase/queries/revisiones";
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -49,6 +51,9 @@ export default function AsociadoPage() {
   const [ContratosData, setContratosData] = useState<PropiedadPropietarioDetalle[]>([]);
   const [PropiedadesData, setPropiedadesData] = useState<PropiedadPropietarioDetalle[]>([]);
   const [PropietariosData, setPropietariosData] = useState<PropiedadPropietarioDetalle[]>([]);
+
+  const [RevisionesData, setRevisionesData] = useState<any[]>([]);
+
 
   const [loadingAsociados, setLoadingAsociados] = useState(true);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
@@ -150,10 +155,11 @@ export default function AsociadoPage() {
       setLoadingPropietarios(true);
 
       try {
-        const [propiedadData, propietariosData, RevisionesPropiedades] = await Promise.all([
+        const [propiedadData, propietariosData, RevisionesPropiedades,DetalleRevisionesPropietario] = await Promise.all([
           getPropiedadDetalleById(selectedPropiedadId),
           getPropietariosByPropiedadId(selectedPropiedadId),
           getRevisionesDetalleByPropiedadId(selectedPropiedadId),
+          getRevisionesDetalleByContratoVista(selectedContratoId),
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
 
@@ -179,8 +185,10 @@ export default function AsociadoPage() {
         setPropiedad(propiedadData);
         setPropietarios(propietariosData);
         setPropiedadesData(RevisionesPropiedades);
-        // setContratosData(RevisionesContratos);
         setPropietariosData(RevisionesPropietarios);
+        //console.log(DetalleRevisionesPropietario)
+        setRevisionesData(DetalleRevisionesPropietario);
+        //setPropietariosData(RevisionesPropietarios);
       } finally {
         if (!cancelled) {
           setLoadingPropiedad(false);
@@ -274,8 +282,8 @@ export default function AsociadoPage() {
         />
       </div> */}
       <div>
-        <PropiedadEstatusItem
-          revisiones={PropiedadesData}
+        <RevisionesEstatusItem
+          revisiones={RevisionesData ? RevisionesData : []}
           loading={loadingPropietarios}
           propiedadId={selectedPropiedadId}
         />

@@ -16,7 +16,7 @@ type DocumentsCheckProps = {
   propiedadId: number | null;
 };
 
-export function PropiedadEstatusItem({ revisiones, loading }: DocumentsCheckProps) {
+export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckProps) {
 
   if (loading) {
     return (
@@ -35,18 +35,21 @@ export function PropiedadEstatusItem({ revisiones, loading }: DocumentsCheckProp
       </Card>
     );
   }
-  // Aplanar los items checklist para mostrar como documentos pendientes o revisar
-  const allDocuments = revisiones.flatMap((prop) =>
-    prop.revisiones.map((item) => ({
-      id: item.id_revision,
-      descripcion: item.items_checklist?.nombre_item || "-",
-      oficina: item.estado_oficina?.descripcion || "-",
-      oficina_color: item.estado_oficina?.color || "#fde68a",
-      operacion_inmobiliaria: item.operacion_inmobiliaria?.operacion || "-",
-      sigi: item.estado_sigi?.descripcion || "-",
-      sigi_color: item.estado_sigi?.color || "#fde68a",
-    }))
-  );
+
+  console.log(revisiones)
+
+  // // Aplanar los items checklist para mostrar como documentos pendientes o revisar
+  // const allDocuments = revisiones.flatMap((prop) =>
+  //   prop.revisiones.map((item) => ({
+  //     id: item.id_revision,
+  //     descripcion: item.rev || "-",
+  //     oficina: item.estado_oficina || "-",
+  //     operacion_inmobiliaria: item.operacion || "-",
+  //     sigi: item.estado_sigi || "-",
+  //     sigi_color: item.estado_sigi?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
+  //     oficina_color: item.estado_oficina?.color || "#fde68a", // amarillo pálido predeterminado para pendientes
+  //   }))
+  // );
 
   function getStatusStyles(descripcion: string, color?: string) {
     if (descripcion === "-") {
@@ -79,28 +82,31 @@ export function PropiedadEstatusItem({ revisiones, loading }: DocumentsCheckProp
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileCheck2 className="size-5 text-indigo-600" />
-          Propiedad
+          Estado
         </CardTitle>
         <CardDescription>
-          {allDocuments.length > 0
-            ? `${allDocuments.length} item${allDocuments.length > 1 ? "s" : ""}.`
+          {revisiones.length > 0
+            ? `${revisiones.length} item${revisiones.length > 1 ? "s" : ""}.`
             : "No hay documentos para revisar por ahora."}
         </CardDescription>
       </CardHeader>
-      {allDocuments.length > 0 && (
+      {revisiones.length > 0 && (
         <CardContent className="grid gap-4 md:grid-cols-5">
-          {allDocuments.map((doc) => (
+          {revisiones.map((doc) => (
             <div
-              key={doc.id}
+              key={doc.id_revision}
               className="group rounded border border-zinc-200 bg-white/75 p-5 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700"
             >
               <div className="mb-4 flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate font-semibold text-zinc-900 dark:text-zinc-50">
-                    {doc.descripcion}
+                    {doc.operacion}
                   </p>
                   <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
-                    {doc.operacion_inmobiliaria} ID #{doc.id}
+                    {doc.rev}
+                  </p>
+                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+                  ID #{doc.id_revision}
                   </p>
                 </div>
               </div>
@@ -108,14 +114,14 @@ export function PropiedadEstatusItem({ revisiones, loading }: DocumentsCheckProp
               <dl className="flex flex-col gap-2.5 text-xs">
                 <div className="flex items-center justify-between">
                   <dt className="font-medium text-zinc-500 dark:text-zinc-400">Oficina</dt>
-                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.oficina, doc.oficina_color)}`} style={doc.oficina_color && doc.oficina !== "-" ? getStatusInlineStyle(doc.oficina_color) : undefined}>
-                    {doc.oficina}
+                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.oficina, doc.color_estado_oficina)}`} style={doc.color_estado_oficina && doc.oficina !== "-" ? getStatusInlineStyle(doc.color_estado_oficina) : undefined}>
+                    {doc.estado_oficina}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="font-medium text-zinc-500 dark:text-zinc-400">Sigi</dt>
-                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.sigi, doc.sigi_color)}`} style={doc.sigi_color && doc.sigi !== "-" ? getStatusInlineStyle(doc.sigi_color) : undefined}>
-                    {doc.sigi}
+                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.sigi, doc.color_estado_sigi)}`} style={doc.color_estado_sigi && doc.sigi !== "-" ? getStatusInlineStyle(doc.color_estado_sigi) : undefined}>
+                    {doc.estado_sigi}
                   </dd>
                 </div>
               </dl>
@@ -127,4 +133,4 @@ export function PropiedadEstatusItem({ revisiones, loading }: DocumentsCheckProp
   );
 }
 
-export default PropiedadEstatusItem;
+export default RevisionesEstatusItem;

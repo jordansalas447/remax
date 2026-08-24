@@ -107,6 +107,7 @@ export async function fetchTableData<T extends TableName>(
   const { data, error } = await supabase
     .from(table)
     .select("*")
+    //.is("eliminado", false)
     .order(getPrimaryKeys(config)[0], { ascending: true });
 
 

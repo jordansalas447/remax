@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Propietario } from "@/lib/types/database";
 import type { Database } from "@/database.types";
+import { RevisionDetalle } from "./revisiones";
 
 type PersonaRow = Database["public"]["Tables"]["personas"]["Row"];
 
@@ -43,8 +44,19 @@ export async function getPropietariosByPropiedadId(id_propiedad: number): Promis
     propietarios: PropietarioDetalle | PropietarioDetalle[] | null;
   };
 
+  console.log(data)
+
   return ((data ?? []) as unknown as PropietarioJoinRow[]).flatMap((row) => {
     if (!row.propietarios) return [];
     return Array.isArray(row.propietarios) ? row.propietarios : [row.propietarios];
   });
 }
+
+
+
+
+
+
+
+
+

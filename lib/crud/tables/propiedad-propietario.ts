@@ -11,7 +11,7 @@ export const propiedadPropietarioConfig: TableConfig = {
       label: "Propiedad",
       type: "select",
       required: true,
-      readOnlyOnEdit: true,
+      readOnlyOnEdit: false,
       foreignKey: {
         table: "propiedades",
         valueField: "id_propiedad",
@@ -23,7 +23,7 @@ export const propiedadPropietarioConfig: TableConfig = {
       label: "Propietario",
       type: "select",
       required: true,
-      readOnlyOnEdit: true,
+      readOnlyOnEdit: false,
       foreignKey: {
         table: "propietarios",
         valueField: "id_propietario",
@@ -35,7 +35,7 @@ export const propiedadPropietarioConfig: TableConfig = {
       label: "Contrato",
       type: "select",
       required: true,
-      readOnlyOnEdit: true,
+      readOnlyOnEdit: false,
       foreignKey: {
         table: "contratos",
         valueField: "id_contrato",

@@ -20,6 +20,7 @@ export function ContratosSection({
   onSelectContrato,
   loading,
 }: ContratosSectionProps) {
+
   if (loading) {
     return (
       <Card>
@@ -70,9 +71,13 @@ export function ContratosSection({
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <div>
                     <p className="font-medium text-zinc-900 dark:text-zinc-50">
-                      Contrato {index +1}
+                      Contrato
+     
                       <span className="text-xs text-gray-400"> #{contrato.id_contrato}</span>
                  
+                    </p>
+                    <p>
+                    <span className="text-xs text-gray-800">{contrato.nro_contrato}</span>
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
                       {contrato.tipo_contrato?.tipo_contrato ?? "No definido"}
@@ -109,7 +114,7 @@ export function ContratosSection({
                     <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                       <Building2 className="size-4 shrink-0" />
                       <span className="truncate">
-                        {propiedad.captacion}
+                        {formatDate(propiedad.captacion)}
                       </span>
                     </div>
                   )}
