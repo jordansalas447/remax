@@ -30,4 +30,9 @@ export interface TableConfig {
   description: string;
   primaryKey: string | string[];
   fields: FieldConfig[];
+
+  softDelete?: {
+    enabled: boolean;
+    field: string;
+  };
 }

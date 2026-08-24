@@ -107,7 +107,7 @@ export async function fetchTableData<T extends TableName>(
   const { data, error } = await supabase
     .from(table)
     .select("*")
-    //.is("eliminado", false)
+    .is("eliminado", false)
     .order(getPrimaryKeys(config)[0], { ascending: true });
 
 
@@ -254,6 +254,7 @@ export async function fetchFieldOptions<T extends TableName>(
   const { data: fkData, error: fkError } = await supabase
     .from(fkTable)
     .select("*")
+    .is("eliminado", false)
     .order(fk.labelField, { ascending: true });
 
   if (fkError || !fkData) return [];
@@ -378,7 +379,10 @@ export async function updateRecord<T extends TableName>(
     const filter = buildPrimaryKeyFilter(config, formData);
     const supabase = await createClient();
 
-    let query = supabase.from(table).update(payload);
+    let query = supabase
+    .from(table)
+    .update(payload)
+    .is("eliminado", false);
 
     for (const [key, value] of Object.entries(filter)) {
       query = query.eq(key, value);
@@ -410,7 +414,11 @@ export async function deleteRecord<T extends TableName>(
     const filter = buildPrimaryKeyFilter(config, formData);
     const supabase = await createClient();
 
-    let query = supabase.from(table).delete();
+    let query = supabase
+      .from(table)
+      .update({
+        eliminado: true,
+      });
 
     for (const [key, value] of Object.entries(filter)) {
       query = query.eq(key, value);
@@ -419,15 +427,24 @@ export async function deleteRecord<T extends TableName>(
     const { error } = await query;
 
     if (error) {
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error.message,
+      };
     }
 
     revalidatePath(`/${table}`);
-    return { success: true };
+
+    return {
+      success: true,
+    };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Error desconocido",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Error desconocido",
     };
   }
 }
