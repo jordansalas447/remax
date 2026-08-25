@@ -7,11 +7,11 @@ import type { EstadoRevisionRow } from "@/lib/supabase/queries/estados_revision"
 import { FileCheck2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import { PropiedadPropietarioDetalle, RevisionDocumentoDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
 
 
 type DocumentsCheckProps = {
-  revisiones: PropiedadPropietarioDetalle[];
+  revisiones: RevisionDocumentoDetalle[];
   loading: boolean;
   propiedadId: number | null;
 };
@@ -82,7 +82,7 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileCheck2 className="size-5 text-indigo-600" />
-          Estado
+          Advertencia
         </CardTitle>
         <CardDescription>
           {revisiones.length > 0
@@ -114,13 +114,13 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
               <dl className="flex flex-col gap-2.5 text-xs">
                 <div className="flex items-center justify-between">
                   <dt className="font-medium text-zinc-500 dark:text-zinc-400">Oficina</dt>
-                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.oficina, doc.color_estado_oficina)}`} style={doc.color_estado_oficina && doc.oficina !== "-" ? getStatusInlineStyle(doc.color_estado_oficina) : undefined}>
+                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.estado_oficina, doc.color_estado_oficina)}`} style={doc.color_estado_oficina && doc.estado_oficina !== "-" ? getStatusInlineStyle(doc.color_estado_oficina) : undefined}>
                     {doc.estado_oficina}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="font-medium text-zinc-500 dark:text-zinc-400">Sigi</dt>
-                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.sigi, doc.color_estado_sigi)}`} style={doc.color_estado_sigi && doc.sigi !== "-" ? getStatusInlineStyle(doc.color_estado_sigi) : undefined}>
+                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.estado_sigi, doc.color_estado_sigi)}`} style={doc.color_estado_sigi && doc.estado_sigi !== "-" ? getStatusInlineStyle(doc.color_estado_sigi) : undefined}>
                     {doc.estado_sigi}
                   </dd>
                 </div>

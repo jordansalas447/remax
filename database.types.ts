@@ -18,7 +18,9 @@ export type Database = {
         Row: {
           area: string | null
           cargo: string | null
+          deleted_at: string | null
           descripcion: string
+          eliminado: boolean
           id: number
           id_persona: number | null
           nombre_completo: string | null
@@ -26,7 +28,9 @@ export type Database = {
         Insert: {
           area?: string | null
           cargo?: string | null
+          deleted_at?: string | null
           descripcion: string
+          eliminado?: boolean
           id?: number
           id_persona?: number | null
           nombre_completo?: string | null
@@ -34,7 +38,9 @@ export type Database = {
         Update: {
           area?: string | null
           cargo?: string | null
+          deleted_at?: string | null
           descripcion?: string
+          eliminado?: boolean
           id?: number
           id_persona?: number | null
           nombre_completo?: string | null
@@ -64,9 +70,69 @@ export type Database = {
         }
         Relationships: []
       }
+      asistencias: {
+        Row: {
+          created_at: string | null
+          estado: string
+          fecha_hora_registro: string
+          id: number
+          id_evento: number | null
+          id_persona: number | null
+          id_tardanza: number | null
+          observacion: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          estado?: string
+          fecha_hora_registro: string
+          id?: number
+          id_evento?: number | null
+          id_persona?: number | null
+          id_tardanza?: number | null
+          observacion?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          estado?: string
+          fecha_hora_registro?: string
+          id?: number
+          id_evento?: number | null
+          id_persona?: number | null
+          id_tardanza?: number | null
+          observacion?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asistencias_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asistencias_id_persona_fkey"
+            columns: ["id_persona"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asistencias_id_tardanza_fkey"
+            columns: ["id_tardanza"]
+            isOneToOne: false
+            referencedRelation: "tardanzas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       asociados: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           fecha_creacion: string | null
           id_asociado: number
           id_detalle_asociado: number | null
@@ -75,7 +141,9 @@ export type Database = {
           url_foto: string | null
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           fecha_creacion?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
@@ -84,7 +152,9 @@ export type Database = {
           url_foto?: string | null
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           fecha_creacion?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
@@ -153,17 +223,23 @@ export type Database = {
       }
       conformidad: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           id: number
           tipo: string
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           tipo: string
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           tipo?: string
         }
@@ -173,6 +249,7 @@ export type Database = {
         Row: {
           captacion: string | null
           comision: number | null
+          deleted_at: string | null
           eliminado: boolean
           estado: boolean
           fecha_fin: string | null
@@ -202,6 +279,7 @@ export type Database = {
         Insert: {
           captacion?: string | null
           comision?: number | null
+          deleted_at?: string | null
           eliminado?: boolean
           estado?: boolean
           fecha_fin?: string | null
@@ -231,6 +309,7 @@ export type Database = {
         Update: {
           captacion?: string | null
           comision?: number | null
+          deleted_at?: string | null
           eliminado?: boolean
           estado?: boolean
           fecha_fin?: string | null
@@ -339,19 +418,25 @@ export type Database = {
       }
       detalle_asociado: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           fecha_registro: string
           id: number
           id_nivel_asociado: number | null
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           fecha_registro: string
           id?: number
           id_nivel_asociado?: number | null
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           fecha_registro?: string
           id?: number
           id_nivel_asociado?: number | null
@@ -368,15 +453,21 @@ export type Database = {
       }
       distritos: {
         Row: {
+          deleted_at: string | null
           distrito: string
+          eliminado: boolean
           id: number
         }
         Insert: {
+          deleted_at?: string | null
           distrito: string
+          eliminado?: boolean
           id?: number
         }
         Update: {
+          deleted_at?: string | null
           distrito?: string
+          eliminado?: boolean
           id?: number
         }
         Relationships: []
@@ -404,17 +495,23 @@ export type Database = {
       }
       estado: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           estado: string
           id: number
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           estado: string
           id?: number
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           estado?: string
           id?: number
         }
@@ -423,35 +520,89 @@ export type Database = {
       estados_revision: {
         Row: {
           color: string | null
+          deleted_at: string | null
           descripcion: string
+          eliminado: boolean
           id: number
         }
         Insert: {
           color?: string | null
+          deleted_at?: string | null
           descripcion: string
+          eliminado?: boolean
           id?: number
         }
         Update: {
           color?: string | null
+          deleted_at?: string | null
           descripcion?: string
+          eliminado?: boolean
           id?: number
+        }
+        Relationships: []
+      }
+      eventos: {
+        Row: {
+          activo: boolean
+          created_at: string
+          descripcion: string | null
+          fecha: string | null
+          hora_fin: string | null
+          hora_inicio: string
+          id: number
+          nombre: string
+          obligatorio: boolean
+          tolerancia_minutos: number
+          updated_at: string | null
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          descripcion?: string | null
+          fecha?: string | null
+          hora_fin?: string | null
+          hora_inicio: string
+          id?: number
+          nombre: string
+          obligatorio?: boolean
+          tolerancia_minutos?: number
+          updated_at?: string | null
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          descripcion?: string | null
+          fecha?: string | null
+          hora_fin?: string | null
+          hora_inicio?: string
+          id?: number
+          nombre?: string
+          obligatorio?: boolean
+          tolerancia_minutos?: number
+          updated_at?: string | null
         }
         Relationships: []
       }
       items_checklist: {
         Row: {
+          delete_at: string | null
+          eliminado: boolean
           icon: string | null
           id_item: number
           id_operacion_inmobiliaria: number | null
           nombre_item: string
         }
         Insert: {
+          delete_at?: string | null
+          eliminado?: boolean
           icon?: string | null
           id_item?: number
           id_operacion_inmobiliaria?: number | null
           nombre_item: string
         }
         Update: {
+          delete_at?: string | null
+          eliminado?: boolean
           icon?: string | null
           id_item?: number
           id_operacion_inmobiliaria?: number | null
@@ -476,17 +627,23 @@ export type Database = {
       }
       mes: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           id: number
           mes: string
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           mes: string
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           mes?: string
         }
@@ -494,67 +651,74 @@ export type Database = {
       }
       multas: {
         Row: {
-          descripcion: string
+          estado: string
           fecha: string | null
           fecha_creacion: string | null
           id: number
-          id_asociados: number | null
           monto: number | null
+          motivo: string
+          tipo: string | null
         }
         Insert: {
-          descripcion: string
+          estado?: string
           fecha?: string | null
           fecha_creacion?: string | null
           id?: number
-          id_asociados?: number | null
           monto?: number | null
+          motivo: string
+          tipo?: string | null
         }
         Update: {
-          descripcion?: string
+          estado?: string
           fecha?: string | null
           fecha_creacion?: string | null
           id?: number
-          id_asociados?: number | null
           monto?: number | null
+          motivo?: string
+          tipo?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "multas_id_asociados_fkey"
-            columns: ["id_asociados"]
-            isOneToOne: false
-            referencedRelation: "asociados"
-            referencedColumns: ["id_asociado"]
-          },
-        ]
+        Relationships: []
       }
       nivel_asociado: {
         Row: {
+          deleted_at: string | null
           descripcion: string
+          eliminado: boolean
           id: number
         }
         Insert: {
+          deleted_at?: string | null
           descripcion: string
+          eliminado?: boolean
           id?: number
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string
+          eliminado?: boolean
           id?: number
         }
         Relationships: []
       }
       operacion: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           id: number
           operacion: string
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           operacion: string
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           operacion?: string
         }
@@ -562,14 +726,20 @@ export type Database = {
       }
       operacion_inmobiliaria: {
         Row: {
+          deleted_at: string | null
+          eliminado: boolean
           id: number
           operacion: string
         }
         Insert: {
+          deleted_at?: string | null
+          eliminado?: boolean
           id?: number
           operacion: string
         }
         Update: {
+          deleted_at?: string | null
+          eliminado?: boolean
           id?: number
           operacion?: string
         }
@@ -579,6 +749,7 @@ export type Database = {
         Row: {
           apellido_materno: string | null
           apellido_paterno: string | null
+          deleted_at: string | null
           direccion: string | null
           documento_identidad: string | null
           eliminado: boolean
@@ -596,6 +767,7 @@ export type Database = {
         Insert: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
+          deleted_at?: string | null
           direccion?: string | null
           documento_identidad?: string | null
           eliminado?: boolean
@@ -613,6 +785,7 @@ export type Database = {
         Update: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
+          deleted_at?: string | null
           direccion?: string | null
           documento_identidad?: string | null
           eliminado?: boolean
@@ -654,18 +827,24 @@ export type Database = {
       }
       propiedad_propietario: {
         Row: {
+          deleted_at: string | null
+          eliminado: boolean | null
           id: number
           id_contrato: number | null
           id_propiedad: number
           id_propietario: number
         }
         Insert: {
+          deleted_at?: string | null
+          eliminado?: boolean | null
           id?: number
           id_contrato?: number | null
           id_propiedad: number
           id_propietario: number
         }
         Update: {
+          deleted_at?: string | null
+          eliminado?: boolean | null
           id?: number
           id_contrato?: number | null
           id_propiedad?: number
@@ -707,6 +886,7 @@ export type Database = {
           area_construida: number | null
           area_terreno: number | null
           captacion: string | null
+          deleted_at: string | null
           descripcion: string | null
           direccion: string | null
           eliminado: boolean
@@ -724,6 +904,7 @@ export type Database = {
           area_construida?: number | null
           area_terreno?: number | null
           captacion?: string | null
+          deleted_at?: string | null
           descripcion?: string | null
           direccion?: string | null
           eliminado?: boolean
@@ -741,6 +922,7 @@ export type Database = {
           area_construida?: number | null
           area_terreno?: number | null
           captacion?: string | null
+          deleted_at?: string | null
           descripcion?: string | null
           direccion?: string | null
           eliminado?: boolean
@@ -831,6 +1013,7 @@ export type Database = {
       revisiones: {
         Row: {
           conformidad_descripcion: string | null
+          deleted_at: string | null
           eliminado: boolean
           fecha_entregado: string | null
           fecha_recibido: string | null
@@ -848,6 +1031,7 @@ export type Database = {
         }
         Insert: {
           conformidad_descripcion?: string | null
+          deleted_at?: string | null
           eliminado?: boolean
           fecha_entregado?: string | null
           fecha_recibido?: string | null
@@ -865,6 +1049,7 @@ export type Database = {
         }
         Update: {
           conformidad_descripcion?: string | null
+          deleted_at?: string | null
           eliminado?: boolean
           fecha_entregado?: string | null
           fecha_recibido?: string | null
@@ -959,19 +1144,66 @@ export type Database = {
         }
         Relationships: []
       }
+      tardanzas: {
+        Row: {
+          created_at: string
+          hora_llegada: string | null
+          hora_programada: string
+          id: number
+          id_multa: number | null
+          justificada: boolean
+          minutos_tardanza: number
+          motivo: string | null
+        }
+        Insert: {
+          created_at?: string
+          hora_llegada?: string | null
+          hora_programada: string
+          id?: number
+          id_multa?: number | null
+          justificada?: boolean
+          minutos_tardanza: number
+          motivo?: string | null
+        }
+        Update: {
+          created_at?: string
+          hora_llegada?: string | null
+          hora_programada?: string
+          id?: number
+          id_multa?: number | null
+          justificada?: boolean
+          minutos_tardanza?: number
+          motivo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tardanzas_id_multa_fkey"
+            columns: ["id_multa"]
+            isOneToOne: false
+            referencedRelation: "multas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tipo_contrato: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           id: number
           tipo_contrato: string
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           tipo_contrato: string
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           tipo_contrato?: string
         }
@@ -979,16 +1211,22 @@ export type Database = {
       }
       tipo_moneda: {
         Row: {
+          deleted_at: string | null
+          eliminado: boolean
           id: number
           simbolo: string | null
           tipo_moneda: string
         }
         Insert: {
+          deleted_at?: string | null
+          eliminado?: boolean
           id?: number
           simbolo?: string | null
           tipo_moneda: string
         }
         Update: {
+          deleted_at?: string | null
+          eliminado?: boolean
           id?: number
           simbolo?: string | null
           tipo_moneda?: string
@@ -997,17 +1235,23 @@ export type Database = {
       }
       tipo_propiedad: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           id: number
           tipo_propiedad: string
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           tipo_propiedad: string
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id?: number
           tipo_propiedad?: string
         }

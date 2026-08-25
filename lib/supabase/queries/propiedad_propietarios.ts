@@ -20,6 +20,22 @@ export type PropiedadPropietarioDetalle = PropiedadPropietarioRow & {
   }>;
 };
 
+export type RevisionDocumentoDetalle = {
+  id_revision: number;
+  nombre_item: string;
+  id_operacion: number;
+  id_operacion_inmobiliaria: number;
+  operacion: string;
+  rev: string;
+  estado_oficina: string;
+  color_estado_oficina: string;
+  estado_sigi: string;
+  color_estado_sigi: string;
+  id_contrato: number;
+  id_propiedad: number;
+  id_propietario: number;
+};
+
 /**
  * Consulta para obtener todos los datos de propiedad_propietario junto con la revisión relacionada y sus joins,
  * filtrando por r.id_ref_propiedad_propietario_contrato = id (si se pasa id).
@@ -100,7 +116,7 @@ export async function getRevisionesDetalleByPropiedadId(
 }
 
 // Obtiene revisiones detalle usando la vista 'vw_revisiones_detalle' por id_contrato
-export async function getRevisionesDetalleByContratoVista(idContrato?: number) {
+export async function getRevisionesDetalleByContratoVista(idContrato?: number) : Promise<RevisionDocumentoDetalle[]> {
   const supabase = createClient();
 
   let query = supabase

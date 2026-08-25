@@ -27,7 +27,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
   asociados: asociadosConfig,
   administrativos: administrativosConfig,
-  checklist_estado: checklistEstadoConfig,
+  //checklist_estado: checklistEstadoConfig,
   conformidad: conformidadConfig,
   contratos: contratosConfig,
   detalle_asociado: detalleAsociadoConfig,
