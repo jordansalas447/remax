@@ -44,8 +44,6 @@ export async function getPropietariosByPropiedadId(id_propiedad: number): Promis
     propietarios: PropietarioDetalle | PropietarioDetalle[] | null;
   };
 
-  console.log(data)
-
   return ((data ?? []) as unknown as PropietarioJoinRow[]).flatMap((row) => {
     if (!row.propietarios) return [];
     return Array.isArray(row.propietarios) ? row.propietarios : [row.propietarios];

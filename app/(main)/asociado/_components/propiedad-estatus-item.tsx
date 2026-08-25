@@ -36,8 +36,6 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
     );
   }
 
-  console.log(revisiones)
-
   // // Aplanar los items checklist para mostrar como documentos pendientes o revisar
   // const allDocuments = revisiones.flatMap((prop) =>
   //   prop.revisiones.map((item) => ({

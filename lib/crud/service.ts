@@ -8,19 +8,15 @@ import { createClient } from "@/lib/supabase/server";
 export async function get_tabla() {
   const TABLE_NAME = "tablas";
 
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from(TABLE_NAME).select("*");
+  const supabase = await createClient();
 
-    if (error) {
-      throw new Error(error.message);
-    }
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .select("*");
 
-    return data;
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Error desconocido" },
-      { status: 500 }
-    );
+  if (error) {
+    throw new Error(error.message);
   }
+
+  return data;
 }

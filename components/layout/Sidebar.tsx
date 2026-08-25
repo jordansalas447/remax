@@ -1,7 +1,7 @@
 import Link from "next/link";
 import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTools, faBuilding } from "@fortawesome/free-solid-svg-icons";
+import { faTools, faBuilding, faChartLine, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { Options } from "./Options";
 import { get_tabla } from "@/lib/crud/service";
 import {
@@ -19,7 +19,7 @@ import { ChevronDown } from "lucide-react";
 
 export async function AppSidebar() {
 
-  // const response = await get_tabla();
+   const response = await get_tabla();
 
   return (
      <Sidebar>
@@ -49,6 +49,7 @@ export async function AppSidebar() {
                 href="/dashboard"
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
               >
+                <FontAwesomeIcon icon={faChartLine} />
                 Dashboard
               </Link>
             </SidebarMenuItem>
@@ -57,11 +58,12 @@ export async function AppSidebar() {
                 href="/asociado"
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
               >
+                <FontAwesomeIcon icon={faUserTie} />
                 Ficha de asociado
               </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Options />
+              <Options Icons={response} />
             </SidebarMenuItem>
             <SidebarMenuItem>
               {/* Herramientas group using Dropdown */}

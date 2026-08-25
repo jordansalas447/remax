@@ -33,7 +33,6 @@ export function ContratoEstatus({ revisiones, loading }: DocumentsCheckProps) {
         );
     }
 
-    console.log(revisiones)
 
     // Aplanar los items checklist para mostrar como documentos pendientes o revisar
     const allDocuments = revisiones.flatMap((prop) =>
