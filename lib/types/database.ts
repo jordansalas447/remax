@@ -20,6 +20,7 @@ type SupportedTableName =
   | "items_checklist"
   | "checklist_estado"
   | "estado"
+  | "resource"
   | "mes"
   | "operacion"
   | "tipo_contrato"
@@ -40,6 +41,7 @@ export type PropiedadPropietario = TableRow<"propiedad_propietario">;
 export type Contrato = TableRow<"contratos">;
 export type Conformidad = TableRow<"conformidad">;
 export type Revision = TableRow<"revisiones">;
+export type Resource = TableRow<"resource">
 //export type ItemChecklist = TableRow<"items_checklist">;
 export type ChecklistEstado = TableRow<"checklist_estado">;
 export type estados_revision = TableRow<"estados_revision">;

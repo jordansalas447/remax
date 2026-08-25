@@ -22,6 +22,7 @@ import { tipoPropiedadConfig } from "./tipo-propiedad";
 import { tablasConfig } from "./tablas";
 import { estados_revisionConfig } from "./estados-revision";
 import { operacioninmobiliariaConfig } from "./operacion-inmobiliaria";
+import { resourceConfig } from "./resource";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -46,7 +47,8 @@ export const tableConfigs: Record<string, TableConfig> = {
   tipo_moneda: tipoMonedaConfig,
   tipo_propiedad: tipoPropiedadConfig,
   estados_revision:estados_revisionConfig,
-  operacion_inmobiliaria:operacioninmobiliariaConfig
+  operacion_inmobiliaria:operacioninmobiliariaConfig,
+  resource:resourceConfig
 };
 
 export const tableConfigEntries = Object.entries(tableConfigs) as Array<[string, TableConfig]>;

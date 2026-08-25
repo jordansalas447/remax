@@ -27,6 +27,7 @@ export const asociadosConfig: TableConfig = {
         labelField: "descripcion",
       },
     },
+    { name: "url_resource", label: "Imagen Perfil", type: "text" },
     { name: "descripcion", label: "Descripción", type: "textarea" },
     { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true },
   ],

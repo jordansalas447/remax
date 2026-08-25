@@ -61,6 +61,7 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
         tipo_moneda,
         simbolo
       ),
+      resource(*),
       propiedades (
         *,
         distritos (distrito),

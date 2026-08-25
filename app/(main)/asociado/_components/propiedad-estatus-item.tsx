@@ -8,6 +8,7 @@ import { FileCheck2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PropiedadPropietarioDetalle, RevisionDocumentoDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import { Badge } from "@/components/ui/badge";
 
 
 type DocumentsCheckProps = {
@@ -76,58 +77,93 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileCheck2 className="size-5 text-indigo-600" />
-          Advertencia
-        </CardTitle>
-        <CardDescription>
-          {revisiones.length > 0
-            ? `${revisiones.length} item${revisiones.length > 1 ? "s" : ""}.`
-            : "No hay documentos para revisar por ahora."}
-        </CardDescription>
-      </CardHeader>
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <FileCheck2 className="size-5 text-amber-600 dark:text-amber-500" />
+      Advertencia
       {revisiones.length > 0 && (
-        <CardContent className="grid gap-4 md:grid-cols-5">
-          {revisiones.map((doc) => (
-            <div
-              key={doc.id_revision}
-              className="group rounded border border-zinc-200 bg-white/75 p-5 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700"
-            >
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate font-semibold text-zinc-900 dark:text-zinc-50">
-                    {doc.operacion}
-                  </p>
-                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
-                    {doc.rev}
-                  </p>
-                  <p className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-500">
-                  ID #{doc.id_revision}
-                  </p>
-                </div>
-              </div>
-
-              <dl className="flex flex-col gap-2.5 text-xs">
-                <div className="flex items-center justify-between">
-                  <dt className="font-medium text-zinc-500 dark:text-zinc-400">Oficina</dt>
-                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.estado_oficina, doc.color_estado_oficina)}`} style={doc.color_estado_oficina && doc.estado_oficina !== "-" ? getStatusInlineStyle(doc.color_estado_oficina) : undefined}>
-                    {doc.estado_oficina}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="font-medium text-zinc-500 dark:text-zinc-400">Sigi</dt>
-                  <dd className={`rounded-full px-2.5 py-0.5 font-medium border ${getStatusStyles(doc.estado_sigi, doc.color_estado_sigi)}`} style={doc.color_estado_sigi && doc.estado_sigi !== "-" ? getStatusInlineStyle(doc.color_estado_sigi) : undefined}>
-                    {doc.estado_sigi}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          ))}
-        </CardContent>
+        <Badge variant="secondary" className="ml-1 rounded-full px-2 py-0 text-xs font-medium">
+          {revisiones.length}
+        </Badge>
       )}
-    </Card>
+    </CardTitle>
+    <CardDescription>
+      {revisiones.length > 0
+        ? `${revisiones.length} documento${revisiones.length > 1 ? "s" : ""} pendiente${revisiones.length > 1 ? "s" : ""} de revisión`
+        : "No hay documentos para revisar por ahora"}
+    </CardDescription>
+  </CardHeader>
+
+  {revisiones.length > 0 ? (
+    <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {revisiones.map((doc) => (
+        <div
+          key={doc.id_revision}
+          className="group relative rounded-lg border border-zinc-200 bg-white p-4 transition-all hover:border-amber-300 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-amber-800/60"
+        >
+          {/* barra de acento */}
+          <div className="absolute inset-y-0 left-0 w-1 rounded-l-lg bg-amber-400/70 dark:bg-amber-500/50" />
+
+          <div className="mb-3 min-w-0 pl-2">
+            <p className="truncate font-semibold text-zinc-900 dark:text-zinc-50">
+              {doc.operacion}
+            </p>
+            <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
+              <span>{doc.rev}</span>
+              <span className="text-zinc-300 dark:text-zinc-700">•</span>
+              <span>ID #{doc.id_revision}</span>
+            </div>
+          </div>
+
+          <dl className="flex flex-col gap-2 pl-2 text-xs">
+  <div className="flex items-center justify-between gap-2">
+    <dt className="font-medium text-zinc-500 dark:text-zinc-400">Oficina</dt>
+    <dd>
+      <Badge
+        variant="outline"
+        className={`truncate rounded-full font-medium ${getStatusStyles(doc.estado_oficina, doc.color_estado_oficina)}`}
+        style={
+          doc.color_estado_oficina && doc.estado_oficina !== "-"
+            ? getStatusInlineStyle(doc.color_estado_oficina)
+            : undefined
+        }
+      >
+        {doc.estado_oficina}
+      </Badge>
+    </dd>
+  </div>
+  <div className="flex items-center justify-between gap-2">
+    <dt className="font-medium text-zinc-500 dark:text-zinc-400">Sigi</dt>
+    <dd>
+      <Badge
+        variant="outline"
+        className={`truncate rounded-full font-medium ${getStatusStyles(doc.estado_sigi, doc.color_estado_sigi)}`}
+        style={
+          doc.color_estado_sigi && doc.estado_sigi !== "-"
+            ? getStatusInlineStyle(doc.color_estado_sigi)
+            : undefined
+        }
+      >
+        {doc.estado_sigi}
+      </Badge>
+    </dd>
+  </div>
+</dl>
+        </div>
+      ))}
+    </CardContent>
+  ) : (
+    <CardContent>
+      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-200 py-10 text-center dark:border-zinc-800">
+        <FileCheck2 className="size-8 text-zinc-300 dark:text-zinc-700" />
+        <p className="text-sm text-zinc-400 dark:text-zinc-500">
+          Todo al día. No hay documentos pendientes.
+        </p>
+      </div>
+    </CardContent>
+  )}
+</Card>
   );
 }
 

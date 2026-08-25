@@ -213,27 +213,28 @@ export default function AsociadoPage() {
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-      <header className="space-y-1">
-        <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
-          <UsersRound className="size-5" />
-          <span className="text-sm font-medium">Gestión de asociados</span>
-        </div>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Ficha del asociado
-        </h1>
-        <p className="max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
-          Selecciona un asociado para consultar su perfil, contratos, propiedades vinculadas y
-          propietarios.
-        </p>
-      </header>
+<div className="mx-auto flex w-full max-w-lxl flex-col gap-6">
+  <header className="space-y-1">
+    <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+      <UsersRound className="size-5" />
+      <span className="text-sm font-medium">Gestión de asociados</span>
+    </div>
+    <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+      Ficha del asociado
+    </h1>
+    <p className="max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
+      Selecciona un asociado para consultar su perfil, contratos, propiedades vinculadas y
+      propietarios.
+    </p>
+  </header>
 
-      <section
-        className="rounded border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
-      >
-        <div className="flex items-center gap-2">
-          <User className="size-5 text-indigo-600 mb-2" />
-          <span className="block text-sm font-medium text-zinc-800 dark:text-zinc-200 mb-2 text-left">
+  <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
+    {/* Columna lateral: búsqueda + perfil, fija al hacer scroll */}
+    <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+      <section className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="mb-3 flex items-center gap-2">
+          <User className="size-5 text-indigo-600 dark:text-indigo-400" />
+          <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
             Asociado
           </span>
         </div>
@@ -253,7 +254,11 @@ export default function AsociadoPage() {
       </section>
 
       <AsociadoProfileCard asociado={asociadoDetalle} loading={loadingDetalle} />
+ 
+    </div>
 
+    {/* Columna principal: todo lo demás apilado verticalmente */}
+    <div className="flex flex-col gap-6">
       <ContratosSection
         contratos={contratos}
         selectedContratoId={selectedContratoId}
@@ -261,40 +266,23 @@ export default function AsociadoPage() {
         loading={loadingContratos}
       />
 
-      <div className="grid gap-6 grid-cols-2">
-        <PropiedadFicha
-          propiedad={propiedad}
-          loading={loadingPropiedad}
-          contratoId={selectedContratoId}
-        />
-        <PropietariosSection
-          propietarios={propietarios}
-          loading={loadingPropietarios}
-          propiedadId={selectedPropiedadId}
-        />
-      </div>
+      <PropiedadFicha
+        propiedad={propiedad}
+        loading={loadingPropiedad}
+        contratoId={selectedContratoId}
+      />
 
-      {/* <div>
-        <ContratoEstatus
-        revisiones = {ContratosData}
+      <PropietariosSection
+        propietarios={propietarios}
         loading={loadingPropietarios}
         propiedadId={selectedPropiedadId}
-        />
-      </div> */}
-      <div>
-        <RevisionesEstatusItem
-          revisiones={RevisionesData ? RevisionesData : []}
-          loading={loadingPropietarios}
-          propiedadId={selectedPropiedadId}
-        />
-      </div>
-      {/* <div>
-        <PropietariosEstatusItem
-        revisiones = {PropietariosData}
+      />
+
+      <RevisionesEstatusItem
+        revisiones={RevisionesData ? RevisionesData : []}
         loading={loadingPropietarios}
         propiedadId={selectedPropiedadId}
-        />
-      </div>   */}
+      />
 
       {selectedContrato?.observaciones && (
         <section className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
@@ -303,5 +291,7 @@ export default function AsociadoPage() {
         </section>
       )}
     </div>
+  </div>
+</div>
   );
 }

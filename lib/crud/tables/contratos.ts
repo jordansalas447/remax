@@ -102,6 +102,16 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
+    {
+      name: "id_resource",
+      label: "Rercursos",
+      type: "select",
+      foreignKey: {
+        table: "resource",
+        valueField: "id_resource",
+        labelField: "url_resource",
+      },
+    },
     { name: "precio", label: "Precio", type: "number" },
     { name: "precio_operacion", label: "Precio Operacion", type: "number" },
     { name: "comision", label: "Comisión", type: "number" },

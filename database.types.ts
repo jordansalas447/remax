@@ -138,7 +138,7 @@ export type Database = {
           id_detalle_asociado: number | null
           id_persona: number | null
           nombre_completo: string | null
-          url_foto: string | null
+          url_resource: string | null
         }
         Insert: {
           deleted_at?: string | null
@@ -149,7 +149,7 @@ export type Database = {
           id_detalle_asociado?: number | null
           id_persona?: number | null
           nombre_completo?: string | null
-          url_foto?: string | null
+          url_resource?: string | null
         }
         Update: {
           deleted_at?: string | null
@@ -160,7 +160,7 @@ export type Database = {
           id_detalle_asociado?: number | null
           id_persona?: number | null
           nombre_completo?: string | null
-          url_foto?: string | null
+          url_resource?: string | null
         }
         Relationships: [
           {
@@ -994,17 +994,23 @@ export type Database = {
       }
       resource: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           id_resource: number
           url_resource: string
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id_resource?: number
           url_resource: string
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           id_resource?: number
           url_resource?: string
         }
@@ -1119,7 +1125,9 @@ export type Database = {
       }
       tablas: {
         Row: {
+          deleted_at: string | null
           descripcion: string | null
+          eliminado: boolean
           estado: number | null
           icon: string
           id: number
@@ -1127,7 +1135,9 @@ export type Database = {
           permiso: string | null
         }
         Insert: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           estado?: number | null
           icon: string
           id?: number
@@ -1135,7 +1145,9 @@ export type Database = {
           permiso?: string | null
         }
         Update: {
+          deleted_at?: string | null
           descripcion?: string | null
+          eliminado?: boolean
           estado?: number | null
           icon?: string
           id?: number
