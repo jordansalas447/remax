@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -267,12 +267,13 @@ export type Database = {
           id_tipo_moneda: number | null
           id_tipo_moneda_comision: number | null
           id_tipo_moneda_operacion: number | null
+          id_tipo_moneda_precio_maximo: number | null
           nro_contrato: string | null
           observaciones: string | null
           operacion: string | null
-          precio: number | null
+          precio_cierre: number | null
+          precio_inicio: number | null
           precio_maximo: number | null
-          precio_operacion: number | null
           timestamp: string | null
           tipo_contrato: string | null
         }
@@ -297,12 +298,13 @@ export type Database = {
           id_tipo_moneda?: number | null
           id_tipo_moneda_comision?: number | null
           id_tipo_moneda_operacion?: number | null
+          id_tipo_moneda_precio_maximo?: number | null
           nro_contrato?: string | null
           observaciones?: string | null
           operacion?: string | null
-          precio?: number | null
+          precio_cierre?: number | null
+          precio_inicio?: number | null
           precio_maximo?: number | null
-          precio_operacion?: number | null
           timestamp?: string | null
           tipo_contrato?: string | null
         }
@@ -327,12 +329,13 @@ export type Database = {
           id_tipo_moneda?: number | null
           id_tipo_moneda_comision?: number | null
           id_tipo_moneda_operacion?: number | null
+          id_tipo_moneda_precio_maximo?: number | null
           nro_contrato?: string | null
           observaciones?: string | null
           operacion?: string | null
-          precio?: number | null
+          precio_cierre?: number | null
+          precio_inicio?: number | null
           precio_maximo?: number | null
-          precio_operacion?: number | null
           timestamp?: string | null
           tipo_contrato?: string | null
         }
@@ -410,6 +413,13 @@ export type Database = {
           {
             foreignKeyName: "contratos_id_tipo_moneda_fkey"
             columns: ["id_tipo_moneda"]
+            isOneToOne: false
+            referencedRelation: "tipo_moneda"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contratos_id_tipo_moneda_precio_maximo_fkey"
+            columns: ["id_tipo_moneda_precio_maximo"]
             isOneToOne: false
             referencedRelation: "tipo_moneda"
             referencedColumns: ["id"]
@@ -892,12 +902,14 @@ export type Database = {
           eliminado: boolean
           estado: string | null
           fotos: boolean | null
+          id_conformidad: number | null
           id_distrito: number | null
           id_propiedad: number
           id_remax: number | null
           id_resource: number | null
           id_tipo_propiedad: number | null
           n_partida: string | null
+          observacion: string | null
           timestamp: string | null
         }
         Insert: {
@@ -910,12 +922,14 @@ export type Database = {
           eliminado?: boolean
           estado?: string | null
           fotos?: boolean | null
+          id_conformidad?: number | null
           id_distrito?: number | null
           id_propiedad?: number
           id_remax?: number | null
           id_resource?: number | null
           id_tipo_propiedad?: number | null
           n_partida?: string | null
+          observacion?: string | null
           timestamp?: string | null
         }
         Update: {
@@ -928,15 +942,24 @@ export type Database = {
           eliminado?: boolean
           estado?: string | null
           fotos?: boolean | null
+          id_conformidad?: number | null
           id_distrito?: number | null
           id_propiedad?: number
           id_remax?: number | null
           id_resource?: number | null
           id_tipo_propiedad?: number | null
           n_partida?: string | null
+          observacion?: string | null
           timestamp?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "propiedades_id_conformidad_fkey"
+            columns: ["id_conformidad"]
+            isOneToOne: false
+            referencedRelation: "conformidad"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "propiedades_id_distrito_fkey"
             columns: ["id_distrito"]

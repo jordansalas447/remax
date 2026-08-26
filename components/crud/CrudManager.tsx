@@ -337,7 +337,7 @@ function RecordForm<T extends TableName>({
   return (
     <>
       <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="max-h-[90vh] max-w-5xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] lg:max-w-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{mode === "create" ? "Nuevo registro" : "Editar registro"}</DialogTitle>
             <DialogDescription>{config.label}</DialogDescription>

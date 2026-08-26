@@ -19,7 +19,7 @@ export const propiedadesConfig: TableConfig = {
     { name: "area_terreno", label: "Área terreno (m²)", type: "number" },
     { name: "area_construida", label: "Área construida (m²)", type: "number" },
     { name: "fotos", label: "Tiene fotos", type: "boolean" },
-    { name: "descripcion", label: "Descripción", type: "textarea" },
+    { name: "observacion", label: "Observación", type: "textarea" },
     { name: "id_remax", label: "ID REMAX", type: "number" },
     {
       name: "id_tipo_propiedad",
@@ -32,6 +32,16 @@ export const propiedadesConfig: TableConfig = {
       },
     },
     {
+      name: "id_conformidad",
+      label: "Conformidad",
+      type: "select",
+      foreignKey: {
+        table: "conformidad",
+        valueField: "id",
+        labelField: "tipo",
+      },
+    },
+    {
       name: "id_distrito",
       label: "Distrito",
       type: "select",
@@ -40,7 +50,6 @@ export const propiedadesConfig: TableConfig = {
         valueField: "id",
         labelField: "distrito",
       },
-    },
-    { name: "estado", label: "Estado", type: "text" },
+    }
   ],
 };

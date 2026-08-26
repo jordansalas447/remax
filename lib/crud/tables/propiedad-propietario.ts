@@ -2,8 +2,8 @@ import type { TableConfig } from "@/lib/crud/types";
 
 export const propiedadPropietarioConfig: TableConfig = {
   name: "propiedad_propietario",
-  label: "Propiedad ↔ Propietario",
-  description: "Relación entre inmuebles y propietarios",
+  label: "Propiedad ↔ Propietario ↔ Contratos",
+  description: "Relación entre inmuebles y propietarios y contratos",
   primaryKey: ["id_propiedad", "id_propietario","id"],
   fields: [
     {

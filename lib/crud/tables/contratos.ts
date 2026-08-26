@@ -93,6 +93,16 @@ export const contratosConfig: TableConfig = {
       },
     },
     {
+      name: "id_tipo_moneda_precio_maximo",
+      label: "Tipo moneda",
+      type: "select",
+      foreignKey: {
+        table: "tipo_moneda",
+        valueField: "id",
+        labelField: "tipo_moneda",
+      },
+    },
+    {
       name: "id_tipo_moneda_comision",
       label: "Tipo moneda comision",
       type: "select",
@@ -112,8 +122,9 @@ export const contratosConfig: TableConfig = {
         labelField: "url_resource",
       },
     },
-    { name: "precio", label: "Precio", type: "number" },
-    { name: "precio_operacion", label: "Precio Operacion", type: "number" },
+    { name: "precio_incio", label: "Precio Inicio", type: "number" },
+    { name: "precio_cierre", label: "Precio Operacion Cierre", type: "number" },
+    { name: "precio_maximo", label: "Precio Operacion maximo", type: "number" },
     { name: "comision", label: "Comisión", type: "number" },
     { name: "fecha_inicio", label: "Fecha inicio", type: "date" },
     { name: "fecha_fin", label: "Fecha fin", type: "date" },
