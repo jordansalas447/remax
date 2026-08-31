@@ -8,6 +8,13 @@ type TipoPropiedadRow = Database["public"]["Tables"]["tipo_propiedad"]["Row"];
 export type PropiedadDetalle = Propiedad & {
   distritos: Pick<DistritoRow, "distrito"> | null;
   tipo_propiedad: Pick<TipoPropiedadRow, "tipo_propiedad"> | null;
+  id_resource_est_titulo?: {
+    url_resource: string;
+  } | null;
+  conformidad?: {
+    tipo: string;
+    descripcion:string;
+  } | null;
 };
 
 export async function getPropiedades(): Promise<Propiedad[]> {
@@ -47,7 +54,10 @@ export async function getPropiedadDetalleById(id_propiedad: number): Promise<Pro
       `
       *,
       distritos (distrito),
-      tipo_propiedad (tipo_propiedad)
+      tipo_propiedad (tipo_propiedad),
+      conformidad:id_conformidad(*),
+      id_resource_partida(*),
+      id_resource_est_titulo(*)
     `,
     )
     .eq("id_propiedad", id_propiedad)

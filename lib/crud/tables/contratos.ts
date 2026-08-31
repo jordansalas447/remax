@@ -5,9 +5,16 @@ export const contratosConfig: TableConfig = {
   label: "Contratos",
   description: "Operaciones de venta y alquiler",
   primaryKey: "id_contrato",
+  form: {
+    title: "Gestionar Contratos",
+    description: "Administra los Contratos disponibles.",
+    columns: 3,
+    submitLabel: "Guardar Contrato",
+    cancelLabel: "Cancelar",
+  },
   fields: [
     { name: "id_contrato", label: "ID", type: "number", readOnlyOnEdit: true },
-    { name: "captacion", label: "Captación", type: "date" },
+    { name: "fecha_contrato", label: "Fecha Contrato", type: "date" },
     {
       name: "id_propiedad",
       label: "Propiedad (Nº de partida)",
@@ -34,6 +41,7 @@ export const contratosConfig: TableConfig = {
       name: "id_operacion",
       label: "Operación",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "operacion",
         valueField: "id",
@@ -44,6 +52,7 @@ export const contratosConfig: TableConfig = {
       name: "id_tipo_contrato",
       label: "Tipo contrato",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "tipo_contrato",
         valueField: "id",
@@ -51,10 +60,10 @@ export const contratosConfig: TableConfig = {
       },
     },
     { name: "estado", label: "Estado activo", type: "boolean" },
-    { name: "observaciones", label: "Observaciones", type: "textarea" },
     {
       name: "id_conformidad",
       label: "Conformidad",
+      selectplus: false,
       type: "select",
       foreignKey: {
         table: "conformidad",
@@ -65,6 +74,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_estado",
       label: "Estado",
+      selectplus: false,
       type: "select",
       foreignKey: {
         table: "estado",
@@ -76,6 +86,7 @@ export const contratosConfig: TableConfig = {
       name: "id_mes_captacion",
       label: "Mes captación",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "mes",
         valueField: "id",
@@ -84,37 +95,45 @@ export const contratosConfig: TableConfig = {
     },
     {
       name: "id_tipo_moneda",
-      label: "Tipo moneda",
+      label: "Tipo moneda Precio Inicio",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "tipo_moneda",
         valueField: "id",
         labelField: "tipo_moneda",
       },
     },
+    { name: "precio_inicio", label: "Precio Inicio", type: "number" },
+    { name: "fecha_fin", label: "Fecha fin", type: "date" },
     {
-      name: "id_tipo_moneda_precio_maximo",
-      label: "Tipo moneda",
+      name: "id_tipo_moneda_precio_venta",
+      label: "Precio de Venta",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "tipo_moneda",
         valueField: "id",
         labelField: "tipo_moneda",
       },
     },
+    { name: "precio_venta", label: "Precio Venta", type: "number" },
+    { name: "fecha_inicio", label: "Fecha inicio", type: "date" },
     {
       name: "id_tipo_moneda_comision",
-      label: "Tipo moneda comision",
+      label: "Tipo moneda Comision",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "tipo_moneda",
         valueField: "id",
         labelField: "tipo_moneda",
       },
     },
+    { name: "comision", label: "Comisión", type: "number" },
     {
       name: "id_resource",
-      label: "Rercursos",
+      label: "Documento",
       type: "select",
       foreignKey: {
         table: "resource",
@@ -122,17 +141,25 @@ export const contratosConfig: TableConfig = {
         labelField: "url_resource",
       },
     },
-    { name: "precio_incio", label: "Precio Inicio", type: "number" },
-    { name: "precio_cierre", label: "Precio Operacion Cierre", type: "number" },
-    { name: "precio_maximo", label: "Precio Operacion maximo", type: "number" },
-    { name: "comision", label: "Comisión", type: "number" },
-    { name: "fecha_inicio", label: "Fecha inicio", type: "date" },
-    { name: "fecha_fin", label: "Fecha fin", type: "date" },
+    {
+      name: "id_tipo_moneda_precio_maximo",
+      label: "Tipo moneda Precio maximo",
+      type: "select",
+      selectplus: false,
+      foreignKey: {
+        table: "tipo_moneda",
+        valueField: "id",
+        labelField: "tipo_moneda",
+      },
+    },
+    { name: "precio_maximo", label: "Precio maximo", type: "number" },
     {
       name: "id_mes_vencimiento",
       label: "Mes vencimiento",
       type: "select",
+      selectplus: false,
       foreignKey: { table: "mes", valueField: "id", labelField: "mes" },
     },
+    { name: "observaciones", label: "Observaciones", type: "textarea" },
   ],
 };

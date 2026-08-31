@@ -10,5 +10,17 @@ export const tablasConfig: TableConfig = {
         { name: "icon", label: "Icon", type: "text" },
         { name: "nombre", label: "Nombre", type: "text", required: true },
         { name: "descripcion", label: "Descripción", type: "textarea" },
+        { name: "grupo", label: "Grupo", type: "textarea" },
+        { name: "prioridad", label: "Prioridad", type: "number" },
+        {
+            name: "tabla_id",
+            label: "Tabla",
+            type: "select",
+            foreignKey: {
+              table: "tablas",
+              valueField: "id",
+              labelField: "nombre",
+            },
+          },
     ],
 };

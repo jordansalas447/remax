@@ -8,10 +8,12 @@ import { cn } from "@/lib/utils";
 import type { ContratoConPropiedad } from "@/lib/supabase/queries/contratos";
 import { DetailField, formatCurrency, formatDate } from "./detail-field";
 import { DocumentResource } from "./document-resource";
+import { Badge } from "@/components/ui/badge";
 
 interface ContratosSectionProps {
   contratos: ContratoConPropiedad[];
   selectedContratoId: number | null;
+  CheckRevision:any[]
   onSelectContrato: (id_contrato: number, id_propiedad: number) => void;
   loading: boolean;
 }
@@ -19,11 +21,12 @@ interface ContratosSectionProps {
 export function ContratosSection({
   contratos,
   selectedContratoId,
+  CheckRevision,
   onSelectContrato,
   loading,
 }: ContratosSectionProps) {
   // Estado para mostrar la imagen del documento seleccionado
-  const [docOpenId, setDocOpenId] = useState<number | null>(null);
+    //console.log(CheckRevision)
 
   if (loading) {
     return (
@@ -44,7 +47,7 @@ export function ContratosSection({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <FileText className="size-5 text-indigo-600" />
+          <FileText className="size-5 text-blue-600" />
           Contratos
         </CardTitle>
         <CardDescription>
@@ -68,47 +71,49 @@ export function ContratosSection({
               <div
                 key={contrato.id_contrato}
                 className={cn(
-                  "relative rounded-xl border p-4 text-left transition-all hover:border-indigo-300 hover:shadow-sm dark:hover:border-indigo-700",
+                  "relative rounded-xl border p-4 text-left transition-all hover:border-blue-300 hover:shadow-sm dark:hover:border-blue-700",
                   isSelected
-                    ? "border-indigo-500 bg-indigo-50/70 ring-2 ring-indigo-500/20 dark:border-indigo-400 dark:bg-indigo-950/30"
+                    ? "border-blue-500 bg-blue-50/70 ring-2 ring-blue-500/20 dark:border-blue-400 dark:bg-blue-950/30"
                     : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950",
                 )}
               >
                 {/* Nuevo botón con icono de documento en la esquina superior derecha */}
-                <button
-                  type="button"
-                  className="absolute right-3 top-3 rounded-full bg-indigo-100 p-2 text-indigo-600 hover:bg-indigo-200 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900"
-                  title={
-                    documentoUrl
-                      ? "Ver documento"
-                      : "Sin documento disponible"
-                  }
-                  disabled={!documentoUrl}
-                  style={documentoUrl ? {} : { opacity: 0.5, cursor: "not-allowed" }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (documentoUrl) setDocOpenId(contrato.id_contrato);
-                  }}
-                >
-                  <FileText className="size-4" />
-                </button>
-                <DocumentResource url={documentoUrl} document={contrato}></DocumentResource>
+                <div className="relative">
+                  <div className="absolute right-0">
+                  <DocumentResource  url={documentoUrl} document={contrato} type="contrato" CheckRevision={CheckRevision}></DocumentResource>
+                  </div>
+                </div>
 
                 {/* Card body button para selección */}
                 <button
                   type="button"
                   onClick={() => onSelectContrato(contrato.id_contrato, contrato.id_propiedad)}
-                  className="w-full text-left focus:outline-none"
+                  className="w-full text-left focus:outline-none w-full!"
                   tabIndex={-1}
                   // Quita estilos de botón para anidar dentro del div
                   style={{ all: "unset", display: "block", cursor: "pointer" }}
                 >
                   <div className="mb-3 flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-medium text-zinc-900 dark:text-zinc-50">
+                      <div className="font-medium text-zinc-900 dark:text-zinc-50">
                         Contrato
-                        <span className="text-xs text-gray-400"> #{contrato.id_contrato}</span>
-                      </p>
+                        <span className="text-xs text-gray-400"> #{contrato.id_contrato}
+                        <Badge
+                          className="mx-2"
+                          style={
+                            contrato.estado?.color
+                              ? { backgroundColor: contrato.estado.color, color: "#fff" }
+                              : undefined
+                          }
+                        >
+                          {contrato.estado?.estado}
+                        </Badge>
+                   
+                        </span>
+                      
+
+                      </div>
+
                       <p>
                         <span className="text-xs text-gray-800">{contrato.nro_contrato}</span>
                       </p>
@@ -116,26 +121,16 @@ export function ContratosSection({
                         {contrato.tipo_contrato?.tipo_contrato ?? "No definido"}
                       </p> 
                     </div>
-                    <span
-                      className={cn(
-                        "rounded-full px-2 py-0.5 text-xs font-medium",
-                        contrato.estado
-                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                          : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300",
-                      )}
-                    >
-                      {contrato.estado ? "Activo" : "Inactivo"}
-                    </span>
                   </div>
 
                   <dl className="grid gap-2 text-sm">
                     <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                       <HandCoins className="size-4 shrink-0" />
-                      <span>P.P. {contrato.tipo_moneda?.simbolo} {contrato.precio}</span>
+                      <span>Precio {contrato.tipo_moneda_precio_inicial?.simbolo} {contrato.precio_inicio} - {contrato.tipo_moneda_precio_maximo?.simbolo} {contrato.precio_maximo}</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                       <HandCoins className="size-4 shrink-0" />
-                      <span>P.F. {contrato.tipo_moneda?.simbolo} {contrato.precio_operacion}</span>
+                      <span>P.Venta {contrato.tipo_moneda_precio_venta?.simbolo} {contrato.precio_venta}</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                       <Calendar className="size-4 shrink-0" />
@@ -147,7 +142,7 @@ export function ContratosSection({
                       <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
                         <Building2 className="size-4 shrink-0" />
                         <span className="truncate">
-                          {formatDate(propiedad.captacion)}
+                          {formatDate(contrato.fecha_contrato)}
                         </span>
                       </div>
                     )}

@@ -19,13 +19,25 @@ export type ContratoConPropiedad = ContratoRow & {
   tipo_contrato?: {
     tipo_contrato: string;
   } | null;
-  tipo_moneda?: {
+  tipo_moneda_precio_inicial?: {
     tipo_moneda: string;
     simbolo: string;
   } | null;
   tipo_moneda_comision?: {
     tipo_moneda_comision: string;
     simbolo: string;
+  } | null;
+  tipo_moneda_precio_maximo?: {
+    tipo_moneda_comision: string;
+    simbolo: string;
+  } | null;
+  tipo_moneda_precio_venta?: {
+    tipo_moneda_comision: string;
+    simbolo: string;
+  } | null;
+  estado?: {
+    estado: string;
+    color: string;
   } | null;
 };
 
@@ -53,7 +65,7 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
       *,
       operacion (*),
       tipo_contrato(tipo_contrato),
-      tipo_moneda:id_tipo_moneda (
+      tipo_moneda_precio_inicial:id_tipo_moneda (
         tipo_moneda,
         simbolo
       ),
@@ -61,6 +73,15 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
         tipo_moneda,
         simbolo
       ),
+      tipo_moneda_precio_maximo:id_tipo_moneda_precio_maximo (
+        tipo_moneda,
+        simbolo
+      ),
+      tipo_moneda_precio_venta:id_tipo_moneda_precio_venta (
+        tipo_moneda,
+        simbolo
+      ),
+      estado:id_estado (*),
       resource(*),
       propiedades (
         *,

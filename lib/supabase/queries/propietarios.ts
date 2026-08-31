@@ -30,7 +30,10 @@ export async function getPropietariosByPropiedadId(id_propiedad: number): Promis
       `
       propietarios (
         *,
-        personas (*)
+        personas (
+        *,
+        id_resource(*)
+        )
       )
     `,
     )

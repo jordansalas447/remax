@@ -12,7 +12,7 @@ export function ContratoDetalle({ data }: { data: any }) {
 
     if (!data) return null;
     return (
-        <div className="flex flex-col gap-2 text-sm w-[340px] border rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900/50 dark:border-zinc-800 font-normal">
+        <div className="flex flex-col gap-2 text-sm w-[340px] border mb-2 bg-zinc-50 p-4 dark:bg-zinc-900/50 dark:border-zinc-800 font-normal">
             <div>
                 <span className="block text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">Contrato</span>
                 <span className="font-semibold text-zinc-900 dark:text-zinc-50">#{data.id_contrato} – {data.nro_contrato}</span>

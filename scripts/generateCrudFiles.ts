@@ -72,7 +72,7 @@ export async function remove(id: number): Promise<void> {
 }
 `;
   writeFileSync(filePath, content, { encoding: 'utf8' });
-  console.log(`Generated ${filePath}`);
+ // console.log(`Generated ${filePath}`);
 }
 
-console.log('CRUD file generation completed.');
+//console.log('CRUD file generation completed.');

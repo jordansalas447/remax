@@ -16,5 +16,16 @@ export const personasConfig: TableConfig = {
     { name: "fecha_nacimiento", label: "Fecha de nacimiento", type: "date" },
     { name: "fecha_registro", label: "Fecha de registro", type: "date" },
     { name: "nombre_completo", label: "Nombre Completo", type: "text" },
+    {
+      name: "id_resource",
+      label: "Documento DNI",
+      type: "select",
+      readOnlyOnEdit: false,
+      foreignKey: {
+        table: "resource",
+        valueField: "id_resource",
+        labelField: "url_resource",
+      },
+    },
   ],
 };

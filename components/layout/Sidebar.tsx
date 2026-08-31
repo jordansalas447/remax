@@ -1,7 +1,7 @@
 import Link from "next/link";
 import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTools, faBuilding, faChartLine, faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { faTools, faBuilding, faChartLine, faUserTie, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Options } from "./Options";
 import { get_tabla } from "@/lib/crud/service";
 import {
@@ -9,41 +9,46 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { BookOpen, ChevronDown, Play, ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 export async function AppSidebar() {
 
-   const response = await get_tabla();
+  const response = await get_tabla();
+
+  // console.log(response)
 
   return (
      <Sidebar>
       <SidebarHeader>
-        <Link href="/" className="flex items-center gap-3 group">
-          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 shadow transition group-hover:scale-105">
-            <FontAwesomeIcon icon={faBuilding} size="lg" />
-          </span>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">
-              RE/MAX Adelante
-            </p>
-            <h1 className="mt-1 text-xl font-bold text-blue-600 dark:text-blue-400">
-              CAPTACIONES
-            </h1>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-              Gestión de inmuebles y revisiones
-            </p>
-          </div>
-        </Link>
+        <div className="flex justify-center items-center w-full">
+          <Link href="/" className="group">
+            <span>
+              <img
+                src="/LogoRemax.png"
+                alt="Logo RE/MAX"
+                className="object-contain w-40 p-2 mx-auto block"
+              />
+            </span>
+          </Link>
+        </div>
+  
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
+          <SidebarMenuItem>
+      </SidebarMenuItem>
           <SidebarMenuItem>
               <Link
                 href="/dashboard"
@@ -52,6 +57,7 @@ export async function AppSidebar() {
                 <FontAwesomeIcon icon={faChartLine} />
                 Dashboard
               </Link>
+              
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link
@@ -108,6 +114,31 @@ export async function AppSidebar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              {/* Herramientas group using Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger render={
+                  <SidebarMenuButton>
+                    <span className="flex items-center gap-2">
+                      <FontAwesomeIcon icon={faUser} />
+                      Usuario
+                      <ChevronRight className="ml-auto w-4 h-4" />
+                    </span>
+                  </SidebarMenuButton>
+                } />
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link
+                      href="#"
+                      className="flex items-center gap-2 px-2 py-1 text-base text-zinc-700 dark:text-zinc-200 hover:underline"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+                      Cerrar Sessión
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
@@ -117,6 +148,5 @@ export async function AppSidebar() {
         </div>
       </SidebarFooter>
     </Sidebar>
-
   );
 }

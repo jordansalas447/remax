@@ -5,10 +5,16 @@ export const propiedadesConfig: TableConfig = {
   label: "Propiedades",
   description: "Inmuebles captados",
   primaryKey: "id_propiedad",
-
   softDelete: {
     enabled: true,
     field: "eliminado",
+  },
+  form: {
+    title: "Gestionar Propiedades",
+    description: "Administra los Propiedades disponibles.",
+    columns: 2,
+    submitLabel: "Guardar Propiedad",
+    cancelLabel: "Cancelar",
   },
 
   fields: [
@@ -32,9 +38,30 @@ export const propiedadesConfig: TableConfig = {
       },
     },
     {
+      name: "id_resource_partida",
+      label: "Documento (Partida)",
+      type: "select",
+      foreignKey: {
+        table: "resource",
+        valueField: "id_resource",
+        labelField: "url_resource",
+      },
+    },
+    {
+      name: "id_resource_est_titulo",
+      label: "Documento (Est Titulo)",
+      type: "select",
+      foreignKey: {
+        table: "resource",
+        valueField: "id_resource",
+        labelField: "url_resource",
+      },
+    },
+    {
       name: "id_conformidad",
       label: "Conformidad",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "conformidad",
         valueField: "id",
@@ -45,6 +72,7 @@ export const propiedadesConfig: TableConfig = {
       name: "id_distrito",
       label: "Distrito",
       type: "select",
+      selectplus: false,
       foreignKey: {
         table: "distritos",
         valueField: "id",

@@ -1,24 +1,30 @@
 "use client";
 
-import { Home, MapPin, Ruler } from "lucide-react";
+import {  Home, MapPin, Ruler } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { PropiedadDetalle } from "@/lib/supabase/queries/propiedades";
 import { DetailField } from "./detail-field";
+import { DocumentResource } from "./document-resource";
+import { Badge } from "@/components/ui/badge";
 
 interface PropiedadFichaProps {
   propiedad: PropiedadDetalle | null;
   loading: boolean;
+  CheckRevision:any[]
   contratoId: number | null;
 }
 
-export function PropiedadFicha({ propiedad, loading, contratoId }: PropiedadFichaProps) {
+export function PropiedadFicha({ propiedad,CheckRevision ,loading, contratoId }: PropiedadFichaProps) {
+  
+ // console.log(propiedad)
+
   if (!contratoId) {
     return (
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Home className="size-5 text-indigo-600" />
+            <Home className="size-5 text-blue-600" />
             Propiedad
           </CardTitle>
           <CardDescription>Selecciona un contrato para ver el detalle de la propiedad.</CardDescription>
@@ -61,22 +67,36 @@ export function PropiedadFicha({ propiedad, loading, contratoId }: PropiedadFich
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Home className="size-5 text-indigo-600" />
-          <p className="font-medium text-zinc-900 dark:text-zinc-50"> Propiedad  <span className="text-xs text-gray-400"> #{propiedad.id_propiedad}</span> </p>
+          <Home className="size-5 text-blue-600" />
+          <div className="flex items-center gap-2 font-medium text-zinc-900 dark:text-zinc-50">
+            <span>Propiedad</span>
+
+              <Badge className="bg-blue-500">
+                Conformidad : {propiedad.conformidad?.tipo}
+              </Badge>
+         
+
+            <span className="text-xs text-gray-400">#{propiedad.id_propiedad}</span>
+          </div>
+        
+          <div className="relative">
+           <DocumentResource url={""} document={propiedad} type="propiedad" CheckRevision={CheckRevision}></DocumentResource> 
+          </div>
+
         </CardTitle>
         <CardDescription className="flex items-center gap-1.5">
           <MapPin className="size-4" />
           {propiedad.direccion ?? "Sin dirección registrada"}
+      
         </CardDescription>
       </CardHeader>
       <CardContent>
         <dl className="grid gap-4 sm:grid-cols-2">
           <DetailField label="Captación" value={propiedad.captacion} />
-          <DetailField label="Estado" value={propiedad.estado} />
           <DetailField label="Tipo" value={propiedad.tipo_propiedad?.tipo_propiedad} />
           <DetailField label="Distrito" value={propiedad.distritos?.distrito} />
           <DetailField label="N° partida" value={propiedad.n_partida} />
-          <DetailField label="ID Remax" value={propiedad.id_remax} />
+          <DetailField label="ID Remax" value={propiedad.id_remax} />      
           <DetailField
             label="Área terreno"
             value={
@@ -98,12 +118,12 @@ export function PropiedadFicha({ propiedad, loading, contratoId }: PropiedadFich
                 </span>
               ) : null
             }
-          />
-          <DetailField label="Descripción" value={propiedad.descripcion} className="sm:col-span-2" />
+          />     
           <DetailField
             label="Fotos"
             value={propiedad.fotos == null ? "—" : propiedad.fotos ? "Disponibles" : "Pendientes"}
           />
+          <DetailField label="Observacion" value={propiedad.observacion} className="sm:col-span-2" />
         </dl>
       </CardContent>
     </Card>

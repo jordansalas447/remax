@@ -21,6 +21,7 @@ export const asociadosConfig: TableConfig = {
       name: "id_detalle_asociado",
       label: "Detalle asociado",
       type: "select",
+      selectplus:false,
       foreignKey: {
         table: "detalle_asociado",
         valueField: "id",

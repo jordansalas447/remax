@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "RE/MAX Captaciones",
+  title: "RE/MAX Adelante",
   description: "Gestión de captaciones inmobiliarias",
 };
 

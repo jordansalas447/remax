@@ -62,15 +62,30 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
   const initials = getInitials(nombre);
 
   return (
-<Card>
-  <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
-    {/* Avatar */}
-    <div className="relative flex size-36 md:size-40 items-center justify-center overflow-hidden rounded-3xl border-2 border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+<Card className="p-0">
+  {/* Sección superior: avatar, fondo blanco */}
+  <div className="flex flex-col items-center px-6 pt-6 bg-white dark:bg-zinc-950 rounded-t-xl">
+    <div className="relative flex size-78 md:size-80 items-center justify-center overflow-hidden border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
       {URL ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={URL} alt={nombre} className="size-full object-cover" />
+        <div className="relative flex flex-col items-center w-full">
+          {/* Imagen grande de perfil */}
+          <img
+            src={URL}
+            alt={nombre}
+            className="size-full object-cover mt-2"
+          />
+          {/* Logo RE/MAX superpuesto en una esquina */}
+          <img
+            src="/LogoRemax.png"
+            alt="Logo RE/MAX"
+            className="object-contain w-25 h-25 absolute top-3 left-3 bg-white/80 p-1"
+            style={{ zIndex: 2 }}
+          />
+        </div>
+ 
       ) : (
-        <div className="flex size-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-blue-50 to-indigo-100 text-indigo-700 dark:from-indigo-950 dark:to-zinc-900 dark:text-indigo-200">
+        <div className="flex size-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 dark:from-blue-950 dark:to-zinc-900 dark:text-blue-200">
           {initials !== "?" ? (
             <span className="text-3xl md:text-4xl font-semibold">{initials}</span>
           ) : (
@@ -79,24 +94,33 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
         </div>
       )}
     </div>
-
+  </div>
+  {/* Parte inferior: fondo azul desde nombre y detalles */}
+  <div
+    className="flex flex-col items-center gap-4 px-6 pb-6 pt-3 text-center w-full bg-gray-100 border-t-[5px] border-gray-200"
+  >
     {/* Nombre + meta */}
     <div className="min-w-0">
-      <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+      <h2 className="text-xl font-semibold tracking-tight">
         {nombre}
       </h2>
-      <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="mt-1 text-xs">
         ID #{asociado.id_asociado}
       </p>
       {detalle?.nivel_asociado?.descripcion && (
-        <Badge variant="secondary" className="mt-2 rounded-full text-xs font-medium">
+        <Badge
+          className="mt-2 rounded-full text-xs font-medium bg-blue-400"
+        >
           {detalle.nivel_asociado.descripcion}
         </Badge>
       )}
     </div>
 
     {/* Detalles */}
-    <dl className="flex w-full flex-col gap-3 border-t border-zinc-100 pt-4 text-left dark:border-zinc-800">
+    <dl
+      className="flex w-full flex-col gap-3 pt-4 text-left"
+      style={{ borderTop: "1px solid rgba(255,255,255,0.14)" }}
+    >
       <DetailField label="Documento" value={persona?.documento_identidad} />
       <DetailField label="Teléfono" value={persona?.numero_telefono} />
       <DetailField label="Dirección" value={persona?.direccion} />
@@ -104,7 +128,7 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
       <DetailField label="Registro asociado" value={formatDate(asociado.fecha_creacion)} />
       <DetailField label="Detalle" value={detalle?.descripcion ?? asociado.descripcion} />
     </dl>
-  </CardContent>
+  </div>
 </Card>
   );
 }

@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.17"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -247,11 +247,11 @@ export type Database = {
       }
       contratos: {
         Row: {
-          captacion: string | null
           comision: number | null
           deleted_at: string | null
           eliminado: boolean
           estado: boolean
+          fecha_contrato: string | null
           fecha_fin: string | null
           fecha_inicio: string | null
           id_asociado: number | null
@@ -266,23 +266,24 @@ export type Database = {
           id_tipo_contrato: number | null
           id_tipo_moneda: number | null
           id_tipo_moneda_comision: number | null
-          id_tipo_moneda_operacion: number | null
+          id_tipo_moneda_operacion_venta: number | null
           id_tipo_moneda_precio_maximo: number | null
+          id_tipo_moneda_precio_venta: number | null
           nro_contrato: string | null
           observaciones: string | null
           operacion: string | null
-          precio_cierre: number | null
           precio_inicio: number | null
           precio_maximo: number | null
+          precio_venta: number | null
           timestamp: string | null
           tipo_contrato: string | null
         }
         Insert: {
-          captacion?: string | null
           comision?: number | null
           deleted_at?: string | null
           eliminado?: boolean
           estado?: boolean
+          fecha_contrato?: string | null
           fecha_fin?: string | null
           fecha_inicio?: string | null
           id_asociado?: number | null
@@ -297,23 +298,24 @@ export type Database = {
           id_tipo_contrato?: number | null
           id_tipo_moneda?: number | null
           id_tipo_moneda_comision?: number | null
-          id_tipo_moneda_operacion?: number | null
+          id_tipo_moneda_operacion_venta?: number | null
           id_tipo_moneda_precio_maximo?: number | null
+          id_tipo_moneda_precio_venta?: number | null
           nro_contrato?: string | null
           observaciones?: string | null
           operacion?: string | null
-          precio_cierre?: number | null
           precio_inicio?: number | null
           precio_maximo?: number | null
+          precio_venta?: number | null
           timestamp?: string | null
           tipo_contrato?: string | null
         }
         Update: {
-          captacion?: string | null
           comision?: number | null
           deleted_at?: string | null
           eliminado?: boolean
           estado?: boolean
+          fecha_contrato?: string | null
           fecha_fin?: string | null
           fecha_inicio?: string | null
           id_asociado?: number | null
@@ -328,14 +330,15 @@ export type Database = {
           id_tipo_contrato?: number | null
           id_tipo_moneda?: number | null
           id_tipo_moneda_comision?: number | null
-          id_tipo_moneda_operacion?: number | null
+          id_tipo_moneda_operacion_venta?: number | null
           id_tipo_moneda_precio_maximo?: number | null
+          id_tipo_moneda_precio_venta?: number | null
           nro_contrato?: string | null
           observaciones?: string | null
           operacion?: string | null
-          precio_cierre?: number | null
           precio_inicio?: number | null
           precio_maximo?: number | null
+          precio_venta?: number | null
           timestamp?: string | null
           tipo_contrato?: string | null
         }
@@ -424,6 +427,13 @@ export type Database = {
             referencedRelation: "tipo_moneda"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "contratos_id_tipo_moneda_precio_venta_fkey"
+            columns: ["id_tipo_moneda_precio_venta"]
+            isOneToOne: false
+            referencedRelation: "tipo_moneda"
+            referencedColumns: ["id"]
+          },
         ]
       }
       detalle_asociado: {
@@ -505,6 +515,7 @@ export type Database = {
       }
       estado: {
         Row: {
+          color: string | null
           deleted_at: string | null
           descripcion: string | null
           eliminado: boolean
@@ -512,6 +523,7 @@ export type Database = {
           id: number
         }
         Insert: {
+          color?: string | null
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
@@ -519,6 +531,7 @@ export type Database = {
           id?: number
         }
         Update: {
+          color?: string | null
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
@@ -625,6 +638,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "operacion_inmobiliaria"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "items_checklist_id_operacion_inmobiliaria_fkey"
+            columns: ["id_operacion_inmobiliaria"]
+            isOneToOne: false
+            referencedRelation: "vista_revisiones"
+            referencedColumns: ["id_operacion"]
           },
           {
             foreignKeyName: "items_checklist_id_operacion_inmobiliaria_fkey"
@@ -759,6 +779,7 @@ export type Database = {
         Row: {
           apellido_materno: string | null
           apellido_paterno: string | null
+          correo_electronico: string | null
           deleted_at: string | null
           direccion: string | null
           documento_identidad: string | null
@@ -777,6 +798,7 @@ export type Database = {
         Insert: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
+          correo_electronico?: string | null
           deleted_at?: string | null
           direccion?: string | null
           documento_identidad?: string | null
@@ -795,6 +817,7 @@ export type Database = {
         Update: {
           apellido_materno?: string | null
           apellido_paterno?: string | null
+          correo_electronico?: string | null
           deleted_at?: string | null
           direccion?: string | null
           documento_identidad?: string | null
@@ -906,7 +929,8 @@ export type Database = {
           id_distrito: number | null
           id_propiedad: number
           id_remax: number | null
-          id_resource: number | null
+          id_resource_est_titulo: number | null
+          id_resource_partida: number | null
           id_tipo_propiedad: number | null
           n_partida: string | null
           observacion: string | null
@@ -926,7 +950,8 @@ export type Database = {
           id_distrito?: number | null
           id_propiedad?: number
           id_remax?: number | null
-          id_resource?: number | null
+          id_resource_est_titulo?: number | null
+          id_resource_partida?: number | null
           id_tipo_propiedad?: number | null
           n_partida?: string | null
           observacion?: string | null
@@ -946,7 +971,8 @@ export type Database = {
           id_distrito?: number | null
           id_propiedad?: number
           id_remax?: number | null
-          id_resource?: number | null
+          id_resource_est_titulo?: number | null
+          id_resource_partida?: number | null
           id_tipo_propiedad?: number | null
           n_partida?: string | null
           observacion?: string | null
@@ -968,8 +994,15 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "propiedades_id_resource_est_titulo_fkey"
+            columns: ["id_resource_est_titulo"]
+            isOneToOne: false
+            referencedRelation: "resource"
+            referencedColumns: ["id_resource"]
+          },
+          {
             foreignKeyName: "propiedades_id_resource_fkey"
-            columns: ["id_resource"]
+            columns: ["id_resource_partida"]
             isOneToOne: false
             referencedRelation: "resource"
             referencedColumns: ["id_resource"]
@@ -1022,6 +1055,11 @@ export type Database = {
           eliminado: boolean
           id_resource: number
           url_resource: string
+          url_resource_2: string | null
+          url_resource_3: string | null
+          url_resource_4: string | null
+          url_resource_5: string | null
+          url_resource_6: string | null
         }
         Insert: {
           deleted_at?: string | null
@@ -1029,6 +1067,11 @@ export type Database = {
           eliminado?: boolean
           id_resource?: number
           url_resource: string
+          url_resource_2?: string | null
+          url_resource_3?: string | null
+          url_resource_4?: string | null
+          url_resource_5?: string | null
+          url_resource_6?: string | null
         }
         Update: {
           deleted_at?: string | null
@@ -1036,6 +1079,11 @@ export type Database = {
           eliminado?: boolean
           id_resource?: number
           url_resource?: string
+          url_resource_2?: string | null
+          url_resource_3?: string | null
+          url_resource_4?: string | null
+          url_resource_5?: string | null
+          url_resource_6?: string | null
         }
         Relationships: []
       }
@@ -1127,6 +1175,13 @@ export type Database = {
             foreignKeyName: "revisiones_id_operacion_inmobiliaria_fkey"
             columns: ["id_operacion_inmobiliaria"]
             isOneToOne: false
+            referencedRelation: "vista_revisiones"
+            referencedColumns: ["id_operacion"]
+          },
+          {
+            foreignKeyName: "revisiones_id_operacion_inmobiliaria_fkey"
+            columns: ["id_operacion_inmobiliaria"]
+            isOneToOne: false
             referencedRelation: "vw_revisiones_detalle"
             referencedColumns: ["id_operacion_inmobiliaria"]
           },
@@ -1152,32 +1207,49 @@ export type Database = {
           descripcion: string | null
           eliminado: boolean
           estado: number | null
+          grupo: string | null
           icon: string
           id: number
           nombre: string | null
           permiso: string | null
+          prioridad: number | null
+          tabla_id: number | null
         }
         Insert: {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
           estado?: number | null
+          grupo?: string | null
           icon: string
           id?: number
           nombre?: string | null
           permiso?: string | null
+          prioridad?: number | null
+          tabla_id?: number | null
         }
         Update: {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
           estado?: number | null
+          grupo?: string | null
           icon?: string
           id?: number
           nombre?: string | null
           permiso?: string | null
+          prioridad?: number | null
+          tabla_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tablas_tabla_id_fkey"
+            columns: ["tabla_id"]
+            isOneToOne: false
+            referencedRelation: "tablas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tardanzas: {
         Row: {
@@ -1294,6 +1366,18 @@ export type Database = {
       }
     }
     Views: {
+      vista_revisiones: {
+        Row: {
+          estado_oficina: string | null
+          estado_sigi: string | null
+          id_operacion: number | null
+          id_ref_propiedad_propietario_contrato: number | null
+          id_revision: number | null
+          nombre_item: string | null
+          operacion: string | null
+        }
+        Relationships: []
+      }
       vw_revisiones_detalle: {
         Row: {
           color_estado_oficina: string | null

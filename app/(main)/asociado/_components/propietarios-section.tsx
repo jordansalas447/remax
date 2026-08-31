@@ -6,20 +6,35 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { PropietarioDetalle } from "@/lib/supabase/queries/propietarios";
 import { DetailField } from "./detail-field";
 import { Badge } from "@/components/ui/badge";
+import { DocumentResource } from "./document-resource";
+import { getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 interface PropietariosSectionProps {
   propietarios: PropietarioDetalle[];
   loading: boolean;
+  CheckRevision:any[];
   propiedadId: number | null;
 }
 
-export function PropietariosSection({ propietarios, loading, propiedadId }: PropietariosSectionProps) {
+export function PropietariosSection({ propietarios,CheckRevision ,loading, propiedadId }: PropietariosSectionProps) {
+
+  // Eliminate the incorrect log and replace with a proper example log per-propietario matching CheckRevision
+
+  // For debugging: print CheckRevision entries grouped/matched by propietario
+
+    const matches = CheckRevision.filter(
+      i => i.id_ref_propiedad_propietario_contrato == propietarios[0]?.id_propietario
+    )
+
+
   if (!propiedadId) {
     return (
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="size-5 text-indigo-600" />
+            <Users className="size-5 text-blue-600" />
             Propietarios
           </CardTitle>
           <CardDescription>Selecciona un contrato para ver los propietarios de la propiedad.</CardDescription>
@@ -47,7 +62,7 @@ export function PropietariosSection({ propietarios, loading, propiedadId }: Prop
 <Card>
   <CardHeader>
     <CardTitle className="flex items-center gap-2">
-      <Users className="size-5 text-indigo-600 dark:text-indigo-400" />
+      <Users className="size-5 text-blue-600 dark:text-blue-400" />
       Propietarios
       {propietarios.length > 0 && (
         <Badge variant="secondary" className="ml-1 rounded-full px-2 py-0 text-xs font-medium">
@@ -71,17 +86,21 @@ export function PropietariosSection({ propietarios, loading, propiedadId }: Prop
         return (
           <div
             key={propietario.id_propietario}
-            className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-indigo-300 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-indigo-800/60"
+            className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-blue-300 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-blue-800/60"
           >
+            <div className="relative">
+              <div className="absolute right-0">
+              <DocumentResource url={undefined} document={propietario} type={"propietario"} CheckRevision={matches} />
+              </div>         
+            </div>  
             <div className="mb-3 flex items-center gap-3">
               <div className="min-w-0">
-                <p className="truncate font-medium text-zinc-900 dark:text-zinc-50">{nombre}</p>
+                <p className="truncate font-medium text-zinc-900 dark:text-zinc-50"><FontAwesomeIcon icon={faUser} />{nombre}</p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   ID #{propietario.id_propietario}
                 </p>
               </div>
-            </div>
-
+            </div>   
             <dl className="grid gap-2 border-t border-zinc-100 pt-3 sm:grid-cols-2 dark:border-zinc-800">
               <DetailField label="Contacto" value={propietario.contacto ?? persona?.numero_telefono} />
               <DetailField label="Documento" value={persona?.documento_identidad} />

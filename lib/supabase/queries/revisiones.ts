@@ -59,7 +59,6 @@ export async function getRevisionesDetallePropiedad(id?: number,operacion_inmobi
 export async function getRevisionesDetallePropietario(id_ref_propiedad_propietario_contrato: number): Promise<RevisionDetalle[]> {
   const supabase = createClient();
 
-
   const { data, error } = await supabase
     .from("revisiones")
     .select(`
@@ -93,12 +92,32 @@ export async function getRevisionesDetallePropietario(id_ref_propiedad_propietar
   // Se ajusta a tipo RevisionDetalle (que asume tener inner join con todo lo relevante)
   const revisiones: RevisionDetalle[] = (data ?? []) as RevisionDetalle[];
 
-  console.log(revisiones);
-
   return revisiones;
 }
 
+export async function getVistaRevisiones(
+  id_ref_propiedad_propietario_contrato: Number,
+  id_operacion: Number
+): Promise<any[]> {
+  const supabase = createClient();
 
+  let query = supabase
+    .from("vista_revisiones")
+    .select("*")
+    .eq("id_ref_propiedad_propietario_contrato", id_ref_propiedad_propietario_contrato)
+    .eq("id_operacion", id_operacion); // Agrega la condición AND id_operacion
+
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Error consultando vista_revisiones: ${error.message}`);
+  }
+
+ // console.log(data)
+
+  return data ?? [];
+}
 
 
 // /**

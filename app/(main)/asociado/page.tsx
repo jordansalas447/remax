@@ -29,7 +29,19 @@ import { RevisionesEstatusItem } from "./_components/propiedad-estatus-item";
 import PropietariosEstatusItem from "./_components/propietarios-estatus-item";
 import ContratoEstatus from "./_components/contrato-estatus";
 import { getContratoRevisionesDetalleByContratoId, getRevisionesDetalleByContratoVista, getRevisionesDetalleByPropiedadId, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
-import { getRevisionesDetallePropietario } from "@/lib/supabase/queries/revisiones";
+import { getRevisionesDetallePropietario, getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  PieChart,
+  Pie,
+} from "recharts";
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -53,6 +65,10 @@ export default function AsociadoPage() {
   const [PropietariosData, setPropietariosData] = useState<PropiedadPropietarioDetalle[]>([]);
 
   const [RevisionesData, setRevisionesData] = useState<any[]>([]);
+
+  const [RevisionesCheckDataContrato,setRevisionesCheckDataContrato] = useState<any[]>([]);
+  const [RevisionesCheckDataPropiedad,setRevisionesCheckDataPropiedad] = useState<any[]>([]);
+  const [RevisionesCheckDataPropietarios,setRevisionesCheckDataPropietarios] = useState<any[]>([]);
 
 
   const [loadingAsociados, setLoadingAsociados] = useState(true);
@@ -155,11 +171,15 @@ export default function AsociadoPage() {
       setLoadingPropietarios(true);
 
       try {
-        const [propiedadData, propietariosData, RevisionesPropiedades,DetalleRevisionesPropietario] = await Promise.all([
+        const [propiedadData, propietariosData, RevisionesPropiedades,DetalleRevisionesPropietario,RevisionesCheckContratoData,RevisionesCheckPropiedadData] = await Promise.all([
           getPropiedadDetalleById(selectedPropiedadId),
           getPropietariosByPropiedadId(selectedPropiedadId),
           getRevisionesDetalleByPropiedadId(selectedPropiedadId),
           getRevisionesDetalleByContratoVista(selectedContratoId),
+
+          getVistaRevisiones(selectedContratoId, 3),
+          getVistaRevisiones(selectedPropiedadId, 1)
+
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
 
@@ -172,20 +192,30 @@ export default function AsociadoPage() {
 
         // Llama a getRevisionesDetallePropietario solo si hay IDs
         let RevisionesPropietarios: any[] = [];
+        let RevisionesPropietariosData: any[] = [];
         if (propietariosIds.length > 0) {
           try {
-            //RevisionesPropietarios = await getRevisionesDetallePropietario(propietariosIds);
+            for (const id of propietariosIds) {
+              const revisionesPropietario = await getVistaRevisiones(id,2);
+              RevisionesPropietariosData.push(...revisionesPropietario);
+            }
           } catch (e) {
             RevisionesPropietarios = [];
           }
         }
+        setRevisionesCheckDataPropietarios(RevisionesPropietariosData)
 
         if (cancelled) return;
 
         setPropiedad(propiedadData);
         setPropietarios(propietariosData);
+
         setPropiedadesData(RevisionesPropiedades);
         setPropietariosData(RevisionesPropietarios);
+
+        setRevisionesCheckDataContrato(RevisionesCheckContratoData)
+        setRevisionesCheckDataPropiedad(RevisionesCheckPropiedadData)
+
         //console.log(DetalleRevisionesPropietario)
         setRevisionesData(DetalleRevisionesPropietario);
         //setPropietariosData(RevisionesPropietarios);
@@ -215,12 +245,12 @@ export default function AsociadoPage() {
   return (
 <div className="mx-auto flex w-full max-w-lxl flex-col gap-6">
   <header className="space-y-1">
-    <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+    <div className="flex items-center gap-2 text-blue-600 dark:text-indigo-400">
       <UsersRound className="size-5" />
       <span className="text-sm font-medium">Gestión de asociados</span>
     </div>
     <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-      Ficha del asociado
+      Ficha de asociado
     </h1>
     <p className="max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
       Selecciona un asociado para consultar su perfil, contratos, propiedades vinculadas y
@@ -231,9 +261,9 @@ export default function AsociadoPage() {
   <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
     {/* Columna lateral: búsqueda + perfil, fija al hacer scroll */}
     <div className="flex flex-col gap-6 lg:sticky lg:top-6">
-      <section className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+      <section className="border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mb-3 flex items-center gap-2">
-          <User className="size-5 text-indigo-600 dark:text-indigo-400" />
+          <User className="size-5 text-blue-600 dark:text-indigo-400" />
           <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
             Asociado
           </span>
@@ -259,29 +289,31 @@ export default function AsociadoPage() {
 
     {/* Columna principal: todo lo demás apilado verticalmente */}
     <div className="flex flex-col gap-6">
-      <ContratosSection
+      <ContratosSection     
         contratos={contratos}
         selectedContratoId={selectedContratoId}
         onSelectContrato={handleSelectContrato}
-        loading={loadingContratos}
+        loading={loadingContratos} 
+        CheckRevision={RevisionesCheckDataContrato}      
       />
 
       <PropiedadFicha
         propiedad={propiedad}
         loading={loadingPropiedad}
         contratoId={selectedContratoId}
+        CheckRevision={RevisionesCheckDataPropiedad} 
       />
 
       <PropietariosSection
         propietarios={propietarios}
         loading={loadingPropietarios}
         propiedadId={selectedPropiedadId}
+        CheckRevision={RevisionesCheckDataPropietarios} 
       />
 
       <RevisionesEstatusItem
         revisiones={RevisionesData ? RevisionesData : []}
         loading={loadingPropietarios}
-        propiedadId={selectedPropiedadId}
       />
 
       {selectedContrato?.observaciones && (
@@ -295,3 +327,4 @@ export default function AsociadoPage() {
 </div>
   );
 }
+
