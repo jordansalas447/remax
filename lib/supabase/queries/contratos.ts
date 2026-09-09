@@ -2,16 +2,16 @@ import type { Database } from "@/database.types";
 import { createClient } from "@/lib/supabase/client";
 
 type ContratoRow = Database["public"]["Tables"]["contratos"]["Row"];
-type PropiedadRow = Database["public"]["Tables"]["propiedades"]["Row"];
+type InmueblesRow = Database["public"]["Tables"]["inmuebles"]["Row"];
 type DistritoRow = Database["public"]["Tables"]["distritos"]["Row"];
-type TipoPropiedadRow = Database["public"]["Tables"]["tipo_propiedad"]["Row"];
+type TipoInmueblesRow = Database["public"]["Tables"]["tipo_propiedad"]["Row"];
 
 export type Contrato = ContratoRow;
 
 export type ContratoConPropiedad = ContratoRow & {
-  propiedades: (PropiedadRow & {
+  inmuebles: (InmueblesRow & {
     distritos: Pick<DistritoRow, "distrito"> | null;
-    tipo_propiedad: Pick<TipoPropiedadRow, "tipo_propiedad"> | null;
+    tipo_propiedad: Pick<TipoInmueblesRow, "tipo_propiedad"> | null;
   }) | null;
   operacion?: {
     operacion: string;
@@ -27,10 +27,6 @@ export type ContratoConPropiedad = ContratoRow & {
     tipo_moneda_comision: string;
     simbolo: string;
   } | null;
-  tipo_moneda_precio_maximo?: {
-    tipo_moneda_comision: string;
-    simbolo: string;
-  } | null;
   tipo_moneda_precio_venta?: {
     tipo_moneda_comision: string;
     simbolo: string;
@@ -39,6 +35,17 @@ export type ContratoConPropiedad = ContratoRow & {
     estado: string;
     color: string;
   } | null;
+};
+
+export type ContratoMulta = {
+  nombre_completo: string; // s.nombre_completo - del asociado (JOIN)
+  nro_contrato: string;    // c.nro_contrato
+  n_partida: string | null;      // p.n_partida - de la propiedad (JOIN)
+  fecha_contrato: string | null; // c.fecha_contrato
+  fecha_contrato_recibido: string | null; // c.fecha_contrato_recibido
+  fecha_contrato_entregado: string | null; // c.fecha_contrato_entregado
+  fecha_contrato_sigi: string | null;      // c.fecha_contrato_sigi
+  fecha_est_titulo:string | null;
 };
 
 // Obtener todos los contratos (READ)
@@ -73,17 +80,13 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
         tipo_moneda,
         simbolo
       ),
-      tipo_moneda_precio_maximo:id_tipo_moneda_precio_maximo (
-        tipo_moneda,
-        simbolo
-      ),
       tipo_moneda_precio_venta:id_tipo_moneda_precio_venta (
         tipo_moneda,
         simbolo
       ),
       estado:id_estado (*),
       resource(*),
-      propiedades (
+      inmuebles (
         *,
         distritos (distrito),
         tipo_propiedad (tipo_propiedad)
@@ -91,7 +94,8 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
       `
     )
     .eq("id_asociado", id_asociado)
-    .order("fecha_inicio", { ascending: false });
+    .eq("eliminado",false)
+    .order("id_contrato", { ascending: false });
 
   if (error) {
     throw new Error(error.message);
@@ -149,6 +153,20 @@ export async function updateContrato(id_contrato: number, updates: Partial<Contr
     throw new Error("No se encontró el contrato para actualizar");
   }
   return data;
+}
+
+export async function fechasContratoMulta(): Promise<ContratoMulta[] | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("vista_contratos")
+    .select("*");
+
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? null;
 }
 
 // Eliminar un contrato (DELETE)

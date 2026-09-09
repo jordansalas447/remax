@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
+import { toast } from "@/components/ui/toast";
 import {
   useLegacyTable,
   getCoreRowModel,
@@ -102,9 +103,35 @@ export function CrudManager<T extends TableName = TableName>({
       formData.append(`__pk__${key}`, String((row as Record<string, unknown>)[key]));
     }
 
+    const loadingId = toast.add({
+      title: "Eliminando…",
+      description: `Registro ${label}`,
+      type: "loading",
+      timeout: 0,
+    });
+
     startDelete(async () => {
       const result = await deleteRecord(table, formData);
-      if (!result.success) { setDeleteError(result.error ?? "No se pudo eliminar el registro."); return; }
+
+      if (!result.success) {
+        const msg = result.error ?? "No se pudo eliminar el registro.";
+        setDeleteError(msg);
+        toast.update(loadingId, {
+          title: "Error al eliminar",
+          description: msg,
+          type: "error",
+          timeout: 5000,
+        });
+        return;
+      }
+
+      toast.update(loadingId, {
+        title: "Eliminado",
+        description: `Registro ${label} eliminado correctamente.`,
+        type: "success",
+        timeout: 3000,
+      });
+
       router.refresh();
     });
   }

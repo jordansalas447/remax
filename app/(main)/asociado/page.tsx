@@ -18,7 +18,7 @@ import {
   getContratosByAsociadoId,
   type ContratoConPropiedad,
 } from "@/lib/supabase/queries/contratos";
-import { getPropiedadDetalleById, type PropiedadDetalle } from "@/lib/supabase/queries/propiedades";
+import { type PropiedadDetalle } from "@/lib/supabase/queries/propiedades";
 import {
   getPropietariosByPropiedadId,
 
@@ -26,22 +26,9 @@ import {
 } from "@/lib/supabase/queries/propietarios";
 import { InputSearch } from "@/components/input-search/input-search";
 import { RevisionesEstatusItem } from "./_components/propiedad-estatus-item";
-import PropietariosEstatusItem from "./_components/propietarios-estatus-item";
-import ContratoEstatus from "./_components/contrato-estatus";
-import { getContratoRevisionesDetalleByContratoId, getRevisionesDetalleByContratoVista, getRevisionesDetalleByPropiedadId, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
-import { getRevisionesDetallePropietario, getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  PieChart,
-  Pie,
-} from "recharts";
+import {  getPropiedadPropietarioInmueblesByContrato, getRevisionesDetalleByContratoVista, getRevisionesDetalleByPropiedadId, InmuebleDetalle, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import {  getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
+
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -53,12 +40,10 @@ export default function AsociadoPage() {
   const [asociadoDetalle, setAsociadoDetalle] = useState<AsociadoDetalle | null>(null);
   const [contratos, setContratos] = useState<ContratoConPropiedad[]>([]);
 
-  const [propiedad, setPropiedad] = useState<PropiedadDetalle | null>(null);
+  const [propiedad, setPropiedad] = useState<InmuebleDetalle[]>([]);
   const [contrato, setContrato] = useState<PropiedadDetalle | null>(null);
 
   const [propietarios, setPropietarios] = useState<PropietarioDetalle[]>([]);
-
-  //const [Revisiones, setRevisiones] = useState<RevisionDetalle[]>([]);
 
   const [ContratosData, setContratosData] = useState<PropiedadPropietarioDetalle[]>([]);
   const [PropiedadesData, setPropiedadesData] = useState<PropiedadPropietarioDetalle[]>([]);
@@ -69,7 +54,6 @@ export default function AsociadoPage() {
   const [RevisionesCheckDataContrato,setRevisionesCheckDataContrato] = useState<any[]>([]);
   const [RevisionesCheckDataPropiedad,setRevisionesCheckDataPropiedad] = useState<any[]>([]);
   const [RevisionesCheckDataPropietarios,setRevisionesCheckDataPropietarios] = useState<any[]>([]);
-
 
   const [loadingAsociados, setLoadingAsociados] = useState(true);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
@@ -106,6 +90,7 @@ export default function AsociadoPage() {
   }, [asociados, search]);
 
   useEffect(() => {
+
     if (selectedAsociadoId == null) {
       setAsociadoDetalle(null);
       setContratos([]);
@@ -153,7 +138,7 @@ export default function AsociadoPage() {
 
   useEffect(() => {
     if (selectedPropiedadId == null) {
-      setPropiedad(null);
+      setPropiedad([]);
       setPropietarios([]);
       return;
     }
@@ -172,8 +157,8 @@ export default function AsociadoPage() {
 
       try {
         const [propiedadData, propietariosData, RevisionesPropiedades,DetalleRevisionesPropietario,RevisionesCheckContratoData,RevisionesCheckPropiedadData] = await Promise.all([
-          getPropiedadDetalleById(selectedPropiedadId),
-          getPropietariosByPropiedadId(selectedPropiedadId),
+          getPropiedadPropietarioInmueblesByContrato(selectedContratoId),
+          getPropietariosByPropiedadId(selectedPropiedadId,selectedContratoId),
           getRevisionesDetalleByPropiedadId(selectedPropiedadId),
           getRevisionesDetalleByContratoVista(selectedContratoId),
 
@@ -253,7 +238,7 @@ export default function AsociadoPage() {
       Ficha de asociado
     </h1>
     <p className="max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
-      Selecciona un asociado para consultar su perfil, contratos, propiedades vinculadas y
+      Selecciona un asociado para consultar su perfil, contratos, inmuebles vinculadas y
       propietarios.
     </p>
   </header>
@@ -298,7 +283,7 @@ export default function AsociadoPage() {
       />
 
       <PropiedadFicha
-        propiedad={propiedad}
+        propiedades={propiedad}
         loading={loadingPropiedad}
         contratoId={selectedContratoId}
         CheckRevision={RevisionesCheckDataPropiedad} 

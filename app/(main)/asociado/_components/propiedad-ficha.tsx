@@ -3,21 +3,28 @@
 import {  Home, MapPin, Ruler } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { PropiedadDetalle } from "@/lib/supabase/queries/propiedades";
 import { DetailField } from "./detail-field";
 import { DocumentResource } from "./document-resource";
 import { Badge } from "@/components/ui/badge";
+import { InmuebleDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
 
-interface PropiedadFichaProps {
-  propiedad: PropiedadDetalle | null;
+
+interface PropiedadesFichaProps {
+  propiedades: InmuebleDetalle[] | []; // puede recibir null o array vacío
   loading: boolean;
-  CheckRevision:any[]
+  CheckRevision: any[];
   contratoId: number | null;
 }
 
-export function PropiedadFicha({ propiedad,CheckRevision ,loading, contratoId }: PropiedadFichaProps) {
-  
- // console.log(propiedad)
+export function PropiedadFicha({
+  propiedades,
+  CheckRevision,
+  loading,
+  contratoId,
+}: PropiedadesFichaProps) {
+
+
+  console.log(propiedades)
 
   if (!contratoId) {
     return (
@@ -27,7 +34,7 @@ export function PropiedadFicha({ propiedad,CheckRevision ,loading, contratoId }:
             <Home className="size-5 text-blue-600" />
             Propiedad
           </CardTitle>
-          <CardDescription>Selecciona un contrato para ver el detalle de la propiedad.</CardDescription>
+          <CardDescription>Selecciona un contrato para ver el detalle de la(s) propiedad(es).</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -52,80 +59,89 @@ export function PropiedadFicha({ propiedad,CheckRevision ,loading, contratoId }:
     );
   }
 
-  if (!propiedad) {
+  if (!propiedades || propiedades.length === 0) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Propiedad</CardTitle>
-          <CardDescription>No se encontró información de la propiedad vinculada al contrato.</CardDescription>
+          <CardTitle>Inmueble</CardTitle>
+          <CardDescription>No se encontró información de las propiedades vinculadas al contrato.</CardDescription>
         </CardHeader>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Home className="size-5 text-blue-600" />
-          <div className="flex items-center gap-2 font-medium text-zinc-900 dark:text-zinc-50">
-            <span>Propiedad</span>
-
-              <Badge className="bg-blue-500">
-                Conformidad : {propiedad.conformidad?.tipo}
-              </Badge>
-         
-
-            <span className="text-xs text-gray-400">#{propiedad.id_propiedad}</span>
+    <>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Home className="size-5 text-blue-600" />
+            <span className="font-medium text-zinc-900 dark:text-zinc-50">Propiedades</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {propiedades.map((propiedad, idx) => (
+              <div
+                key={idx}
+                className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-white dark:bg-zinc-900 shadow-sm flex flex-col h-full"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-blue-500">
+                      {propiedad.inmueble.conformidad?.tipo
+                        ? `Conformidad: ${propiedad.inmueble.conformidad.tipo}`
+                        : "Sin conformidad"}
+                    </Badge>
+                    <span className="text-xs text-gray-400">#{propiedad.id_propiedad}</span>
+                  </div>
+                  <div className="relative">
+                    <DocumentResource url={""} document={propiedad} type="inmueble" CheckRevision={CheckRevision} />
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 mb-4 text-sm text-zinc-600 dark:text-zinc-300">
+                  <MapPin className="size-4" />
+                  {propiedad.inmueble.direccion ?? "Sin dirección registrada"}
+                </div>
+                <dl className="grid gap-4 sm:grid-cols-2">
+                  <DetailField label="Captación" value={propiedad.inmueble.captacion} />
+                  <DetailField label="Tipo" value={propiedad.inmueble.tipo_propiedad?.tipo_propiedad} />
+                  <DetailField label="Distrito" value={propiedad.inmueble.distritos?.distrito} />
+                  <DetailField label="N° partida" boldValue={true} value={propiedad.inmueble.n_partida} />
+                  <DetailField label="ID Remax" value={propiedad.inmueble.id_remax} />
+                  <DetailField
+                    label="Área terreno"
+                    value={
+                      propiedad.inmueble.area_terreno != null ? (
+                        <span className="inline-flex items-center gap-1">
+                          <Ruler className="size-3.5" />
+                          {propiedad.inmueble.area_terreno} m²
+                        </span>
+                      ) : null
+                    }
+                  />
+                  <DetailField
+                    label="Área construida"
+                    value={
+                      propiedad.inmueble.area_construida != null ? (
+                        <span className="inline-flex items-center gap-1">
+                          <Ruler className="size-3.5" />
+                          {propiedad.inmueble.area_construida} m²
+                        </span>
+                      ) : null
+                    }
+                  />
+                  <DetailField
+                    label="Fotos"
+                    value={propiedad.inmueble.fotos == null ? "—" : propiedad.inmueble.fotos ? "Disponibles" : "Pendientes"}
+                  />
+                  <DetailField label="Observacion" value={propiedad.inmueble.observacion} className="sm:col-span-2" />
+                </dl>
+              </div>
+            ))}
           </div>
-        
-          <div className="relative">
-           <DocumentResource url={""} document={propiedad} type="propiedad" CheckRevision={CheckRevision}></DocumentResource> 
-          </div>
-
-        </CardTitle>
-        <CardDescription className="flex items-center gap-1.5">
-          <MapPin className="size-4" />
-          {propiedad.direccion ?? "Sin dirección registrada"}
-      
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <dl className="grid gap-4 sm:grid-cols-2">
-          <DetailField label="Captación" value={propiedad.captacion} />
-          <DetailField label="Tipo" value={propiedad.tipo_propiedad?.tipo_propiedad} />
-          <DetailField label="Distrito" value={propiedad.distritos?.distrito} />
-          <DetailField label="N° partida" value={propiedad.n_partida} />
-          <DetailField label="ID Remax" value={propiedad.id_remax} />      
-          <DetailField
-            label="Área terreno"
-            value={
-              propiedad.area_terreno != null ? (
-                <span className="inline-flex items-center gap-1">
-                  <Ruler className="size-3.5" />
-                  {propiedad.area_terreno} m²
-                </span>
-              ) : null
-            }
-          />
-          <DetailField
-            label="Área construida"
-            value={
-              propiedad.area_construida != null ? (
-                <span className="inline-flex items-center gap-1">
-                  <Ruler className="size-3.5" />
-                  {propiedad.area_construida} m²
-                </span>
-              ) : null
-            }
-          />     
-          <DetailField
-            label="Fotos"
-            value={propiedad.fotos == null ? "—" : propiedad.fotos ? "Disponibles" : "Pendientes"}
-          />
-          <DetailField label="Observacion" value={propiedad.observacion} className="sm:col-span-2" />
-        </dl>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   );
 }

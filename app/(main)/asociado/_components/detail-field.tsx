@@ -4,15 +4,23 @@ interface DetailFieldProps {
   label: string;
   value: React.ReactNode;
   className?: string;
+  boldValue?: boolean; // Permite configurar si el texto debe ir en negrita
 }
 
-export function DetailField({ label, value, className }: DetailFieldProps) {
+export function DetailField({ label, value, className, boldValue = false }: DetailFieldProps) {
   return (
     <div className={cn("space-y-1", className)}>
       <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
         {label}
       </dt>
-      <dd className="text-sm text-zinc-900 dark:text-zinc-100">{value ?? "—"}</dd>
+      <dd
+        className={cn(
+          "text-sm text-zinc-900 dark:text-zinc-100",
+          boldValue && "font-semibold"
+        )}
+      >
+        {value ?? "—"}
+      </dd>
     </div>
   );
 }

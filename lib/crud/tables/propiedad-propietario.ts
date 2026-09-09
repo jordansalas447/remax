@@ -2,18 +2,18 @@ import type { TableConfig } from "@/lib/crud/types";
 
 export const propiedadPropietarioConfig: TableConfig = {
   name: "propiedad_propietario",
-  label: "Propiedad ↔ Propietario ↔ Contratos",
+  label: "I ↔ P ↔ C",
   description: "Relación entre inmuebles y propietarios y contratos",
-  primaryKey: ["id_propiedad", "id_propietario","id"],
+  primaryKey: ["id_propiedad", "id_propietario", "id"],
   fields: [
     {
       name: "id_propiedad",
-      label: "Propiedad",
-      type: "select",
+      label: "Inmueble",
+      type: "inputsearch",
       required: true,
-      readOnlyOnEdit: false,
+      readOnlyOnEdit: true,
       foreignKey: {
-        table: "propiedades",
+        table: "inmuebles",
         valueField: "id_propiedad",
         labelField: "n_partida",
       },
@@ -21,9 +21,9 @@ export const propiedadPropietarioConfig: TableConfig = {
     {
       name: "id_propietario",
       label: "Propietario",
-      type: "select",
+      type: "inputsearch",
       required: true,
-      readOnlyOnEdit: false,
+      readOnlyOnEdit: true,
       foreignKey: {
         table: "propietarios",
         valueField: "id_propietario",
@@ -33,14 +33,15 @@ export const propiedadPropietarioConfig: TableConfig = {
     {
       name: "id_contrato",
       label: "Contrato",
-      type: "select",
+      type: "inputsearch",
       required: true,
-      readOnlyOnEdit: false,
+      readOnlyOnEdit: true,
       foreignKey: {
         table: "contratos",
         valueField: "id_contrato",
         labelField: "nro_contrato",
       },
     },
+    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true },
   ],
 };

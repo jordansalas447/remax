@@ -13,7 +13,7 @@ export async function updateRevision(
   const { data, error } = await supabase
     .from('revisiones')
     .update(updates)
-    .eq('id', id)
+    .eq('id_revision', id)
     .select()
     .maybeSingle();
   if (error) throw new Error(error.message);
@@ -118,6 +118,8 @@ export async function getVistaRevisiones(
 
   return data ?? [];
 }
+
+
 
 
 // /**

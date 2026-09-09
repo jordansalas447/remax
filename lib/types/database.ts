@@ -12,8 +12,9 @@ type SupportedTableName =
   | "nivel_asociado"
   | "distritos"
   | "propietarios"
-  | "propiedades"
+  | "inmuebles"
   | "propiedad_propietario"
+  | "configuracion_revisiones"
   | "contratos"
   | "conformidad"
   | "revisiones"
@@ -36,12 +37,13 @@ export type TableUpdate<T extends TableName> = PublicTableMap[T]["Update"];
 
 export type Asociados = TableRow<"asociados">;
 export type Propietario = TableRow<"propietarios">;
-export type Propiedad = TableRow<"propiedades">;
+export type Propiedad = TableRow<"inmuebles">;
 export type PropiedadPropietario = TableRow<"propiedad_propietario">;
 export type Contrato = TableRow<"contratos">;
 export type Conformidad = TableRow<"conformidad">;
 export type Revision = TableRow<"revisiones">;
 export type Resource = TableRow<"resource">
+export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">
 //export type ItemChecklist = TableRow<"items_checklist">;
 export type ChecklistEstado = TableRow<"checklist_estado">;
 export type estados_revision = TableRow<"estados_revision">;

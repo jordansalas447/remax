@@ -65,21 +65,21 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
 <Card className="p-0">
   {/* Sección superior: avatar, fondo blanco */}
   <div className="flex flex-col items-center px-6 pt-6 bg-white dark:bg-zinc-950 rounded-t-xl">
-    <div className="relative flex size-78 md:size-80 items-center justify-center overflow-hidden border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
+    <div className="relative flex items-center justify-center overflow-hidden border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
       {URL ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <div className="relative flex flex-col items-center w-full">
+        <div className="">
           {/* Imagen grande de perfil */}
           <img
             src={URL}
             alt={nombre}
-            className="size-full object-cover mt-2"
+            className="size-full object-cover"
           />
           {/* Logo RE/MAX superpuesto en una esquina */}
           <img
             src="/LogoRemax.png"
             alt="Logo RE/MAX"
-            className="object-contain w-25 h-25 absolute top-3 left-3 bg-white/80 p-1"
+            className="object-contain w-25 h-25 absolute top-3 left-1 bg-white/80 p-1"
             style={{ zIndex: 2 }}
           />
         </div>
@@ -126,7 +126,7 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
       <DetailField label="Dirección" value={persona?.direccion} />
       <DetailField label="Fecha nacimiento" value={formatDate(persona?.fecha_nacimiento)} />
       <DetailField label="Registro asociado" value={formatDate(asociado.fecha_creacion)} />
-      <DetailField label="Detalle" value={detalle?.descripcion ?? asociado.descripcion} />
+      <DetailField label="Correo Electronico" value={persona?.correo_electronico ?? persona?.correo_electronico} />
     </dl>
   </div>
 </Card>

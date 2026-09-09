@@ -2,7 +2,7 @@
 
 import { FormField } from "@/components/crud/FormField";
 import { FormSection } from "@/components/crud/FormSection";
-import { isAutoIncrementField } from "@/lib/crud/utils";
+import { resolveFieldState } from "@/lib/crud/rules";
 import type { FieldConfig, TableConfig } from "@/lib/crud/config";
 import type { SelectOption } from "@/lib/crud/actions";
 import type { FormColumns, FormLayout, FormSectionConfig } from "@/lib/crud/types";
@@ -32,7 +32,17 @@ function fieldByName(config: TableConfig, name: string): FieldConfig | undefined
 }
 
 function shouldSkipField(field: FieldConfig, config: TableConfig, mode: FormMode): boolean {
-  return mode === "create" && isAutoIncrementField(field, config);
+  return resolveFieldState(config, field, mode).hidden;
+}
+
+function isFieldDisabled(
+  config: TableConfig,
+  field: FieldConfig,
+  mode: FormMode,
+  values: DynamicFormProps["values"],
+  allDisabled?: boolean,
+): boolean {
+  return allDisabled || resolveFieldState(config, field, mode, values).disabled;
 }
 
 function resolveFields(
@@ -80,7 +90,9 @@ function resolveSections(config: TableConfig, mode: FormMode): ResolvedSection[]
   });
 
   const readOnly =
-    mode === "edit" ? config.fields.filter((field) => field.readOnlyOnEdit) : [];
+    mode === "edit"
+      ? config.fields.filter((field) => field.readOnlyOnEdit && !shouldSkipField(field, config, mode))
+      : [];
 
   const sections: ResolvedSection[] = [
     {
@@ -123,7 +135,9 @@ export function DynamicForm({
           layout={section.layout}
         >
           {section.fields.map((field) => {
-            const disabled = Boolean(section.allDisabled || (mode === "edit" && field.readOnlyOnEdit));
+            const state = resolveFieldState(config, field, mode, values);
+            if (state.hidden) return null;
+            const disabled = isFieldDisabled(config, field, mode, values, section.allDisabled);
             return (
               <FormField
                 key={field.name}
@@ -131,6 +145,7 @@ export function DynamicForm({
                 value={values[field.name]}
                 options={options[field.name] ?? []}
                 disabled={disabled}
+                required={state.required}
                 onChange={(val) => onChange(field.name, val)}
                 onQuickCreate={disabled ? undefined : onQuickCreate}
               />

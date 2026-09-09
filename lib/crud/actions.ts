@@ -7,6 +7,7 @@ import {
   type TableConfig,
 } from "@/lib/crud/config";
 import { getPrimaryKeys, isAutoIncrementField } from "@/lib/crud/utils";
+import { formDataToValues, resolveFieldState } from "@/lib/crud/rules";
 import { createClient } from "@/lib/supabase/server";
 import type {
   RowRecord,
@@ -29,9 +30,10 @@ export interface CrudPageData<T extends TableName = TableName> {
 function parseFieldValue(
   field: FieldConfig,
   raw: FormDataEntryValue | null | undefined,
+  required: boolean,
 ): string | number | boolean | null {
   if (raw === null || raw === undefined || raw === "") {
-    if (field.required) {
+    if (required) {
       throw new Error(`El campo "${field.label}" es obligatorio.`);
     }
     return field.type === "boolean" ? false : null;
@@ -60,16 +62,15 @@ function buildPayload(
   mode: "create" | "update",
 ): RowRecord {
   const payload: RowRecord = {};
+  const formMode = mode === "update" ? "edit" : "create";
+  const values = formDataToValues(formData, config);
 
   for (const field of config.fields) {
-    if (mode === "create" && isAutoIncrementField(field, config)) {
-      continue;
-    }
-    if (mode === "update" && field.readOnlyOnEdit) {
-      continue;
-    }
+    const state = resolveFieldState(config, field, formMode, values);
+    if (state.omit || state.hidden) continue;
+    if (mode === "create" && isAutoIncrementField(field, config)) continue;
 
-    payload[field.name] = parseFieldValue(field, formData.get(field.name));
+    payload[field.name] = parseFieldValue(field, formData.get(field.name), state.required);
   }
 
   return payload;

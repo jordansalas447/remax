@@ -11,7 +11,7 @@ export const itemsChecklistConfig: TableConfig = {
     {
       name: "id_operacion_inmobiliaria",
       label: "Operacion Inmobiliaria",
-      type: "select",
+      type: "inputsearch",
       foreignKey: {
         table: "operacion_inmobiliaria",
         valueField: "id",

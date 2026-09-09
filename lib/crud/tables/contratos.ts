@@ -18,10 +18,10 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_propiedad",
       label: "Propiedad (Nº de partida)",
-      type: "select",
+      type: "inputsearch",
       required: true,
       foreignKey: {
-        table: "propiedades",
+        table: "inmuebles",
         valueField: "id_propiedad",
         labelField: "n_partida",
       },
@@ -30,7 +30,8 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_asociado",
       label: "Asociado",
-      type: "select",
+      required: true,
+      type: "inputsearch",
       foreignKey: {
         table: "asociados",
         valueField: "id_asociado",
@@ -95,7 +96,7 @@ export const contratosConfig: TableConfig = {
     },
     {
       name: "id_tipo_moneda",
-      label: "Tipo moneda Precio Inicio",
+      label: "Medición / Moneda Precio Acordado",
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -104,24 +105,24 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
-    { name: "precio_inicio", label: "Precio Inicio", type: "number" },
-    { name: "fecha_fin", label: "Fecha fin", type: "date" },
-    {
-      name: "id_tipo_moneda_precio_venta",
-      label: "Precio de Venta",
-      type: "select",
-      selectplus: false,
-      foreignKey: {
-        table: "tipo_moneda",
-        valueField: "id",
-        labelField: "tipo_moneda",
-      },
-    },
-    { name: "precio_venta", label: "Precio Venta", type: "number" },
+    { name: "precio_inicio", label: "Precio Acordado", type: "number" },
     { name: "fecha_inicio", label: "Fecha inicio", type: "date" },
     {
+      name: "id_tipo_moneda_precio_venta",
+      label: "Medición / Moneda Precio de Venta",
+      type: "select",
+      selectplus: false,
+      foreignKey: {
+        table: "tipo_moneda",
+        valueField: "id",
+        labelField: "tipo_moneda",
+      },
+    },
+    { name: "precio_venta", label: "Precio Venta", type: "number"},
+    { name: "fecha_fin", label: "Fecha fin", type: "date" },
+    {
       name: "id_tipo_moneda_comision",
-      label: "Tipo moneda Comision",
+      label: "Medición / Moneda Comisión",
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -131,9 +132,12 @@ export const contratosConfig: TableConfig = {
       },
     },
     { name: "comision", label: "Comisión", type: "number" },
+    { name: "fecha_contrato_entregado", label: "Fecha Contrato Entregado", type: "date" },
+    { name: "fecha_contrato_sigi", label: "Fecha Contrato Sigi", type: "date" },
+    { name: "fecha_contrato_recibido", label: "Fecha Contrato Recibido", type: "date" },
     {
       name: "id_resource",
-      label: "Documento",
+      label: "Documento (URL)",
       type: "select",
       foreignKey: {
         table: "resource",
@@ -141,18 +145,6 @@ export const contratosConfig: TableConfig = {
         labelField: "url_resource",
       },
     },
-    {
-      name: "id_tipo_moneda_precio_maximo",
-      label: "Tipo moneda Precio maximo",
-      type: "select",
-      selectplus: false,
-      foreignKey: {
-        table: "tipo_moneda",
-        valueField: "id",
-        labelField: "tipo_moneda",
-      },
-    },
-    { name: "precio_maximo", label: "Precio maximo", type: "number" },
     {
       name: "id_mes_vencimiento",
       label: "Mes vencimiento",
@@ -162,4 +154,26 @@ export const contratosConfig: TableConfig = {
     },
     { name: "observaciones", label: "Observaciones", type: "textarea" },
   ],
+
+  rules: {
+    validations: [
+      {
+        id: "fecha_recibido_no_mayor_a_entregado",
+        /**
+         * La condición se activa (= error) cuando fecha_contrato_recibido
+         * es estrictamente mayor que fecha_contrato_entregado.
+         *
+         * Solo se evalúa si ambas fechas están completas (gtField retorna
+         * false cuando alguna está vacía).
+         */
+        when: {
+          field: "fecha_contrato_recibido",
+          gtField: "fecha_contrato_entregado",
+          ltFieldMayor: "fecha_contrato_sigi"
+        },
+        message:
+          "La fecha de contrato recibido no puede ser posterior a la fecha de contrato entregado.",
+      },
+    ],
+  },
 };

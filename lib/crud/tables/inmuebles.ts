@@ -1,19 +1,19 @@
 import type { TableConfig } from "@/lib/crud/types";
 
-export const propiedadesConfig: TableConfig = {
-  name: "propiedades",
-  label: "Propiedades",
-  description: "Inmuebles captados",
+export const inmueblesConfig: TableConfig = {
+  name: "inmuebles",
+  label: "inmuebles",
+  description: "Inmuebles disponibles",
   primaryKey: "id_propiedad",
   softDelete: {
     enabled: true,
     field: "eliminado",
   },
   form: {
-    title: "Gestionar Propiedades",
-    description: "Administra los Propiedades disponibles.",
+    title: "Gestionar Inmuebles",
+    description: "Administra los Inmuebles disponibles.",
     columns: 2,
-    submitLabel: "Guardar Propiedad",
+    submitLabel: "Guardar Inmueble",
     cancelLabel: "Cancelar",
   },
 
@@ -47,6 +47,7 @@ export const propiedadesConfig: TableConfig = {
         labelField: "url_resource",
       },
     },
+    { name: "fecha_est_titulo", label: "Fecha Estudio Titulo", type: "date" },
     {
       name: "id_resource_est_titulo",
       label: "Documento (Est Titulo)",

@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 interface InputSearchProps<T> {
+  className?: string;
   search: string;
   setSearch: (value: string) => void;
   selectedId: number | null;
@@ -34,6 +35,7 @@ interface InputSearchProps<T> {
 }
 
 export function InputSearch<T>({
+  className,
   search,
   setSearch,
   selectedId,
@@ -64,7 +66,7 @@ export function InputSearch<T>({
     filteredItems.find((item) => getOptionValue(item) === selectedId) ?? null;
 
   return (
-    <div>
+    <div className={className}>
       {/* <div className="relative">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" />
           <Input
@@ -88,10 +90,10 @@ export function InputSearch<T>({
           w-full
           items-center
           justify-between
-          rounded-md
+          rounded-lg
           border
           px-3
-          py-2
+          py-0
           text-sm
           shadow-xs
         "

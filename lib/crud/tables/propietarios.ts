@@ -10,11 +10,11 @@ export const propietariosConfig: TableConfig = {
     {
       name: "id_personas",
       label: "Persona",
-      type: "select",
+      type: "inputsearch",
       foreignKey: {
         table: "personas",
         valueField: "id",
-        labelField: "nombre",
+        labelField: "nombre_completo",
       },
     },
     { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true },

@@ -29,7 +29,7 @@ export async function AppSidebar() {
   // console.log(response)
 
   return (
-     <Sidebar>
+    <Sidebar>
       <SidebarHeader>
         <div className="flex justify-center items-center w-full">
           <Link href="/" className="group">
@@ -42,14 +42,14 @@ export async function AppSidebar() {
             </span>
           </Link>
         </div>
-  
+
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-          <SidebarMenuItem>
-      </SidebarMenuItem>
-          <SidebarMenuItem>
+            <SidebarMenuItem>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
               <Link
                 href="/dashboard"
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
@@ -57,7 +57,7 @@ export async function AppSidebar() {
                 <FontAwesomeIcon icon={faChartLine} />
                 Dashboard
               </Link>
-              
+
             </SidebarMenuItem>
             <SidebarMenuItem>
               <Link
@@ -66,6 +66,24 @@ export async function AppSidebar() {
               >
                 <FontAwesomeIcon icon={faUserTie} />
                 Ficha de asociado
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link
+                href="/multas"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+              >
+                <FontAwesomeIcon icon={faUserTie} />
+                Multas
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link
+                href="/revisiones-gestion"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+              >
+                
+                Revisiones
               </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>

@@ -3,11 +3,11 @@ import { createClient } from "@/lib/supabase/client";
 import type { Propiedad } from "@/lib/types/database";
 
 type DistritoRow = Database["public"]["Tables"]["distritos"]["Row"];
-type TipoPropiedadRow = Database["public"]["Tables"]["tipo_propiedad"]["Row"];
+type TipoInmueblesRow = Database["public"]["Tables"]["tipo_propiedad"]["Row"];
 
 export type PropiedadDetalle = Propiedad & {
   distritos: Pick<DistritoRow, "distrito"> | null;
-  tipo_propiedad: Pick<TipoPropiedadRow, "tipo_propiedad"> | null;
+  tipo_propiedad: Pick<TipoInmueblesRow, "tipo_propiedad"> | null;
   id_resource_est_titulo?: {
     url_resource: string;
   } | null;
@@ -17,10 +17,10 @@ export type PropiedadDetalle = Propiedad & {
   } | null;
 };
 
-export async function getPropiedades(): Promise<Propiedad[]> {
+export async function getinmuebles(): Promise<Propiedad[]> {
   const supabase = createClient();
 
-  const { data, error } = await supabase.from("propiedades").select("*");
+  const { data, error } = await supabase.from("inmuebles").select("*");
 
   if (error) {
     throw new Error(error.message);
@@ -33,7 +33,7 @@ export async function getPropiedadById(id_propiedad: number): Promise<Propiedad 
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("propiedades")
+    .from("inmuebles")
     .select("*")
     .eq("id_propiedad", id_propiedad)
     .maybeSingle();
@@ -49,7 +49,7 @@ export async function getPropiedadDetalleById(id_propiedad: number): Promise<Pro
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("propiedades")
+    .from("inmuebles")
     .select(
       `
       *,
@@ -61,6 +61,7 @@ export async function getPropiedadDetalleById(id_propiedad: number): Promise<Pro
     `,
     )
     .eq("id_propiedad", id_propiedad)
+    .eq("eliminado", false)
     .maybeSingle();
 
   if (error) {

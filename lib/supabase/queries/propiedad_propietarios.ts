@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/database.types";
-import { operacion_inmobiliaria } from "@/lib/types/database";
+import { Propiedad } from "@/lib/types/database";
 import { da } from "date-fns/locale";
 
 // Tipos para las filas de cada tabla relevante
@@ -8,7 +8,12 @@ type RevisionRow = Database["public"]["Tables"]["revisiones"]["Row"];
 type ItemChecklistRow = Database["public"]["Tables"]["items_checklist"]["Row"];
 type EstadoRevisionRow = Database["public"]["Tables"]["estados_revision"]["Row"];
 type PropiedadPropietarioRow = Database["public"]["Tables"]["propiedad_propietario"]["Row"];
+type ContratoRow = Database["public"]["Tables"]["contratos"]["Row"];
+type PropietariosRow = Database["public"]["Tables"]["propietarios"]["Row"];
+type InmueblesRow = Database["public"]["Tables"]["inmuebles"]["Row"];
 type operacion_inmobiliariaRow = Database["public"]["Tables"]["operacion_inmobiliaria"]["Row"]
+type DistritoRow = Database["public"]["Tables"]["distritos"]["Row"];
+type TipoInmueblesRow = Database["public"]["Tables"]["tipo_propiedad"]["Row"];
 
 // Tipo de detalle de relación según el join requerido
 export type PropiedadPropietarioDetalle = PropiedadPropietarioRow & {
@@ -18,6 +23,26 @@ export type PropiedadPropietarioDetalle = PropiedadPropietarioRow & {
     estado_sigi: EstadoRevisionRow | null;
     operacion_inmobiliaria: operacion_inmobiliariaRow | null;
   }>;
+};
+
+export type InmuebleDetalle = PropiedadPropietarioRow & {
+  inmueble: Propiedad & {
+    distritos: Pick<DistritoRow, "distrito"> | null;
+    tipo_propiedad: Pick<TipoInmueblesRow, "tipo_propiedad"> | null;
+    id_resource_est_titulo?: {
+      url_resource: string;
+    } | null;
+    conformidad?: {
+      tipo: string;
+      descripcion: string;
+    } | null;
+  }
+}
+
+export type PropiedadInmueblePropietarioContrato = PropiedadPropietarioRow & {
+  propietarios: PropietariosRow;
+  contrato: ContratoRow;
+  inmueble: InmueblesRow;
 };
 
 export type RevisionDocumentoDetalle = {
@@ -31,6 +56,8 @@ export type RevisionDocumentoDetalle = {
   color_estado_oficina: string;
   estado_sigi: string;
   color_estado_sigi: string;
+  observacion: string;
+  fecha_creado: Date;
   id_contrato: number;
   id_propiedad: number;
   id_propietario: number;
@@ -48,33 +75,33 @@ export async function getPropietarioRevisionesDetalleByRefId(
 ): Promise<PropiedadPropietarioDetalle[]> {
   const supabase = createClient();
 
-//   let query = supabase
-//     .from("propiedad_propietario")
-//     .select(`
-//       *,
-//       revision:revisiones (
-//         *,
-//         items_checklist: id_item (*),
-//         estado_oficina: id_estado_oficina (*),
-//         estado_sigi: id_estado_sigi (*)
-//       )
-//     `)
-//     .neq("revisiones.id", null);
+  //   let query = supabase
+  //     .from("propiedad_propietario")
+  //     .select(`
+  //       *,
+  //       revision:revisiones (
+  //         *,
+  //         items_checklist: id_item (*),
+  //         estado_oficina: id_estado_oficina (*),
+  //         estado_sigi: id_estado_sigi (*)
+  //       )
+  //     `)
+  //     .neq("revisiones.id", null);
 
-//   if (typeof id_ref === "number") {
-//     query = query.eq("revisiones.id_ref_propiedad_propietario_contrato", id_ref);
-//   }
-//   if (typeof id_propiedad === "number") {
-//     query = query.eq("id_propiedad", id_propiedad);
-//   }
+  //   if (typeof id_ref === "number") {
+  //     query = query.eq("revisiones.id_ref_propiedad_propietario_contrato", id_ref);
+  //   }
+  //   if (typeof id_propiedad === "number") {
+  //     query = query.eq("id_propiedad", id_propiedad);
+  //   }
 
-//   const { data, error } = await query;
+  //   const { data, error } = await query;
 
-//   if (error) {
-//     throw new Error(`Error consultando propiedad_propietario y revisiones: ${error.message}`);
-//   }
+  //   if (error) {
+  //     throw new Error(`Error consultando propiedad_propietario y revisiones: ${error.message}`);
+  //   }
 
-  return  [];
+  return [];
 }
 
 // Por propiedad (id_propiedad)
@@ -90,18 +117,21 @@ export async function getRevisionesDetalleByPropiedadId(
       *,
       revisiones (
         *,
-        items_checklist: id_item (*),
+        items_checklist: id_revisiones_configuracion (*),
         estado_oficina: id_estado_oficina (*),
-        estado_sigi: id_estado_sigi (*),
-        operacion_inmobiliaria: id_operacion_inmobiliaria(*)
+        estado_sigi: id_estado_sigi (*)
       )
     `);
 
   if (typeof id_propiedad === "number") {
-    query = query.eq("id_propiedad", id_propiedad);
+    query = query
+      .eq("id_propiedad", id_propiedad)
+      .eq("eliminado", false);
   }
   if (typeof id_contrato === "number") {
-    query = query.eq("id_contrato", id_contrato);
+    query = query
+      .eq("id_contrato", id_contrato)
+      .eq("eliminado", false);
   }
 
   const { data, error } = await query;
@@ -110,13 +140,69 @@ export async function getRevisionesDetalleByPropiedadId(
     throw new Error(`Error consultando propiedad_propietario y revisiones por propiedad/contrato: ${error.message}`);
   }
 
- // console.log(data)
+  return data ?? [];
+}
+
+
+export async function getRevisionesDetalleByInmueblesContratosPropietarios(
+): Promise<PropiedadInmueblePropietarioContrato[]> {
+  const supabase = createClient();
+
+  let query = supabase
+    .from("propiedad_propietario")
+    .select(`
+      *,
+      inmueble:id_propiedad(*),
+      propietarios:id_propietario(*),
+      contrato:id_contrato(*)
+    `)
+    .eq("eliminado", false);
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Error consultando propiedad_propietario y revisiones por propiedad/contrato: ${error.message}`);
+  }
 
   return data ?? [];
 }
 
+export async function getPropiedadPropietarioInmueblesByContrato(
+  id_contrato: number
+): Promise<InmuebleDetalle[]> {
+  const supabase = createClient();
+
+  // Realizamos el join utilizando la sintaxis de supabase select
+  // propiedad_propietario.*, inmuebles(*, distritos, tipo_propiedad, conformidad:id_conformidad, id_resource_partida, id_resource_est_titulo)
+  let query = supabase
+    .from("propiedad_propietario")
+    .select(`
+      *,
+      inmueble:id_propiedad(
+        *,
+        distritos (distrito),
+        tipo_propiedad (tipo_propiedad),
+        conformidad:id_conformidad(*),
+        id_resource_partida(*),
+        id_resource_est_titulo(*)
+      )
+    `)
+    .eq("id_contrato", id_contrato)
+    .eq("eliminado", false);
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Error consultando propiedad_propietario + inmuebles por contrato: ${error.message}`);
+  }
+
+  return data ?? [];
+}
+
+
+
 // Obtiene revisiones detalle usando la vista 'vw_revisiones_detalle' por id_contrato
-export async function getRevisionesDetalleByContratoVista(idContrato?: number) : Promise<RevisionDocumentoDetalle[]> {
+export async function getRevisionesDetalleByContratoVista(idContrato?: number): Promise<RevisionDocumentoDetalle[]> {
   const supabase = createClient();
 
   let query = supabase
@@ -133,11 +219,31 @@ export async function getRevisionesDetalleByContratoVista(idContrato?: number) :
     throw new Error(`Error consultando vw_revisiones_detalle: ${error.message}`);
   }
 
- // console.log(data,idContrato)
+  // console.log(data,idContrato)
 
   return data ?? [];
 }
 
+
+
+export async function getRevisionesDetalleByContratoVistaall(): Promise<RevisionDocumentoDetalle[]> {
+  const supabase = createClient();
+
+  let query = supabase
+    .from("vw_revisiones_detalle")
+    .select("*")
+    .eq("eliminado", false); // Filtrar por eliminado = false
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Error consultando vw_revisiones_detalle: ${error.message}`);
+  }
+
+  // console.log(data,idContrato)
+
+  return data ?? [];
+}
 
 // Por contrato (id_contrato)
 export async function getContratoRevisionesDetalleByContratoId(
@@ -145,28 +251,28 @@ export async function getContratoRevisionesDetalleByContratoId(
 ): Promise<PropiedadPropietarioDetalle[]> {
   const supabase = createClient();
 
-//   let query = supabase
-//     .from("propiedad_propietario")
-//     .select(`
-//       *,
-//       revisiones (
-//         *,
-//         items_checklist: id_item (*),
-//         estado_oficina: id_estado_oficina (*),
-//         estado_sigi: id_estado_sigi (*)
-//       )
-//     `)
-//     .neq("revisiones.id", null);
+  //   let query = supabase
+  //     .from("propiedad_propietario")
+  //     .select(`
+  //       *,
+  //       revisiones (
+  //         *,
+  //         items_checklist: id_item (*),
+  //         estado_oficina: id_estado_oficina (*),
+  //         estado_sigi: id_estado_sigi (*)
+  //       )
+  //     `)
+  //     .neq("revisiones.id", null);
 
-//   if (typeof id_contrato === "number") {
-//     query = query.eq("id_contrato", id_contrato);
-//   }
+  //   if (typeof id_contrato === "number") {
+  //     query = query.eq("id_contrato", id_contrato);
+  //   }
 
-//   const { data, error } = await query;
+  //   const { data, error } = await query;
 
-//   if (error) {
-//     throw new Error(`Error consultando propiedad_propietario y revisiones por contrato: ${error.message}`);
-//   }
+  //   if (error) {
+  //     throw new Error(`Error consultando propiedad_propietario y revisiones por contrato: ${error.message}`);
+  //   }
 
   return [];
 }

@@ -2,12 +2,15 @@ import type { TableName } from "@/lib/types/database";
 import { tableConfigs } from "@/lib/crud/tables";
 
 export type {
+  DateConstraints,
   FieldConfig,
   FieldUiConfig,
   FormConfig,
   FormSectionConfig,
   TableConfig,
 } from "@/lib/crud/types";
+
+export type { FieldRule, TableRules } from "@/lib/crud/rules";
 
 export const TABLE_CONFIGS: Record<TableName, import("@/lib/crud/types").TableConfig> =
   tableConfigs as Record<TableName, import("@/lib/crud/types").TableConfig>;

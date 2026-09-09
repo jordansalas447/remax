@@ -12,10 +12,11 @@ import { mesConfig } from "./mes";
 import { nivelAsociadoConfig } from "./nivel-asociado";
 import { operacionConfig } from "./operacion";
 import { personasConfig } from "./personas";
-import { propiedadesConfig } from "./propiedades";
+import { inmueblesConfig } from "./inmuebles";
 import { propiedadPropietarioConfig } from "./propiedad-propietario";
 import { propietariosConfig } from "./propietarios";
-import { revisionesConfig } from "./revisiones";
+import { configuracion_revisionesConfig } from "./configuracion_revisiones";
+import { revisionesConfig } from "./revisiones" 
 import { tipoContratoConfig } from "./tipo-contrato";
 import { tipoMonedaConfig } from "./tipo-moneda";
 import { tipoPropiedadConfig } from "./tipo-propiedad";
@@ -39,10 +40,11 @@ export const tableConfigs: Record<string, TableConfig> = {
   nivel_asociado: nivelAsociadoConfig,
   operacion: operacionConfig,
   personas: personasConfig,
-  propiedades: propiedadesConfig,
+  inmuebles: inmueblesConfig,
   propiedad_propietario: propiedadPropietarioConfig,
   propietarios: propietariosConfig,
   revisiones: revisionesConfig,
+  configuracion_revisiones:configuracion_revisionesConfig,
   tipo_contrato: tipoContratoConfig,
   tipo_moneda: tipoMonedaConfig,
   tipo_propiedad: tipoPropiedadConfig,

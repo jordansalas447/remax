@@ -44,7 +44,7 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
         return simbolo + " " + value.toLocaleString("es-PE");
     }
 
-    if (type === "propiedad") {
+    if (type === "inmueble") {
         // Para propiedad, accede a los dos recursos si existen
         const partida = document?.id_resource_partida;
         const estTitulo = document?.id_resource_est_titulo;
@@ -61,7 +61,7 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                     <img
                         src={docUrl}
                         alt={`Documento de propiedad`}
-                        className="max-w-full max-h-[80vh] object-contain rounded-md mx-auto"
+                        className="max-w-full max-h-[90vh] object-contain rounded-md mx-auto"
                     />
                 );
             }
@@ -70,7 +70,7 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                     <iframe
                         src={docUrl}
                         title="Documento de propiedad"
-                        className="w-full h-[80vh] rounded-md"
+                        className="w-full h-[90vh] rounded-md"
                     />
                 );
             }
@@ -104,14 +104,13 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                 >
                     <FileText className="size-4" />
                 </DialogTrigger>
-                <DialogContent className="w-full max-w-5xl sm:max-w-5xl h-[98vh] max-h-[98vh]">
+                <DialogContent className="w-full max-w-5xl sm:max-w-5xl h-[98vh] max-h-[98vh] overflow-auto">
                     {/* <DialogHeader>
                         Documentos de propiedad
                     </DialogHeader> */}
-                    <div className="flex flex-col md:flex-row gap-1 h-[80vh] w-full items-stretch justify-center">
+                    <div className="flex flex-col md:flex-row gap-1 h-[85vh] w-full items-stretch justify-center">
                         <div className="flex-none">
                             <PropiedadDetalle data={document} />
-                            <RevisionesEstatusItem revisiones={CheckRevision ? CheckRevision : []} loading={false} />
                             {/* Nuevo componente que imprime la respuesta de CheckRevision */}
                         </div>
                         <div className="flex-1 flex flex-col items-stretch min-w-0">
@@ -147,8 +146,12 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                             )}
                         </div>
                     </div>
+                    <div>
+                        {/* <div className="mt-2">
+                             <RevisionesEstatusItem revisiones={CheckRevision ? CheckRevision : []} loading={false} />
+                        </div> */}
+                    </div>
                 </DialogContent>
-
             </Dialog>
         );
     }
@@ -171,7 +174,7 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                     <img
                         src={docUrl}
                         alt={`Documento del propietario`}
-                        className="max-w-full max-h-[80vh] object-contain rounded-md mx-auto"
+                        className="max-w-full max-h-[89vh] object-contain rounded-md mx-auto"
                     />
                 );
             }
@@ -180,7 +183,7 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                     <iframe
                         src={docUrl}
                         title="Documento del propietario"
-                        className="w-full h-[80vh] rounded-md"
+                        className="w-full h-[89vh] rounded-md"
                     />
                 );
             }
@@ -210,12 +213,12 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                     <FileText className="size-4" />
                 </DialogTrigger>
                 <DialogContent className="w-full max-w-4xl sm:max-w-4xl h-[95vh] max-h-[95vh]">
-                    <div className="flex flex-col md:flex-row gap-2 h-[80vh] w-full items-stretch justify-center">
+                    <div className="flex flex-col md:flex-row gap-2 h-[85vh] w-full items-stretch justify-center">
                         <div className="flex-none">
                             <PropietarioDetalle data={document} />
-                        <div className="mb-2">
+                        {/* <div className="mb-2">
                             <RevisionesEstatusItem revisiones={CheckRevision ? CheckRevision : []} loading={false} />
-                        </div>
+                        </div> */}
                         </div>
                         <div className="flex-1 flex items-center justify-center min-w-0">
                             {hasDoc ? (
@@ -247,19 +250,19 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                 <FileText className="size-4" />
             </DialogTrigger>
             <DialogContent className="w-full max-w-5xl sm:max-w-5xl h-[98vh] max-h-[98vh]">
-                <div className="flex flex-col md:flex-row gap-2 h-[80vh] w-full items-stretch justify-center">
+                <div className="flex flex-col md:flex-row gap-2 h-[92vh] w-full items-stretch justify-center">
                     <div className="flex-none">
                         {type === "contrato" ? (
                             <ContratoDetalle data={document} />
 
-                        ) : type === "propietario" ? (
+                        ) : type === "inmueble" ? (
                             <PropietarioDetalle data={document} />
                         ) : (
                             <PropiedadDetalle data={document} />
                         )}
-                        <div className="mb-2">
+                        {/* <div className="mb-2">
                             <RevisionesEstatusItem revisiones={CheckRevision ? CheckRevision : []} loading={false} />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="flex-1 flex items-center justify-center min-w-0">
                         {url ? (
@@ -267,13 +270,13 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
                                 <img
                                     src={url}
                                     alt={`Documento del contrato${document ? ` ${document.nro_contrato ?? ''}` : ''}`}
-                                    className="max-w-full max-h-[80vh] object-contain rounded-md mx-auto"
+                                    className="max-w-full max-h-[85vh] object-contain rounded-md mx-auto"
                                 />
                             ) : isPdf ? (
                                 <iframe
                                     src={url}
                                     title={`Documento del contrato${document ? ` ${document.nro_contrato ?? ''}` : ''}`}
-                                    className="w-full h-[80vh] rounded-md"
+                                    className="w-full h-[92vh] rounded-md"
                                 />
                             ) : (
                                 <div className="text-center">

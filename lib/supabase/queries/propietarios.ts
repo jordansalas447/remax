@@ -21,7 +21,7 @@ export async function getPropietarios(): Promise<Propietario[]> {
   return data ?? [];
 }
 
-export async function getPropietariosByPropiedadId(id_propiedad: number): Promise<PropietarioDetalle[]> {
+export async function getPropietariosByPropiedadId(id_propiedad: number,id_contrato: number): Promise<PropietarioDetalle[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase
@@ -37,7 +37,9 @@ export async function getPropietariosByPropiedadId(id_propiedad: number): Promis
       )
     `,
     )
-    .eq("id_propiedad", id_propiedad);
+    .eq("id_propiedad", id_propiedad)
+    .eq("id_contrato", id_contrato)
+    .eq("eliminado", false);
 
   if (error) {
     throw new Error(error.message);

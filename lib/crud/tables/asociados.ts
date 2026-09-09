@@ -21,15 +21,20 @@ export const asociadosConfig: TableConfig = {
       name: "id_detalle_asociado",
       label: "Detalle asociado",
       type: "select",
-      selectplus:false,
+      selectplus: false,
       foreignKey: {
         table: "detalle_asociado",
         valueField: "id",
         labelField: "descripcion",
       },
     },
+    { name: "cod_agente", label: "Código Agente", type: "text" },
+    { name: "correo_corporativo", label: "Correo Corporativo", type: "text" },
     { name: "url_resource", label: "Imagen Perfil", type: "text" },
     { name: "descripcion", label: "Descripción", type: "textarea" },
-    { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true },
+    { name: "nombre_completo", label: "Nombre Completo", type: "text" },
   ],
+  rules: {
+    nombre_completo: { hide: true },
+  },
 };

@@ -22,6 +22,7 @@ import {
   updateRecord,
 } from "@/lib/crud/actions";
 import { getPrimaryKeys } from "@/lib/crud/utils";
+import { validateBusinessRules, formDataToValues } from "@/lib/crud/rules";
 import type { TableName, TableRow } from "@/lib/types/database";
 import { cn } from "@/lib/utils";
 
@@ -134,6 +135,24 @@ export function CrudFormModal<T extends TableName>({
 
   function handleSubmit(formData: FormData) {
     setError(null);
+
+    // Validar reglas de negocio antes de tocar la BD
+    const values = formDataToValues(formData, config);
+    const formMode = mode === "create" ? "create" : "edit";
+    const validation = validateBusinessRules(config, values, formMode);
+
+    if (!validation.valid) {
+      const msg = validation.errors.map((e: { ruleId: string; message: string }) => e.message).join(" — ");
+      setError(msg);
+      toast.add({
+        title: "No se puede guardar",
+        description: msg,
+        type: "error",
+        timeout: 6000,
+      });
+      return;
+    }
+
     const loadingId = toast.add({
       title: mode === "create" ? "Creando…" : "Guardando…",
       description: "Por favor espere",
