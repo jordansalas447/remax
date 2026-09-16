@@ -15,6 +15,36 @@ export type ContratoConPropiedad = ContratoRow & {
   }) | null;
   operacion?: {
     operacion: string;
+    color: 
+      | "blue"
+      | "green"
+      | "red"
+      | "yellow"
+      | "amber"
+      | "pink"
+      | "violet"
+      | "indigo"
+      | "orange"
+      | "teal"
+      | "gray"
+      | "default";
+  } | null;
+  conformidad?: {
+    id: number;
+    tipo: string;
+    color: 
+    | "blue"
+    | "green"
+    | "red"
+    | "yellow"
+    | "amber"
+    | "pink"
+    | "violet"
+    | "indigo"
+    | "orange"
+    | "teal"
+    | "gray"
+    | "default";
   } | null;
   tipo_contrato?: {
     tipo_contrato: string;
@@ -28,8 +58,11 @@ export type ContratoConPropiedad = ContratoRow & {
     simbolo: string;
   } | null;
   tipo_moneda_precio_venta?: {
-    tipo_moneda_comision: string;
+    tipo_moneda: string;
     simbolo: string;
+  } | null;
+  renovacion_contrato?: {
+    nro_contrato: string;
   } | null;
   estado?: {
     estado: string;
@@ -71,6 +104,7 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
       `
       *,
       operacion (*),
+      conformidad:id_conformidad(*),
       tipo_contrato(tipo_contrato),
       tipo_moneda_precio_inicial:id_tipo_moneda (
         tipo_moneda,
@@ -86,6 +120,7 @@ export async function getContratosByAsociadoId(id_asociado: number): Promise<Con
       ),
       estado:id_estado (*),
       resource(*),
+      renovacion_contrato:id_renovacion_contrato(nro_contrato),
       inmuebles (
         *,
         distritos (distrito),

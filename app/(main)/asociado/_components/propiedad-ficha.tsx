@@ -3,7 +3,7 @@
 import {  Home, MapPin, Ruler } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DetailField } from "./detail-field";
+import { DetailField, formatDate } from "./detail-field";
 import { DocumentResource } from "./document-resource";
 import { Badge } from "@/components/ui/badge";
 import { InmuebleDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
@@ -22,9 +22,6 @@ export function PropiedadFicha({
   loading,
   contratoId,
 }: PropiedadesFichaProps) {
-
-
-  console.log(propiedades)
 
   if (!contratoId) {
     return (
@@ -72,7 +69,7 @@ export function PropiedadFicha({
 
   return (
     <>
-      <Card className="mb-6">
+      <Card className="">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Home className="size-5 text-blue-600" />
@@ -88,11 +85,13 @@ export function PropiedadFicha({
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-blue-500">
+                    {/* <Badge className="bg-blue-500">
                       {propiedad.inmueble.conformidad?.tipo
                         ? `Conformidad: ${propiedad.inmueble.conformidad.tipo}`
                         : "Sin conformidad"}
-                    </Badge>
+                    </Badge> */}
+                    <span className="text-base font-bold text-black">{propiedad.inmueble.n_partida}</span>
+               
                     <span className="text-xs text-gray-400">#{propiedad.id_propiedad}</span>
                   </div>
                   <div className="relative">
@@ -104,7 +103,7 @@ export function PropiedadFicha({
                   {propiedad.inmueble.direccion ?? "Sin dirección registrada"}
                 </div>
                 <dl className="grid gap-4 sm:grid-cols-2">
-                  <DetailField label="Captación" value={propiedad.inmueble.captacion} />
+                  <DetailField label="Captación" value={propiedad.inmueble.captacion_mes?.mes} />
                   <DetailField label="Tipo" value={propiedad.inmueble.tipo_propiedad?.tipo_propiedad} />
                   <DetailField label="Distrito" value={propiedad.inmueble.distritos?.distrito} />
                   <DetailField label="N° partida" boldValue={true} value={propiedad.inmueble.n_partida} />
@@ -135,7 +134,12 @@ export function PropiedadFicha({
                     label="Fotos"
                     value={propiedad.inmueble.fotos == null ? "—" : propiedad.inmueble.fotos ? "Disponibles" : "Pendientes"}
                   />
-                  <DetailField label="Observacion" value={propiedad.inmueble.observacion} className="sm:col-span-2" />
+                  <DetailField
+                    badge={true}
+                    label="Fecha est Titulo"
+                    value={formatDate(propiedad.inmueble.fecha_est_titulo)}
+                  />
+                  <DetailField label="Observacion" value={propiedad.inmueble.observacion} />
                 </dl>
               </div>
             ))}

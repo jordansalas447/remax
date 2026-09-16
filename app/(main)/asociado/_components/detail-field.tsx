@@ -1,13 +1,30 @@
 import { cn } from "@/lib/utils";
+import { Badge, type badgeVariants } from "@/components/ui/badge";
 
 interface DetailFieldProps {
   label: string;
   value: React.ReactNode;
   className?: string;
   boldValue?: boolean; // Permite configurar si el texto debe ir en negrita
+  badge?: boolean; // Nuevo prop para renderizar el valor en un Badge
+  badgeVariant?: React.ComponentProps<typeof Badge>["variant"]; // Fix: use correct type for variant
+  textColorClass?: string; // Nueva prop para color de texto extra, ej. 'text-red-500'
 }
 
-export function DetailField({ label, value, className, boldValue = false }: DetailFieldProps) {
+/**
+ * Si la prop `badge` está activa, renderiza el valor como un <Badge />.
+ * Permite customizar el color utilizando el prop `badgeVariant`.
+ * Permite customizar el color del texto con textColorClass.
+ */
+export function DetailField({
+  label,
+  value,
+  className,
+  boldValue = false,
+  badge = false,
+  badgeVariant,
+  textColorClass = "",
+}: DetailFieldProps) {
   return (
     <div className={cn("space-y-1", className)}>
       <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
@@ -16,10 +33,17 @@ export function DetailField({ label, value, className, boldValue = false }: Deta
       <dd
         className={cn(
           "text-sm text-zinc-900 dark:text-zinc-100",
-          boldValue && "font-semibold"
+          boldValue && "font-semibold",
+          textColorClass
         )}
       >
-        {value ?? "—"}
+        {badge ? (
+          <Badge variant={badgeVariant}>
+            {value ?? "—"}
+          </Badge>
+        ) : (
+          value ?? "—"
+        )}
       </dd>
     </div>
   );

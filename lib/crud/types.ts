@@ -6,9 +6,11 @@ export type FieldType =
   | "number"
   | "boolean"
   | "date"
+  | "datenative"
   | "textarea"
   | "select"
   | "inputsearch"
+  | "detailselect"
   | "custom";
 
 export type SelectPlus = true | false
@@ -17,6 +19,7 @@ export interface ForeignKeyConfig {
   table: TableName;
   valueField: string;
   labelField: string;
+  sublabelField?:string;
 }
 
 export interface FieldUiConfig {
@@ -80,6 +83,9 @@ export interface FieldConfig {
    * Permite limitar el calendario a un rango, días específicos o fechas exactas.
    */
   dateConstraints?: DateConstraints;
+
+  /** Array de subcampos, si corresponde (para campos compuestos o anidados) */
+  fields?: FieldConfig[];
 }
 
 export type FormColumns = 1 | 2 | 3;

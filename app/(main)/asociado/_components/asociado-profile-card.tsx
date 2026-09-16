@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { User } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +15,8 @@ interface AsociadoProfileCardProps {
 }
 
 export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProfileCardProps) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+
   if (loading) {
     return (
 <Card>
@@ -68,12 +71,18 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
     <div className="relative flex items-center justify-center overflow-hidden border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
       {URL ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <div className="">
-          {/* Imagen grande de perfil */}
+        <div className="relative">
+          {/* Imagen grande de perfil con skeleton */}
+          {!imgLoaded && (
+            <Skeleton className="absolute inset-0 w-full h-full rounded-2xl" />
+          )}
           <img
             src={URL}
             alt={nombre}
-            className="size-full object-cover"
+            className={`size-full object-cover transition-opacity duration-300 rounded-2xl ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgLoaded(true)}
+            style={{ display: imgLoaded ? "block" : "none" }}
           />
           {/* Logo RE/MAX superpuesto en una esquina */}
           <img
@@ -83,7 +92,6 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
             style={{ zIndex: 2 }}
           />
         </div>
- 
       ) : (
         <div className="flex size-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 dark:from-blue-950 dark:to-zinc-900 dark:text-blue-200">
           {initials !== "?" ? (

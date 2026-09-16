@@ -149,7 +149,7 @@ export function FieldInput(props: FieldInputProps) {
         <option value="">Seleccionar…</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {option.sublabel ? `${option.label} — ${option.sublabel}` : option.label}
           </option>
         ))}
       </NativeSelect>
@@ -190,6 +190,28 @@ export function FieldInput(props: FieldInputProps) {
         disabled={disabled}
         className={baseClass}
         dateConstraints={field.dateConstraints}
+      />
+    );
+  }
+
+  if (field.type === "datenative") {
+    // Si está deshabilitado o readonly, usa el input nativo (mejor para experiencia mobile/accesibilidad)
+    const isReadOnly = field.readOnlyOnEdit || !onChange;
+    return (
+      <Input
+        id={field.name}
+        name={field.name}
+        type="date"
+        value={inputValue}
+        required={required}
+        disabled={disabled}
+        className={baseClass}
+        readOnly={isReadOnly}
+        onChange={
+          !isReadOnly
+            ? (e) => onChange?.(e.target.value)
+            : undefined
+        }
       />
     );
   }
@@ -276,6 +298,7 @@ function InputSearchWrapper({
         loading={false}
         getOptionLabel={(option: SelectOption) => option.label}
         getOptionValue={(option: SelectOption) => Number(option.value)}
+        getOptionSublabel={(option: SelectOption) => option.sublabel}
         inputPlaceholder={placeholder || "Buscar..."}
         selectPlaceholder={label || "Seleccionar"}
       />

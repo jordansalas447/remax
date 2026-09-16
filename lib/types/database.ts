@@ -20,6 +20,8 @@ type SupportedTableName =
   | "revisiones"
   | "items_checklist"
   | "checklist_estado"
+  | "situaciones"
+  | "empresas"
   | "estado"
   | "resource"
   | "mes"
@@ -27,6 +29,7 @@ type SupportedTableName =
   | "tipo_contrato"
   | "tipo_propiedad"
   | "tipo_moneda"
+  | "historial_observaciones"
   | "tablas";
 
 export type TableName = Extract<keyof PublicTableMap, SupportedTableName>;
@@ -42,8 +45,11 @@ export type PropiedadPropietario = TableRow<"propiedad_propietario">;
 export type Contrato = TableRow<"contratos">;
 export type Conformidad = TableRow<"conformidad">;
 export type Revision = TableRow<"revisiones">;
-export type Resource = TableRow<"resource">
+export type Resource = TableRow<"resource">;
+export type Situacion = TableRow<"situaciones">
+export type Empresas = TableRow<"empresas">
 export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">
+export type historial_observaciones = TableRow<"historial_observaciones">
 //export type ItemChecklist = TableRow<"items_checklist">;
 export type ChecklistEstado = TableRow<"checklist_estado">;
 export type estados_revision = TableRow<"estados_revision">;

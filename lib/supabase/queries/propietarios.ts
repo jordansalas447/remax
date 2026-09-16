@@ -7,6 +7,9 @@ type PersonaRow = Database["public"]["Tables"]["personas"]["Row"];
 
 export type PropietarioDetalle = Propietario & {
   personas: PersonaRow | null;
+  situacion?: {
+    descripcion: string;
+  } | null;
 };
 
 export async function getPropietarios(): Promise<Propietario[]> {
@@ -30,6 +33,7 @@ export async function getPropietariosByPropiedadId(id_propiedad: number,id_contr
       `
       propietarios (
         *,
+        situacion:id_situacion(descripcion),
         personas (
         *,
         id_resource(*)

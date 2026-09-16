@@ -19,14 +19,24 @@ export const inmueblesConfig: TableConfig = {
 
   fields: [
     { name: "id_propiedad", label: "ID", type: "number", readOnlyOnEdit: true },
-    { name: "captacion", label: "Captación", type: "date" },
+    // { name: "captacion", label: "Captación", type: "date" },
+    { name: "id_remax", label: "ID REMAX", type: "number", required:true },
+    { name: "n_partida", label: "N° Partida", type: "text" , required: true },
+    {
+      name: "id_mes_captacion",
+      label: "Mes Captacion",
+      type: "select",
+      selectplus: false,
+      foreignKey: {
+        table: "mes",
+        valueField: "id",
+        labelField: "mes",
+      },
+    },
     { name: "direccion", label: "Dirección", type: "text" },
-    { name: "n_partida", label: "N° Partida", type: "text" },
     { name: "area_terreno", label: "Área terreno (m²)", type: "number" },
     { name: "area_construida", label: "Área construida (m²)", type: "number" },
-    { name: "fotos", label: "Tiene fotos", type: "boolean" },
-    { name: "observacion", label: "Observación", type: "textarea" },
-    { name: "id_remax", label: "ID REMAX", type: "number" },
+    { name: "fecha_est_titulo", label: "Fecha Estudio Titulo", type: "datenative" },
     {
       name: "id_tipo_propiedad",
       label: "Tipo de propiedad",
@@ -35,38 +45,6 @@ export const inmueblesConfig: TableConfig = {
         table: "tipo_propiedad",
         valueField: "id",
         labelField: "tipo_propiedad",
-      },
-    },
-    {
-      name: "id_resource_partida",
-      label: "Documento (Partida)",
-      type: "select",
-      foreignKey: {
-        table: "resource",
-        valueField: "id_resource",
-        labelField: "url_resource",
-      },
-    },
-    { name: "fecha_est_titulo", label: "Fecha Estudio Titulo", type: "date" },
-    {
-      name: "id_resource_est_titulo",
-      label: "Documento (Est Titulo)",
-      type: "select",
-      foreignKey: {
-        table: "resource",
-        valueField: "id_resource",
-        labelField: "url_resource",
-      },
-    },
-    {
-      name: "id_conformidad",
-      label: "Conformidad",
-      type: "select",
-      selectplus: false,
-      foreignKey: {
-        table: "conformidad",
-        valueField: "id",
-        labelField: "tipo",
       },
     },
     {
@@ -79,6 +57,29 @@ export const inmueblesConfig: TableConfig = {
         valueField: "id",
         labelField: "distrito",
       },
-    }
+    },
+    { name: "fotos", label: "Tiene fotos", type: "boolean" },    
+    { name: "observacion", label: "Observación", type: "textarea" },
+    // {
+    //   name: "id_resource_partida",
+    //   label: "Documento (Partida)",
+    //   type: "select",
+    //   foreignKey: {
+    //     table: "resource",
+    //     valueField: "id_resource",
+    //     labelField: "url_resource",
+    //   },
+    // },
+    // {
+    //   name: "id_resource_est_titulo",
+    //   label: "Documento (Est Titulo)",
+    //   type: "select",
+    //   foreignKey: {
+    //     table: "resource",
+    //     valueField: "id_resource",
+    //     labelField: "url_resource",
+    //   },
+    // },
+
   ],
 };

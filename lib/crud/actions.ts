@@ -20,6 +20,7 @@ import type {
 export interface SelectOption {
   value: string;
   label: string;
+  sublabel?:string;
 }
 
 export interface CrudPageData<T extends TableName = TableName> {
@@ -109,8 +110,7 @@ export async function fetchTableData<T extends TableName>(
     .from(table)
     .select("*")
     .is("eliminado", false)
-    .order(getPrimaryKeys(config)[0], { ascending: true });
-
+    .order(getPrimaryKeys(config)[0], { ascending: false });
 
   if (error) {
     throw new Error(error.message);
@@ -125,7 +125,8 @@ export async function fetchTableData<T extends TableName>(
     const { data: fkData, error: fkError } = await supabase
       .from(fkTable)
       .select("*")
-      .order(field.foreignKey.labelField, { ascending: true });
+      .is("eliminado", false)
+      .order(field.foreignKey.labelField, { ascending: false });
 
     
     //console.log({ data: fkData, error: fkError })
@@ -201,10 +202,12 @@ export async function fetchTableData<T extends TableName>(
             }
 
             const fallbackLabel = rec[fk.labelField] ?? "";
+            const sublabelRaw = fk.sublabelField ? String(rec[fk.sublabelField] ?? "") : "";
 
             return {
               value: String(rec[fk.valueField]),
               label: label ?? String(fallbackLabel),
+              sublabel: sublabelRaw || undefined,
             };
           });
 
@@ -212,18 +215,22 @@ export async function fetchTableData<T extends TableName>(
         } else {
           optionsForField = records.map((row) => {
             const record = row as Record<string, string | number>;
+            const sublabelRaw = fk.sublabelField ? String(record[fk.sublabelField] ?? "") : "";
             return {
               value: String(record[fk.valueField]),
               label: String(record[fk.labelField]),
+              sublabel: sublabelRaw || undefined,
             };
           });
         }
       } else {
         optionsForField = records.map((row) => {
           const record = row as Record<string, string | number>;
+          const sublabelRaw = fk.sublabelField ? String(record[fk.sublabelField] ?? "") : "";
           return {
             value: String(record[fk.valueField]),
             label: String(record[fk.labelField]),
+            sublabel: sublabelRaw || undefined,
           };
         });
       }
@@ -256,7 +263,7 @@ export async function fetchFieldOptions<T extends TableName>(
     .from(fkTable)
     .select("*")
     .is("eliminado", false)
-    .order(fk.labelField, { ascending: true });
+    .order(fk.labelField, { ascending: false });
 
   if (fkError || !fkData) return [];
 
@@ -307,10 +314,12 @@ export async function fetchFieldOptions<T extends TableName>(
         }
 
         const fallbackLabel = rec[fk.labelField] ?? "";
+        const sublabelRaw = fk.sublabelField ? String(rec[fk.sublabelField] ?? "") : "";
 
         return {
           value: String(rec[fk.valueField]),
           label: label && label.trim() !== "" ? label : String(fallbackLabel),
+          sublabel: sublabelRaw || undefined,
         };
       });
     }
@@ -318,9 +327,11 @@ export async function fetchFieldOptions<T extends TableName>(
 
   return records.map((row) => {
     const record = row as Record<string, string | number>;
+    const sublabelRaw = fk.sublabelField ? String(record[fk.sublabelField] ?? "") : "";
     return {
       value: String(record[fk.valueField]),
       label: String(record[fk.labelField]),
+      sublabel: sublabelRaw || undefined,
     };
   });
 }

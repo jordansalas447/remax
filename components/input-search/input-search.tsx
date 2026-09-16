@@ -30,6 +30,8 @@ interface InputSearchProps<T> {
   loading: boolean;
   getOptionLabel: (item: T) => string;
   getOptionValue: (item: T) => number;
+  /** Devuelve el texto secundario del ítem (ej: RUC, código). Si no existe, no se muestra nada. */
+  getOptionSublabel?: (item: T) => string | undefined;
   inputPlaceholder?: string;
   selectPlaceholder?: string;
 }
@@ -44,26 +46,36 @@ export function InputSearch<T>({
   loading,
   getOptionLabel,
   getOptionValue,
+  getOptionSublabel,
   inputPlaceholder = "Buscar...",
   selectPlaceholder = "Seleccionar",
 }: InputSearchProps<T>) {
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  // Filtra por el texto de búsqueda sobre 'getOptionLabel'
+  // Filtra por texto de búsqueda sobre label Y sublabel
   const options = useMemo(
     () =>
       search.trim() === ""
         ? filteredItems
-        : filteredItems.filter((item) =>
-          getOptionLabel(item)
-            .toLowerCase()
-            .includes(search.trim().toLowerCase())
-        ),
-    [filteredItems, getOptionLabel, search]
+        : filteredItems.filter((item) => {
+            const q = search.trim().toLowerCase();
+            const matchLabel = getOptionLabel(item).toLowerCase().includes(q);
+            const sublabel = getOptionSublabel?.(item);
+            const matchSublabel = sublabel
+              ? sublabel.toLowerCase().includes(q)
+              : false;
+            return matchLabel || matchSublabel;
+          }),
+    [filteredItems, getOptionLabel, getOptionSublabel, search]
   );
 
   const selectedItem =
     filteredItems.find((item) => getOptionValue(item) === selectedId) ?? null;
+
+  const selectedLabel = selectedItem ? getOptionLabel(selectedItem) : null;
+  const selectedSublabel = selectedItem
+    ? getOptionSublabel?.(selectedItem)
+    : undefined;
 
   return (
     <div className={className}>
@@ -78,7 +90,7 @@ export function InputSearch<T>({
           />
         </div> */}
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-        <PopoverTrigger 
+        <PopoverTrigger
           disabled={loading}
           className="
           border-input
@@ -100,11 +112,22 @@ export function InputSearch<T>({
           aria-expanded={popoverOpen}
           role="combobox">
 
-          {loading
-            ? "Cargando..."
-            : selectedItem
-              ? getOptionLabel(selectedItem)
-              : selectPlaceholder}
+          <span className="flex min-w-0 flex-col items-start leading-tight">
+            {loading ? (
+              "Cargando..."
+            ) : selectedLabel ? (
+              <>
+                <span className="truncate">{selectedLabel}</span>
+                {selectedSublabel && (
+                  <span className="truncate text-xs text-muted-foreground">
+                    {selectedSublabel}
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-muted-foreground">{selectPlaceholder}</span>
+            )}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 
         </PopoverTrigger>
@@ -125,10 +148,13 @@ export function InputSearch<T>({
               <CommandGroup>
                 {options.map((item) => {
                   const value = String(getOptionValue(item));
+                  const label = getOptionLabel(item);
+                  const sublabel = getOptionSublabel?.(item);
+                  const isSelected = selectedId === getOptionValue(item);
                   return (
                     <CommandItem
                       key={value}
-                      value={getOptionLabel(item)}
+                      value={label}
                       onSelect={() => {
                         setSelectedId(getOptionValue(item));
                         setPopoverOpen(false);
@@ -136,13 +162,18 @@ export function InputSearch<T>({
                     >
                       <Check
                         className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedId === getOptionValue(item)
-                            ? "opacity-100"
-                            : "opacity-0"
+                          "mr-2 h-4 w-4 shrink-0",
+                          isSelected ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {getOptionLabel(item)}
+                      <span className="flex flex-col">
+                        <span>{label}</span>
+                        {sublabel && (
+                          <span className="text-xs text-muted-foreground">
+                            {sublabel}
+                          </span>
+                        )}
+                      </span>
                     </CommandItem>
                   );
                 })}

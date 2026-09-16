@@ -15,9 +15,51 @@ export const propietariosConfig: TableConfig = {
         table: "personas",
         valueField: "id",
         labelField: "nombre_completo",
+        sublabelField: "numero_telefono"
+      },
+    },
+    {
+      name: "id_empresas",
+      label: "Empresas",
+      type: "inputsearch",
+      foreignKey: {
+        table: "empresas",
+        valueField: "id",
+        labelField: "razon_soc",
+        sublabelField: "ruc"
+      },
+    },
+    {
+      name: "id_situacion",
+      label: "Situacion",
+      type: "select",
+      foreignKey: {
+        table: "situaciones",
+        valueField: "id",
+        labelField: "descripcion",
       },
     },
     { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true },
     { name: "contacto", label: "Contacto", type: "text" }
   ],
+  rules: {
+    fields: {
+      id_personas: {
+            when: {
+                field: "id_personas",
+                onlyOneSelected: true,
+                groupFields: ["id_personas", "id_empresas"],
+            },
+            disable: true,
+        },
+        id_empresas: {
+            when: {
+                field: "id_empresas",
+                onlyOneSelected: true,
+                groupFields: ["id_empresas", "id_personas"],
+            },
+            disable: true,
+        }
+    },
+},
 };

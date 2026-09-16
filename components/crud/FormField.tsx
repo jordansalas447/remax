@@ -29,8 +29,11 @@ export function FormField({
         className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
       >
         {field.label}
-        {isRequired && !disabled ? " *" : ""}
+        {isRequired && !disabled ? (
+          <span className="text-red-600"> *</span>
+        ) : ""}
       </label>
+ 
       {field.ui?.description ? (
         <p className="mb-1.5 text-xs text-zinc-500 dark:text-zinc-400">{field.ui.description}</p>
       ) : null}

@@ -82,6 +82,7 @@ export function PropietariosSection({ propietarios,CheckRevision ,loading, propi
       {propietarios.map((propietario) => {
         const persona = propietario.personas;
         const nombre = propietario.nombre_completo ?? persona?.nombre_completo ?? "Sin nombre";
+        const situacion = propietario.situacion?.descripcion;
 
         return (
           <div
@@ -96,6 +97,7 @@ export function PropietariosSection({ propietarios,CheckRevision ,loading, propi
             <div className="mb-3 flex items-center gap-3">
               <div className="min-w-0">
                 <p className="truncate font-medium text-zinc-900 dark:text-zinc-50"><FontAwesomeIcon icon={faUser} />{nombre}</p>
+                <p>{situacion}</p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   ID #{propietario.id_propietario}
                 </p>

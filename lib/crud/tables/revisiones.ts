@@ -87,7 +87,7 @@ export const revisionesConfig: TableConfig = {
       {
         name: "id_propietario_inmueble_contrato",
         label: "Inmueble propietario Contrato",
-        type: "select",
+        type: "inputsearch",
         foreignKey: {
           table: "propiedad_propietario",
           valueField: "id",

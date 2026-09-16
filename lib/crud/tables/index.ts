@@ -24,20 +24,26 @@ import { tablasConfig } from "./tablas";
 import { estados_revisionConfig } from "./estados-revision";
 import { operacioninmobiliariaConfig } from "./operacion-inmobiliaria";
 import { resourceConfig } from "./resource";
+import { historial_observacionesConfig } from "./historial_observaciones";
+import { situacionesConfig } from "./situaciones";
+import { empresasConfig } from "./empresas";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
   asociados: asociadosConfig,
   administrativos: administrativosConfig,
+  historial_observaciones: historial_observacionesConfig,
   //checklist_estado: checklistEstadoConfig,
   conformidad: conformidadConfig,
   contratos: contratosConfig,
   detalle_asociado: detalleAsociadoConfig,
+  situaciones:situacionesConfig,
   distritos: distritosConfig,
   estado: estadoConfig,
   items_checklist: itemsChecklistConfig,
   mes: mesConfig,
   nivel_asociado: nivelAsociadoConfig,
+  empresas:empresasConfig,
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,

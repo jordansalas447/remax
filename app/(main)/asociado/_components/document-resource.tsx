@@ -159,7 +159,7 @@ export function DocumentResource({ url, document, type, CheckRevision }: Documen
     // Agrega soporte para propietario
     if (type === "propietario") {
         // El recurso/documento principal está en document?.id_resource (siguiendo convención de los otros)
-        const doc = document?.personas.id_resource;
+        const doc = document?.personas?.id_resource;
         const hasDoc = !!doc?.url_resource;
 
         const getDocViewer = (doc: any) => {

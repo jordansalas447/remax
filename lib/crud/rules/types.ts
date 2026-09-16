@@ -83,7 +83,25 @@ export interface FieldCondition {
   ltField?: string;
 
 
-  ltFieldMayor?: string
+  ltFieldMayor?: string;
+
+  /**
+   * Lista de campos que forman el grupo de exclusión mutua.
+   *
+   * Se usa junto a `onlyOneSelected: true`.
+   * Ejemplo: ["id_propietarios", "id_contratos", "id_inmuebles"]
+   */
+  groupFields?: string[];
+
+  /**
+   * Si es `true`, deshabilita todos los demás campos del grupo
+   * (`groupFields`) en cuanto alguno de ellos tenga un valor.
+   *
+   * Cada campo del grupo debe tener una regla con:
+   *   when: { onlyOneSelected: true, groupFields: [...] }
+   *   disable: true
+   */
+  onlyOneSelected?: boolean;
 }
 
 /**

@@ -193,6 +193,9 @@ export default function AsociadoPage() {
         if (cancelled) return;
 
         setPropiedad(propiedadData);
+
+        console.log(propiedadData[0].inmueble)
+
         setPropietarios(propietariosData);
 
         setPropiedadesData(RevisionesPropiedades);
@@ -216,6 +219,8 @@ export default function AsociadoPage() {
       cancelled = true;
     };
   }, [selectedPropiedadId, selectedContratoId]);
+
+  
 
   const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number) => {
     setSelectedContratoId(id_contrato);
@@ -282,6 +287,28 @@ export default function AsociadoPage() {
         CheckRevision={RevisionesCheckDataContrato}      
       />
 
+      {selectedContrato?.observaciones && (
+        <section className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
+          <p className="mb-1 font-medium">Observaciones del contrato</p>
+          <p>{selectedContrato.observaciones}</p>
+        </section>
+      )}
+      
+      {propiedad &&
+        propiedad.map(
+          (item, idx) =>
+            item?.inmueble?.observacion && (
+              <section
+                key={idx}
+                className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100"
+              >
+                <p className="mb-1 font-medium">Observaciones del Inmueble</p>
+                <p>{item.inmueble.observacion}</p>
+              </section>
+            )
+        )}
+ 
+
       <PropiedadFicha
         propiedades={propiedad}
         loading={loadingPropiedad}
@@ -300,13 +327,6 @@ export default function AsociadoPage() {
         revisiones={RevisionesData ? RevisionesData : []}
         loading={loadingPropietarios}
       />
-
-      {selectedContrato?.observaciones && (
-        <section className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
-          <p className="mb-1 font-medium">Observaciones del contrato</p>
-          <p>{selectedContrato.observaciones}</p>
-        </section>
-      )}
     </div>
   </div>
 </div>

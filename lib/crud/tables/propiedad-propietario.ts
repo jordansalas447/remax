@@ -15,19 +15,20 @@ export const propiedadPropietarioConfig: TableConfig = {
       foreignKey: {
         table: "inmuebles",
         valueField: "id_propiedad",
-        labelField: "n_partida",
+        labelField: "id_remax",
+        sublabelField: "n_partida"
       },
     },
     {
       name: "id_propietario",
-      label: "Propietario",
+      label: "Propietario / Representante",
       type: "inputsearch",
       required: true,
       readOnlyOnEdit: true,
       foreignKey: {
         table: "propietarios",
         valueField: "id_propietario",
-        labelField: "nombre_completo",
+        labelField: "nombre_completo"
       },
     },
     {
@@ -42,6 +43,7 @@ export const propiedadPropietarioConfig: TableConfig = {
         labelField: "nro_contrato",
       },
     },
+    { name: "observacion", label: "Observacion", type: "textarea"},
     { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true },
   ],
 };

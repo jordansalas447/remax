@@ -71,6 +71,20 @@ function conditionMatches(condition: FieldCondition, mode: FormMode, values: For
     if (!(String(value) < String(other))) return false;
   }
 
+  /**
+   * onlyOneSelected: true
+   *
+   * La condición se cumple (devuelve true) si algún campo del grupo
+   * que NO sea el campo actual ya tiene un valor → la regla disable:true se activa.
+   */
+  if (condition.onlyOneSelected && Array.isArray(condition.groupFields)) {
+    const otherFieldHasValue = condition.groupFields.some((fieldName) => {
+      if (fieldName === condition.field) return false;
+      return !isEmptyValue(values[fieldName]);
+    });
+    if (!otherFieldHasValue) return false;
+  }
+
   return true;
 }
 

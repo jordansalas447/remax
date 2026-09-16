@@ -9,5 +9,6 @@ export const conformidadConfig: TableConfig = {
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "tipo", label: "Tipo", type: "text", required: true },
     { name: "descripcion", label: "Descripción", type: "textarea" },
+    { name: "color", label: "Color", type: "textarea" },
   ],
 };

@@ -36,6 +36,9 @@ export type InmuebleDetalle = PropiedadPropietarioRow & {
       tipo: string;
       descripcion: string;
     } | null;
+    captacion_mes?: {
+      mes:string;
+    } | null
   }
 }
 
@@ -172,8 +175,7 @@ export async function getPropiedadPropietarioInmueblesByContrato(
 ): Promise<InmuebleDetalle[]> {
   const supabase = createClient();
 
-  // Realizamos el join utilizando la sintaxis de supabase select
-  // propiedad_propietario.*, inmuebles(*, distritos, tipo_propiedad, conformidad:id_conformidad, id_resource_partida, id_resource_est_titulo)
+  // Consulta las filas de propiedad_propietario por id_contrato
   let query = supabase
     .from("propiedad_propietario")
     .select(`
@@ -184,7 +186,8 @@ export async function getPropiedadPropietarioInmueblesByContrato(
         tipo_propiedad (tipo_propiedad),
         conformidad:id_conformidad(*),
         id_resource_partida(*),
-        id_resource_est_titulo(*)
+        id_resource_est_titulo(*),
+        captacion_mes:id_mes_captacion(mes)
       )
     `)
     .eq("id_contrato", id_contrato)
@@ -196,7 +199,24 @@ export async function getPropiedadPropietarioInmueblesByContrato(
     throw new Error(`Error consultando propiedad_propietario + inmuebles por contrato: ${error.message}`);
   }
 
-  return data ?? [];
+  // filtrar los que tengan id_propiedad igual
+  // asumimos que data es un array de propiedad_propietario (cada uno puede tener el campo id_propiedad)
+  if (!data) {
+    return [];
+  }
+
+  // Sacamos los id_propiedad únicos y devolvemos sólo los primeros para cada id_propiedad
+  const filtered: any[] = [];
+  const seen = new Set<number>();
+  for (const item of data) {
+    const idProp = item.id_propiedad;
+    if (typeof idProp === "number" && !seen.has(idProp)) {
+      filtered.push(item);
+      seen.add(idProp);
+    }
+  }
+
+  return filtered;
 }
 
 

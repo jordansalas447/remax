@@ -9,5 +9,6 @@ export const operacionConfig: TableConfig = {
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "operacion", label: "Operación", type: "text", required: true },
     { name: "descripcion", label: "Descripción", type: "textarea" },
+    { name: "color", label: "Color", type: "text" },
   ],
 };

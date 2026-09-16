@@ -14,7 +14,16 @@ export const contratosConfig: TableConfig = {
   },
   fields: [
     { name: "id_contrato", label: "ID", type: "number", readOnlyOnEdit: true },
-    { name: "fecha_contrato", label: "Fecha Contrato", type: "date" },
+    {
+      name: "id_renovacion_contrato",
+      label: "Contrato (Renovación)",
+      type: "select",
+      selectplus: false,
+      foreignKey: { 
+        table: "contratos", 
+        valueField: "id_contrato", 
+        labelField: "nro_contrato" },
+    },
     {
       name: "id_propiedad",
       label: "Propiedad (Nº de partida)",
@@ -24,9 +33,10 @@ export const contratosConfig: TableConfig = {
         table: "inmuebles",
         valueField: "id_propiedad",
         labelField: "n_partida",
+        sublabelField: "id_remax"
       },
     },
-    { name: "nro_contrato", label: "Nro Contrato", type: "text" },
+    { name: "nro_contrato", label: "Nro Contrato", type: "text" , disabled:true },
     {
       name: "id_asociado",
       label: "Asociado",
@@ -41,6 +51,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_operacion",
       label: "Operación",
+      required:true,
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -52,6 +63,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_tipo_contrato",
       label: "Tipo contrato",
+      required:true,
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -60,7 +72,13 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_contrato",
       },
     },
-    { name: "estado", label: "Estado activo", type: "boolean" },
+    {
+      name: "id_mes_vencimiento",
+      label: "Mes vencimiento",
+      type: "select",
+      selectplus: false,
+      foreignKey: { table: "mes", valueField: "id", labelField: "mes" },
+    },
     {
       name: "id_conformidad",
       label: "Conformidad",
@@ -84,17 +102,6 @@ export const contratosConfig: TableConfig = {
       },
     },
     {
-      name: "id_mes_captacion",
-      label: "Mes captación",
-      type: "select",
-      selectplus: false,
-      foreignKey: {
-        table: "mes",
-        valueField: "id",
-        labelField: "mes",
-      },
-    },
-    {
       name: "id_tipo_moneda",
       label: "Medición / Moneda Precio Acordado",
       type: "select",
@@ -106,7 +113,7 @@ export const contratosConfig: TableConfig = {
       },
     },
     { name: "precio_inicio", label: "Precio Acordado", type: "number" },
-    { name: "fecha_inicio", label: "Fecha inicio", type: "date" },
+    { name: "fecha_inicio", label: "Fecha inicio", type: "datenative" },
     {
       name: "id_tipo_moneda_precio_venta",
       label: "Medición / Moneda Precio de Venta",
@@ -119,7 +126,7 @@ export const contratosConfig: TableConfig = {
       },
     },
     { name: "precio_venta", label: "Precio Venta", type: "number"},
-    { name: "fecha_fin", label: "Fecha fin", type: "date" },
+    { name: "fecha_fin", label: "Fecha fin", type: "datenative" },
     {
       name: "id_tipo_moneda_comision",
       label: "Medición / Moneda Comisión",
@@ -132,27 +139,21 @@ export const contratosConfig: TableConfig = {
       },
     },
     { name: "comision", label: "Comisión", type: "number" },
-    { name: "fecha_contrato_entregado", label: "Fecha Contrato Entregado", type: "date" },
-    { name: "fecha_contrato_sigi", label: "Fecha Contrato Sigi", type: "date" },
-    { name: "fecha_contrato_recibido", label: "Fecha Contrato Recibido", type: "date" },
-    {
-      name: "id_resource",
-      label: "Documento (URL)",
-      type: "select",
-      foreignKey: {
-        table: "resource",
-        valueField: "id_resource",
-        labelField: "url_resource",
-      },
-    },
-    {
-      name: "id_mes_vencimiento",
-      label: "Mes vencimiento",
-      type: "select",
-      selectplus: false,
-      foreignKey: { table: "mes", valueField: "id", labelField: "mes" },
-    },
-    { name: "observaciones", label: "Observaciones", type: "textarea" },
+    { name: "fecha_contrato_recibido", label: "Fecha Contrato Recibido", type: "datenative" },
+    { name: "fecha_contrato_entregado", label: "Fecha Contrato Entregado", type: "datenative" },
+    { name: "fecha_contrato_sigi", label: "Fecha Contrato Sigi", type: "datenative" },
+    { name: "observaciones", label: "Observaciones", type: "text" },
+
+    // {
+    //   name: "id_resource",
+    //   label: "Documento (URL)",
+    //   type: "select",
+    //   foreignKey: {
+    //     table: "resource",
+    //     valueField: "id_resource",
+    //     labelField: "url_resource",
+    //   },
+    // },
   ],
 
   rules: {
