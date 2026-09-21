@@ -134,6 +134,28 @@ export function FieldInput(props: FieldInputProps) {
     return selectElement;
   }
 
+  if (field.type === "enum") {
+    const enumOptions = field.options ?? [];
+    return (
+      <NativeSelect
+        id={field.name}
+        name={field.name}
+        value={inputValue}
+        onChange={(e) => onChange?.(e.target.value)}
+        required={required}
+        disabled={disabled}
+        className={baseClass}
+      >
+        <option value="">Seleccionar…</option>
+        {enumOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </NativeSelect>
+    );
+  }
+
   if (field.type === "select") {
     const showQuickCreate = !disabled && Boolean(field.foreignKey) && Boolean(onQuickCreate);
     const selectElement = (

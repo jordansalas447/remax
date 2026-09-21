@@ -25,7 +25,9 @@ export type PropiedadPropietarioDetalle = PropiedadPropietarioRow & {
   }>;
 };
 
+
 export type InmuebleDetalle = PropiedadPropietarioRow & {
+  historial_observacioness:  any[] | null;
   inmueble: Propiedad & {
     distritos: Pick<DistritoRow, "distrito"> | null;
     tipo_propiedad: Pick<TipoInmueblesRow, "tipo_propiedad"> | null;
@@ -39,7 +41,8 @@ export type InmuebleDetalle = PropiedadPropietarioRow & {
     captacion_mes?: {
       mes:string;
     } | null
-  }
+  };
+  observaciones:string[] | null;
 }
 
 export type PropiedadInmueblePropietarioContrato = PropiedadPropietarioRow & {
@@ -191,9 +194,12 @@ export async function getPropiedadPropietarioInmueblesByContrato(
       )
     `)
     .eq("id_contrato", id_contrato)
-    .eq("eliminado", false);
+    .eq("eliminado", false)
 
   const { data, error } = await query;
+
+
+  console.log(data)
 
   if (error) {
     throw new Error(`Error consultando propiedad_propietario + inmuebles por contrato: ${error.message}`);
@@ -205,16 +211,62 @@ export async function getPropiedadPropietarioInmueblesByContrato(
     return [];
   }
 
-  // Sacamos los id_propiedad únicos y devolvemos sólo los primeros para cada id_propiedad
-  const filtered: any[] = [];
-  const seen = new Set<number>();
+  // Integramos objetos duplicados por id_propiedad, agrupando campos repetidos en arrays
+
+  const integrated: any[] = [];
+  const groupedByPropiedad = new Map<number, any[]>();
+
   for (const item of data) {
     const idProp = item.id_propiedad;
-    if (typeof idProp === "number" && !seen.has(idProp)) {
-      filtered.push(item);
-      seen.add(idProp);
+    if (typeof idProp === "number") {
+      if (!groupedByPropiedad.has(idProp)) {
+        groupedByPropiedad.set(idProp, []);
+      }
+      groupedByPropiedad.get(idProp)!.push(item);
     }
   }
+
+  for (const [idProp, items] of groupedByPropiedad.entries()) {
+    if (!Array.isArray(items) || items.length === 0) continue;
+
+    // Usamos el primer objeto como base para los campos "simples"
+    const merged: any = { ...items[0] };
+
+    // Recorremos todas las claves, y si un campo tiene valores distintos lo agrupamos en array
+    for (const key of Object.keys(items[0])) {
+      const values = items.map(obj => obj[key]).filter(v => v !== undefined && v !== null);
+
+      const unique = Array.from(new Set(values.map(v => typeof v === "object" ? JSON.stringify(v) : v)));
+
+      // Si hay más de un valor, crear un array (parsear si es object)
+      if (unique.length > 1 || Array.isArray(values[0])) {
+        // restaurar objetos si era JSON.stringify
+        merged[key + "s"] = unique.map(v => {
+          if (typeof values[0] === "object" && typeof v === "string") {
+            try {
+              return JSON.parse(v);
+            } catch {
+              return v;
+            }
+          }
+          return v;
+        });
+      } else if (unique.length === 1) {
+        // unico valor, asignar directamente
+        merged[key] = typeof values[0] === "string" && values[0].startsWith("{") ? (()=>{try{return JSON.parse(values[0])}catch{return values[0]}})() : values[0];
+      }
+    }
+
+    // Adicionalmente, para observacion: juntar no vacíos en un array "observaciones"
+    const observaciones = items
+      .map(i => i.observacion)
+      .filter(s => typeof s === 'string' && s.trim() !== "");
+    merged["observaciones"] = observaciones;
+
+    integrated.push(merged);
+  }
+
+  const filtered = integrated;
 
   return filtered;
 }

@@ -55,6 +55,30 @@ export type Database = {
           },
         ]
       }
+      alcances: {
+        Row: {
+          alcance: string | null
+          created_at: string
+          eliminado: boolean | null
+          id_alcance: number
+          nombre_propiedad: string | null
+        }
+        Insert: {
+          alcance?: string | null
+          created_at?: string
+          eliminado?: boolean | null
+          id_alcance?: number
+          nombre_propiedad?: string | null
+        }
+        Update: {
+          alcance?: string | null
+          created_at?: string
+          eliminado?: boolean | null
+          id_alcance?: number
+          nombre_propiedad?: string | null
+        }
+        Relationships: []
+      }
       area: {
         Row: {
           area: string
@@ -135,6 +159,7 @@ export type Database = {
           deleted_at: string | null
           descripcion: string | null
           eliminado: boolean
+          estado: Database["public"]["Enums"]["estado_asociado"] | null
           fecha_creacion: string | null
           id_asociado: number
           id_detalle_asociado: number | null
@@ -148,6 +173,7 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
+          estado?: Database["public"]["Enums"]["estado_asociado"] | null
           fecha_creacion?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
@@ -161,6 +187,7 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
+          estado?: Database["public"]["Enums"]["estado_asociado"] | null
           fecha_creacion?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
@@ -732,7 +759,9 @@ export type Database = {
           eliminado: boolean | null
           fecha_creacion: string | null
           id: number
+          id_alcance: number | null
           id_contratos: number | null
+          id_inmueble_propietario_contrato: number | null
           id_inmuebles: number | null
           id_propietarios: number | null
           observacion: string
@@ -741,7 +770,9 @@ export type Database = {
           eliminado?: boolean | null
           fecha_creacion?: string | null
           id?: number
+          id_alcance?: number | null
           id_contratos?: number | null
+          id_inmueble_propietario_contrato?: number | null
           id_inmuebles?: number | null
           id_propietarios?: number | null
           observacion: string
@@ -750,12 +781,21 @@ export type Database = {
           eliminado?: boolean | null
           fecha_creacion?: string | null
           id?: number
+          id_alcance?: number | null
           id_contratos?: number | null
+          id_inmueble_propietario_contrato?: number | null
           id_inmuebles?: number | null
           id_propietarios?: number | null
           observacion?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "historial_observaciones_id_alcance_fkey"
+            columns: ["id_alcance"]
+            isOneToOne: false
+            referencedRelation: "alcances"
+            referencedColumns: ["id_alcance"]
+          },
           {
             foreignKeyName: "historial_observaciones_id_contratos_fkey"
             columns: ["id_contratos"]
@@ -776,6 +816,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "vw_revisiones_detalle"
             referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "historial_observaciones_id_inmueble_propietario_contrato_fkey"
+            columns: ["id_inmueble_propietario_contrato"]
+            isOneToOne: false
+            referencedRelation: "propiedad_propietario"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "historial_observaciones_id_inmuebles_fkey"
@@ -808,6 +855,7 @@ export type Database = {
           fotos: boolean | null
           id_conformidad: number | null
           id_distrito: number | null
+          id_inmueble: number | null
           id_mes_captacion: number | null
           id_propiedad: number
           id_remax: number | null
@@ -832,6 +880,7 @@ export type Database = {
           fotos?: boolean | null
           id_conformidad?: number | null
           id_distrito?: number | null
+          id_inmueble?: number | null
           id_mes_captacion?: number | null
           id_propiedad?: number
           id_remax?: number | null
@@ -856,6 +905,7 @@ export type Database = {
           fotos?: boolean | null
           id_conformidad?: number | null
           id_distrito?: number | null
+          id_inmueble?: number | null
           id_mes_captacion?: number | null
           id_propiedad?: number
           id_remax?: number | null
@@ -867,6 +917,13 @@ export type Database = {
           timestamp?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "inmuebles_id_inmueble_fkey"
+            columns: ["id_inmueble"]
+            isOneToOne: false
+            referencedRelation: "inmuebles"
+            referencedColumns: ["id_propiedad"]
+          },
           {
             foreignKeyName: "inmuebles_id_mes_captacion_fkey"
             columns: ["id_mes_captacion"]
@@ -1757,7 +1814,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      estado_asociado: "activo" | "deshafiliado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1884,6 +1941,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      estado_asociado: ["activo", "deshafiliado"],
+    },
   },
 } as const

@@ -9,6 +9,7 @@ export type FieldType =
   | "datenative"
   | "textarea"
   | "select"
+  | "enum"
   | "inputsearch"
   | "detailselect"
   | "custom";
@@ -63,10 +64,18 @@ export interface DateConstraints {
   disabledDates?: string[];
 }
 
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
 export interface FieldConfig {
   name: string;
   label: string;
   type: FieldType;
+
+  options?: SelectOption[];
+
   selectplus?: SelectPlus;
   /** Deshabilita el input en create y edit. */
   disabled?: boolean;

@@ -1,31 +1,25 @@
-import Link from "next/link";
-import { TABLE_CONFIGS, TABLE_NAMES } from "@/lib/crud/config";
-import { get_tabla } from "@/lib/crud/service";
-import { library, IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AnunciosGallery from "@/components/AnunciosGallery/AnunciosGallery";
 
-library.add(fas);
-
-export default async function HomePage() {
-
-  // Debes esperar la promesa que retorna GET_tabla usando await
-  // Y no uses mayúscula para variables comunes por convención.
-  const response = await get_tabla();
-
+export default function HomePage() {
   return (
     <div className="space-y-8">
-      <section>
-        <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Panel de captaciones
-        </h1>
-        <p className="mt-2 max-w-2xl text-zinc-600 dark:text-zinc-400">
-          Administra asesores, propiedades, contratos, revisiones y el checklist
-          de cada ficha inmobiliaria conectado a tu base de datos en Supabase.
-        </p>
-      </section>
+      <section className="w-full">
+        <div className="p-6 flex flex-col items-center gap-6">
+          <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-200 mb-2">
+            Anuncios destacados
+          </h2>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <AnunciosGallery />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+
+
+
+      {/* <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {TABLE_NAMES.map(async (name) => {
           const config = TABLE_CONFIGS[name];
 
@@ -58,7 +52,4 @@ export default async function HomePage() {
             </Link>
           );
         })}
-      </section>
-    </div>
-  );
-}
+      </section> */}

@@ -19,6 +19,18 @@ export const inmueblesConfig: TableConfig = {
 
   fields: [
     { name: "id_propiedad", label: "ID", type: "number", readOnlyOnEdit: true },
+    {
+      name: "id_inmueble",
+      label: "Inmueble",
+      type: "inputsearch",
+      selectplus: false,
+      foreignKey: {
+        table: "inmuebles",
+        valueField: "id_propiedad",
+        labelField: "n_partida",
+        sublabelField: "id_remax"
+    },
+    },
     // { name: "captacion", label: "Captación", type: "date" },
     { name: "id_remax", label: "ID REMAX", type: "number", required:true },
     { name: "n_partida", label: "N° Partida", type: "text" , required: true },

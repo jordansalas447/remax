@@ -33,6 +33,16 @@ export const asociadosConfig: TableConfig = {
     { name: "url_resource", label: "Imagen Perfil", type: "text" },
     { name: "descripcion", label: "Descripción", type: "textarea" },
     { name: "nombre_completo", label: "Nombre Completo", type: "text" },
+    // En tu TableConfig:
+    {
+      name: "estado",
+      label: "Estado",
+      type: "enum",
+      options: [
+        { value: "activo", label: "Activo" },
+        { value: "deshafiliado", label: "Deshafiliado" }
+      ],
+    }
   ],
   rules: {
     nombre_completo: { hide: true },

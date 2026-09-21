@@ -34,6 +34,7 @@ export function formatDisplayValue(
 ): string {
   if (value === null || value === undefined) return "—";
 
+  // Resolver desde opciones FK (select/inputsearch)
   if (options && options[field.name]) {
     const fieldOptions = options[field.name];
     const stringValue = String(value);
@@ -41,6 +42,13 @@ export function formatDisplayValue(
     if (matchedOption) {
       return matchedOption.label;
     }
+  }
+
+  // Resolver desde opciones estáticas del campo (enum)
+  if (field.type === "enum" && field.options) {
+    const stringValue = String(value);
+    const matchedOption = field.options.find((opt) => opt.value === stringValue);
+    if (matchedOption) return matchedOption.label;
   }
 
   return formatCellValue(value);

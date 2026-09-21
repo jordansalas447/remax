@@ -4,8 +4,9 @@ export const propiedadPropietarioConfig: TableConfig = {
   name: "propiedad_propietario",
   label: "I ↔ P ↔ C",
   description: "Relación entre inmuebles y propietarios y contratos",
-  primaryKey: ["id_propiedad", "id_propietario", "id"],
+  primaryKey: "id",
   fields: [
+    { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     {
       name: "id_propiedad",
       label: "Inmueble",

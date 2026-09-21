@@ -22,8 +22,10 @@ type SupportedTableName =
   | "checklist_estado"
   | "situaciones"
   | "empresas"
+  | "alcances"
   | "estado"
   | "resource"
+  | "alcance"
   | "mes"
   | "operacion"
   | "tipo_contrato"
@@ -48,6 +50,7 @@ export type Revision = TableRow<"revisiones">;
 export type Resource = TableRow<"resource">;
 export type Situacion = TableRow<"situaciones">
 export type Empresas = TableRow<"empresas">
+export type Alcances = TableRow<"alcances">
 export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">
 export type historial_observaciones = TableRow<"historial_observaciones">
 //export type ItemChecklist = TableRow<"items_checklist">;

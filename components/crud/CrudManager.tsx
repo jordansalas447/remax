@@ -150,6 +150,11 @@ export function CrudManager<T extends TableName = TableName>({
           const match = options[field.name].find((o) => o.value === String(raw ?? ""));
           if (match) return match.label;
         }
+        // Resolver etiqueta enum (opciones estáticas)
+        if (field.type === "enum" && field.options) {
+          const match = field.options.find((o) => o.value === String(raw ?? ""));
+          if (match) return match.label;
+        }
         if (raw === null || raw === undefined) return "";
         if (typeof raw === "boolean") return raw ? "Sí" : "No";
         return String(raw);

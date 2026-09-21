@@ -26,8 +26,14 @@ import {
 } from "@/lib/supabase/queries/propietarios";
 import { InputSearch } from "@/components/input-search/input-search";
 import { RevisionesEstatusItem } from "./_components/propiedad-estatus-item";
-import {  getPropiedadPropietarioInmueblesByContrato, getRevisionesDetalleByContratoVista, getRevisionesDetalleByPropiedadId, InmuebleDetalle, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
-import {  getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
+import { getPropiedadPropietarioInmueblesByContrato, getRevisionesDetalleByContratoVista, getRevisionesDetalleByPropiedadId, InmuebleDetalle, PropiedadPropietarioDetalle } from "@/lib/supabase/queries/propiedad_propietarios";
+import { getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
+import { ContratoDetalle } from "@/lib/business";
+import HistorialObservaciones from "./_components/historial-observaciones";
+import ObservacionInput from "./_components/componente-observaciones";
+import { createHistorialObservacion, getHistorialObservacionById, getHistorialObservacionByIdInmueblePropietarioContrato, HistorialObservacionesDetalle } from "@/lib/supabase/queries/historial_observaciones";
+import { toast } from "@/components/ui/toast";
+import { AlcanceDetalle, getAlcances } from "@/lib/supabase/queries/alcance";
 
 
 export default function AsociadoPage() {
@@ -49,11 +55,22 @@ export default function AsociadoPage() {
   const [PropiedadesData, setPropiedadesData] = useState<PropiedadPropietarioDetalle[]>([]);
   const [PropietariosData, setPropietariosData] = useState<PropiedadPropietarioDetalle[]>([]);
 
+  const [ContratoSelecionado, setContratoSelecionado] = useState<InmuebleDetalle | null>(null);
+
+
+  const [Observaciones, setObservaciones] = useState<string>("");
+  const [AlcanceSeleccionado, setAlcanceSeleccionado] = useState<number>(1)
+  const [guardandoObservacion, setGuardandoObservacion] = useState(false);
+
   const [RevisionesData, setRevisionesData] = useState<any[]>([]);
 
-  const [RevisionesCheckDataContrato,setRevisionesCheckDataContrato] = useState<any[]>([]);
-  const [RevisionesCheckDataPropiedad,setRevisionesCheckDataPropiedad] = useState<any[]>([]);
-  const [RevisionesCheckDataPropietarios,setRevisionesCheckDataPropietarios] = useState<any[]>([]);
+  const [historialObservacionesData,sethistorialObservacionesData] = useState<HistorialObservacionesDetalle[] | null>([]);
+
+  const [alcancesData,setalcancesData] = useState<AlcanceDetalle[]>([]);
+
+  const [RevisionesCheckDataContrato, setRevisionesCheckDataContrato] = useState<any[]>([]);
+  const [RevisionesCheckDataPropiedad, setRevisionesCheckDataPropiedad] = useState<any[]>([]);
+  const [RevisionesCheckDataPropietarios, setRevisionesCheckDataPropietarios] = useState<any[]>([]);
 
   const [loadingAsociados, setLoadingAsociados] = useState(true);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
@@ -156,9 +173,9 @@ export default function AsociadoPage() {
       setLoadingPropietarios(true);
 
       try {
-        const [propiedadData, propietariosData, RevisionesPropiedades,DetalleRevisionesPropietario,RevisionesCheckContratoData,RevisionesCheckPropiedadData] = await Promise.all([
+        const [propiedadData, propietariosData, RevisionesPropiedades, DetalleRevisionesPropietario, RevisionesCheckContratoData, RevisionesCheckPropiedadData] = await Promise.all([
           getPropiedadPropietarioInmueblesByContrato(selectedContratoId),
-          getPropietariosByPropiedadId(selectedPropiedadId,selectedContratoId),
+          getPropietariosByPropiedadId(selectedPropiedadId, selectedContratoId),
           getRevisionesDetalleByPropiedadId(selectedPropiedadId),
           getRevisionesDetalleByContratoVista(selectedContratoId),
 
@@ -167,6 +184,17 @@ export default function AsociadoPage() {
 
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
+
+
+        const [HistorialObservacionesData,AlcancesData] = await Promise.all([
+          getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0].id),
+          getAlcances()
+
+          //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
+        ]);
+
+        sethistorialObservacionesData(HistorialObservacionesData)
+        setalcancesData(AlcancesData)
 
         if (cancelled) return;
 
@@ -181,7 +209,7 @@ export default function AsociadoPage() {
         if (propietariosIds.length > 0) {
           try {
             for (const id of propietariosIds) {
-              const revisionesPropietario = await getVistaRevisiones(id,2);
+              const revisionesPropietario = await getVistaRevisiones(id, 2);
               RevisionesPropietariosData.push(...revisionesPropietario);
             }
           } catch (e) {
@@ -193,8 +221,6 @@ export default function AsociadoPage() {
         if (cancelled) return;
 
         setPropiedad(propiedadData);
-
-        console.log(propiedadData[0].inmueble)
 
         setPropietarios(propietariosData);
 
@@ -220,7 +246,6 @@ export default function AsociadoPage() {
     };
   }, [selectedPropiedadId, selectedContratoId]);
 
-  
 
   const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number) => {
     setSelectedContratoId(id_contrato);
@@ -232,104 +257,191 @@ export default function AsociadoPage() {
     [contratos, selectedContratoId],
   );
 
-  return (
-<div className="mx-auto flex w-full max-w-lxl flex-col gap-6">
-  <header className="space-y-1">
-    <div className="flex items-center gap-2 text-blue-600 dark:text-indigo-400">
-      <UsersRound className="size-5" />
-      <span className="text-sm font-medium">Gestión de asociados</span>
-    </div>
-    <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-      Ficha de asociado
-    </h1>
-    <p className="max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
-      Selecciona un asociado para consultar su perfil, contratos, inmuebles vinculadas y
-      propietarios.
-    </p>
-  </header>
+  const handleGuardarObservacion = useCallback(async () => {
+    const operacion = propiedad[0];
+    const texto = Observaciones.trim();
 
-  <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
-    {/* Columna lateral: búsqueda + perfil, fija al hacer scroll */}
-    <div className="flex flex-col gap-6 lg:sticky lg:top-6">
-      <section className="border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="mb-3 flex items-center gap-2">
-          <User className="size-5 text-blue-600 dark:text-indigo-400" />
-          <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-            Asociado
-          </span>
+    if (!operacion?.id || !texto || !AlcanceSeleccionado) return;
+
+    setGuardandoObservacion(true);
+
+    try {
+      const created = await createHistorialObservacion({
+        observacion: texto,
+        id_alcance: AlcanceSeleccionado,
+        id_inmueble_propietario_contrato: operacion.id,
+      });
+
+
+
+
+      setPropiedad((prev) => {
+        if (prev.length === 0) return prev;
+        const [first, ...rest] = prev;
+        const historial = Array.isArray(first.historial_observacioness)
+          ? first.historial_observacioness
+          : [];
+        return [
+          { ...first, historial_observacioness: [...historial, created] },
+          ...rest,
+        ];
+      });
+
+      setObservaciones("");
+      toast.add({
+        title: "Observación guardada",
+        type: "success",
+      });
+
+
+      const [HistorialObservacionesData] = await Promise.all([
+        getHistorialObservacionByIdInmueblePropietarioContrato(propiedad[0].id),
+
+        //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
+      ]);
+
+      sethistorialObservacionesData(HistorialObservacionesData)
+
+    } catch (error) {
+      toast.add({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "No se pudo guardar la observación.",
+        type: "error",
+      });
+    } finally {
+      setGuardandoObservacion(false);
+    }
+  }, [propiedad, Observaciones, AlcanceSeleccionado]);
+
+  return (
+    <div className="mx-auto flex w-full max-w-lxl flex-col gap-6">
+      <header className="space-y-1">
+        <div className="flex items-center gap-2 text-blue-600 dark:text-indigo-400">
+          <UsersRound className="size-5" />
+          <span className="text-sm font-medium">Gestión de asociados</span>
+        </div>
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          Ficha de asociado
+        </h1>
+        <p className="max-w-2xl text-sm text-zinc-500 dark:text-zinc-400">
+          Selecciona un asociado para consultar su perfil, contratos, inmuebles vinculadas y
+          propietarios.
+        </p>
+      </header>
+
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
+        {/* Columna lateral: búsqueda + perfil, fija al hacer scroll */}
+        <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+          <section className="border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+            <div className="mb-3 flex items-center gap-2">
+              <User className="size-5 text-blue-600 dark:text-indigo-400" />
+              <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                Asociado
+              </span>
+            </div>
+
+            <InputSearch
+              search={search}
+              setSearch={setSearch}
+              selectedId={selectedAsociadoId}
+              setSelectedId={setSelectedAsociadoId}
+              filteredItems={filteredAsociados}
+              loading={loadingAsociados}
+              getOptionLabel={(item) => item.nombre_completo ?? `Asociado #${item.id_asociado}`}
+              getOptionValue={(item) => item.id_asociado}
+              inputPlaceholder="Buscar por nombre o ID..."
+              selectPlaceholder="Seleccionar asociado"
+            />
+          </section>
+
+          <AsociadoProfileCard asociado={asociadoDetalle} loading={loadingDetalle} />
+
         </div>
 
-        <InputSearch
-          search={search}
-          setSearch={setSearch}
-          selectedId={selectedAsociadoId}
-          setSelectedId={setSelectedAsociadoId}
-          filteredItems={filteredAsociados}
-          loading={loadingAsociados}
-          getOptionLabel={(item) => item.nombre_completo ?? `Asociado #${item.id_asociado}`}
-          getOptionValue={(item) => item.id_asociado}
-          inputPlaceholder="Buscar por nombre o ID..."
-          selectPlaceholder="Seleccionar asociado"
-        />
-      </section>
+        {/* Columna principal: todo lo demás apilado verticalmente */}
+        <div className="flex flex-col gap-6">
+          <ContratosSection
+            contratos={contratos}
+            selectedContratoId={selectedContratoId}
+            onSelectContrato={handleSelectContrato}
+            loading={loadingContratos}
+            CheckRevision={RevisionesCheckDataContrato}
+          />
 
-      <AsociadoProfileCard asociado={asociadoDetalle} loading={loadingDetalle} />
- 
+
+
+          {selectedContrato?.observaciones && (
+            <section className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
+              <p className="mb-1 font-medium">Observaciones del contrato</p>
+              <p>{selectedContrato.observaciones}</p>
+            </section>
+          )}
+
+
+          {propiedad[0]?.observaciones && propiedad[0].observaciones.length > 0 && (
+            <section className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
+              <p className="mb-1 font-medium">Observaciones Generales</p>
+              {propiedad[0].observaciones.map((obs: string, idx: number) => (
+                <p key={idx}>{obs}</p>
+              ))}
+            </section>
+          )}
+
+
+          {propiedad &&
+            propiedad.map(
+              (item, idx) =>
+                item?.inmueble?.observacion && (
+                  <section
+                    key={idx}
+                    className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100"
+                  >
+                    <p className="mb-1 font-medium">Observaciones del Inmueble</p>
+                    <p>{item.inmueble.observacion}</p>
+                  </section>
+                )
+            )}
+
+          <HistorialObservaciones loading={loadingPropiedad} historial_observacioness={historialObservacionesData}></HistorialObservaciones>
+
+          {
+            contratos[0] &&
+            <ObservacionInput
+            
+              nuevaObservacion={Observaciones}
+              setNuevaObservacion={setObservaciones}
+              alcance={AlcanceSeleccionado}
+              setAlcance={setAlcanceSeleccionado}
+              onGuardar={handleGuardarObservacion}
+              guardando={guardandoObservacion} 
+              AlcancesOptions={alcancesData}          />
+        
+          }
+          
+          <PropiedadFicha
+            propiedades={propiedad}
+            loading={loadingPropiedad}
+            contratoId={selectedContratoId}
+            CheckRevision={RevisionesCheckDataPropiedad}
+          />
+
+          <PropietariosSection
+            propietarios={propietarios}
+            loading={loadingPropietarios}
+            propiedadId={selectedPropiedadId}
+            CheckRevision={RevisionesCheckDataPropietarios}
+          />
+
+          <RevisionesEstatusItem
+            revisiones={RevisionesData ? RevisionesData : []}
+            loading={loadingPropietarios}
+          />
+        </div>
+      </div>
     </div>
-
-    {/* Columna principal: todo lo demás apilado verticalmente */}
-    <div className="flex flex-col gap-6">
-      <ContratosSection     
-        contratos={contratos}
-        selectedContratoId={selectedContratoId}
-        onSelectContrato={handleSelectContrato}
-        loading={loadingContratos} 
-        CheckRevision={RevisionesCheckDataContrato}      
-      />
-
-      {selectedContrato?.observaciones && (
-        <section className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
-          <p className="mb-1 font-medium">Observaciones del contrato</p>
-          <p>{selectedContrato.observaciones}</p>
-        </section>
-      )}
-      
-      {propiedad &&
-        propiedad.map(
-          (item, idx) =>
-            item?.inmueble?.observacion && (
-              <section
-                key={idx}
-                className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100"
-              >
-                <p className="mb-1 font-medium">Observaciones del Inmueble</p>
-                <p>{item.inmueble.observacion}</p>
-              </section>
-            )
-        )}
- 
-
-      <PropiedadFicha
-        propiedades={propiedad}
-        loading={loadingPropiedad}
-        contratoId={selectedContratoId}
-        CheckRevision={RevisionesCheckDataPropiedad} 
-      />
-
-      <PropietariosSection
-        propietarios={propietarios}
-        loading={loadingPropietarios}
-        propiedadId={selectedPropiedadId}
-        CheckRevision={RevisionesCheckDataPropietarios} 
-      />
-
-      <RevisionesEstatusItem
-        revisiones={RevisionesData ? RevisionesData : []}
-        loading={loadingPropietarios}
-      />
-    </div>
-  </div>
-</div>
   );
 }
 

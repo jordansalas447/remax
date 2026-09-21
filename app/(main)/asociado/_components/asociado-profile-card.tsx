@@ -88,7 +88,7 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
           <img
             src="/LogoRemax.png"
             alt="Logo RE/MAX"
-            className="object-contain w-25 h-25 absolute top-3 left-1 bg-white/80 p-1"
+            className="object-contain w-25 h-25 absolute top-3 left-1 p-1"
             style={{ zIndex: 2 }}
           />
         </div>
@@ -135,6 +135,7 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
       <DetailField label="Fecha nacimiento" value={formatDate(persona?.fecha_nacimiento)} />
       <DetailField label="Registro asociado" value={formatDate(asociado.fecha_creacion)} />
       <DetailField label="Correo Electronico" value={persona?.correo_electronico ?? persona?.correo_electronico} />
+      <DetailField label="Estado" badge={true} badgeVariant={"default"} value={asociado?.estado} />
     </dl>
   </div>
 </Card>

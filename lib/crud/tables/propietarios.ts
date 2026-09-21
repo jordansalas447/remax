@@ -39,8 +39,8 @@ export const propietariosConfig: TableConfig = {
         labelField: "descripcion",
       },
     },
-    { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true },
-    { name: "contacto", label: "Contacto", type: "text" }
+    { name: "nombre_completo", label: "Nombre Completo", type: "text", readOnlyOnEdit: true , hiddenInForm:true },
+    // { name: "contacto", label: "Contacto", type: "text" }
   ],
   rules: {
     fields: {
@@ -50,7 +50,7 @@ export const propietariosConfig: TableConfig = {
                 onlyOneSelected: true,
                 groupFields: ["id_personas", "id_empresas"],
             },
-            disable: true,
+            hide: true,
         },
         id_empresas: {
             when: {
@@ -58,7 +58,7 @@ export const propietariosConfig: TableConfig = {
                 onlyOneSelected: true,
                 groupFields: ["id_empresas", "id_personas"],
             },
-            disable: true,
+            hide: true,
         }
     },
 },

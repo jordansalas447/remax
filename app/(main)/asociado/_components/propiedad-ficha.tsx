@@ -99,7 +99,7 @@ export function PropiedadFicha({
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 mb-4 text-sm text-zinc-600 dark:text-zinc-300">
-                  <MapPin className="size-4" />
+                  <MapPin className="size-8" />
                   {propiedad.inmueble.direccion ?? "Sin dirección registrada"}
                 </div>
                 <dl className="grid gap-4 sm:grid-cols-2">
@@ -136,10 +136,10 @@ export function PropiedadFicha({
                   />
                   <DetailField
                     badge={true}
-                    label="Fecha est Titulo"
+                    label="Fecha est Título"
                     value={formatDate(propiedad.inmueble.fecha_est_titulo)}
                   />
-                  <DetailField label="Observacion" value={propiedad.inmueble.observacion} />
+                  <DetailField label="Observación" value={propiedad.inmueble.observacion} />
                 </dl>
               </div>
             ))}
