@@ -332,7 +332,7 @@ export default function AsociadoPage() {
         </p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr] sm:grid-cols-[300px_1fr] lg:items-start">
         {/* Columna lateral: búsqueda + perfil, fija al hacer scroll */}
         <div className="flex flex-col gap-6 lg:sticky lg:top-6">
           <section className="border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">

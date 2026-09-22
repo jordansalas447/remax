@@ -77,7 +77,7 @@ export function PropiedadFicha({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-1 xl:grid-cols-2">
             {propiedades.map((propiedad, idx) => (
               <div
                 key={idx}
@@ -102,7 +102,7 @@ export function PropiedadFicha({
                   <MapPin className="size-8" />
                   {propiedad.inmueble.direccion ?? "Sin dirección registrada"}
                 </div>
-                <dl className="grid gap-4 sm:grid-cols-2">
+                <dl className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   <DetailField label="Captación" value={propiedad.inmueble.captacion_mes?.mes} />
                   <DetailField label="Tipo" value={propiedad.inmueble.tipo_propiedad?.tipo_propiedad} />
                   <DetailField label="Distrito" value={propiedad.inmueble.distritos?.distrito} />

@@ -5,6 +5,9 @@ export const personasConfig: TableConfig = {
   label: "Personas",
   description: "Personas registradas en el sistema",
   primaryKey: "id",
+  form: {
+    columns: 2,
+  },
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "nombre", label: "Nombre", type: "text", required: true },

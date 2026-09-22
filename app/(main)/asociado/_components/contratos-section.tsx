@@ -316,7 +316,7 @@ export function ContratosSection({
 
       {contratosFiltrados.length > 0 ? (
         <>
-          <CardContent className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+          <CardContent className="grid gap-3 grid-cols-1 sm:grid-cols-1 xl:grid-cols-3">
             {gruposVisibles.map((grupo) => {
               if (grupo.items.length === 1) {
                 const contrato = grupo.items[0];
@@ -506,7 +506,7 @@ function RenewalStack({
                 type="button"
                 onClick={() => bringToFront(i)}
                 title="Ver este contrato"
-                className="absolute inset-x-0 flex h-15 items-center justify-between gap-2 rounded-t-xl border border-zinc-200 bg-white px-3.5 text-left shadow-sm transition-all duration-300 ease-out hover:brightness-95 dark:border-zinc-800 dark:bg-zinc-900"
+                className="absolute inset-x-0 flex h-15 items-center justify-between gap-2 rounded-t-xl border border-zinc-200 bg-white px-3.5 text-left transition-all duration-300 ease-out hover:brightness-95 dark:border-zinc-800 dark:bg-zinc-900"
                 style={{
                   top: (maxDistancia - distancia) * PEEK,
                   zIndex: items.length - distancia,
@@ -521,14 +521,14 @@ function RenewalStack({
                   </span>
                   {/* Nro de contrato o fallback */}
                   <span className="truncate">
-                    {contrato.nro_contrato || `Contrato #${contrato.id_contrato}`}
+                    C: {contrato.nro_contrato || `Contrato #${contrato.id_contrato}`}
                   </span>
                   {/* Fecha inicio */}
                   {/* <span className="shrink-0 text-zinc-400 dark:text-zinc-500">
                     · {formatDate(contrato.fecha_inicio)}
                   </span> */}
                   {/* Datos fijos en la cadena */}
-                  {hayDatosFijos && (
+                  {/* {hayDatosFijos && (
                     <span className="gap-2.5 text-sm flex items-center">
                       {tipoEsConstante && (
                         <Badge variant="secondary">
@@ -541,8 +541,7 @@ function RenewalStack({
                         </Badge>
                       )}
                     </span>
-                  )}
-
+                  )} */}
                 </span>
 
                 {/* Chevron para indicar "expandir/ver" */}
@@ -673,13 +672,14 @@ function ContratoCard({
         <div className="mb-3 flex items-start justify-between gap-2">
           <div>
             <div className="font-medium text-zinc-900 dark:text-zinc-50">
-              Contrato
+            <span className="text-base text-gray-800">C: {contrato.nro_contrato}</span>
+       
               <span className="text-xs text-gray-400"> #{contrato.id_contrato}
-                {stackVariant && stackTotal && stackTotal > 1 && (
+                {/* {stackVariant && stackTotal && stackTotal > 1 && (
                   <Badge variant="outline" className="mx-2 text-[10px]">
                     {stackPosition === stackTotal ? "Vigente" : `Renovación ${stackPosition}/${stackTotal}`}
                   </Badge>
-                )}
+                )} */}
                 {contrato.conformidad?.tipo ? (
                   <Badge
                     className="mx-2"
@@ -700,14 +700,15 @@ function ContratoCard({
                   </Badge>}
               </span>
             </div>
-            <p>
-              <span className="text-xs text-gray-800">{contrato.nro_contrato}</span>
-            </p>
-            {!hideTipoContrato && (
+            <Badge variant={"outline"}>
+              {contrato.tipo_contrato?.tipo_contrato}
+            </Badge>
+       
+            {/* {!hideTipoContrato && (
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 {contrato.tipo_contrato?.tipo_contrato ?? "No definido"}
               </p>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -771,6 +772,13 @@ function ContratoCard({
                 <strong>Días: {calcularDiasDesdeEntrada(contrato)} {calcularDiasDesdeEntrada(contrato) === 1 ? "día" : "días"}</strong>
               </Badge>
             )}
+          </div>
+          <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300">
+            <Calendar className="size-4 shrink-0" />
+            <span>
+              Observaciones: {formatDate(contrato.observaciones)}
+            </span>
+
           </div>
         </dl>
         <div

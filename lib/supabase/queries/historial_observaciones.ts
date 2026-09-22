@@ -38,7 +38,8 @@ export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_
       alcance:id_alcance(*)
       `)
     .eq('id_inmueble_propietario_contrato', id_inmueble_propietario_contrato)
-    .eq('eliminado',false);
+    .eq('eliminado',false)
+    .order('fecha_creacion', { ascending: true });;
   if (error) throw new Error(error.message);
   return data ?? null;
 }
