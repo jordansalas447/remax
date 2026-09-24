@@ -10,6 +10,8 @@ export function FormField({
   options,
   disabled,
   required,
+  htmlName,
+  htmlId,
   onChange,
   onQuickCreate,
 }: {
@@ -18,14 +20,17 @@ export function FormField({
   options: SelectOption[];
   disabled?: boolean;
   required?: boolean;
+  htmlName?: string;
+  htmlId?: string;
   onChange?: (val: string) => void;
   onQuickCreate?: (field: FieldConfig) => void;
 }) {
   const isRequired = required ?? field.required;
+  const inputId = htmlId ?? field.name;
   return (
     <div>
       <label
-        htmlFor={field.name}
+        htmlFor={inputId}
         className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
       >
         {field.label}
@@ -43,6 +48,8 @@ export function FormField({
         options={options}
         disabled={disabled}
         required={isRequired}
+        htmlName={htmlName}
+        htmlId={inputId}
         onChange={onChange}
         onQuickCreate={onQuickCreate}
       />

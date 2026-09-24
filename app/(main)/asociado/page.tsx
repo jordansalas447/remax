@@ -222,6 +222,8 @@ export default function AsociadoPage() {
 
         setPropiedad(propiedadData);
 
+        console.log(propietariosData);
+
         setPropietarios(propietariosData);
 
         setPropiedadesData(RevisionesPropiedades);
@@ -405,20 +407,19 @@ export default function AsociadoPage() {
                 )
             )}
 
-          <HistorialObservaciones loading={loadingPropiedad} historial_observacioness={historialObservacionesData}></HistorialObservaciones>
-
           {
             contratos[0] &&
+            <div>
+            <HistorialObservaciones loading={loadingPropiedad} historial_observacioness={historialObservacionesData}></HistorialObservaciones>
             <ObservacionInput
-            
               nuevaObservacion={Observaciones}
               setNuevaObservacion={setObservaciones}
               alcance={AlcanceSeleccionado}
               setAlcance={setAlcanceSeleccionado}
               onGuardar={handleGuardarObservacion}
               guardando={guardandoObservacion} 
-              AlcancesOptions={alcancesData}          />
-        
+              AlcancesOptions={alcancesData}/>
+            </div>                  
           }
           
           <PropiedadFicha

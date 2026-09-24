@@ -8,7 +8,7 @@ export const empresasConfig: TableConfig = {
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "razon_soc", label: "Razon Social", type: "text", required: true },
-    { name: "ruc", label: "RUC", type: "text", required: true },
+    { name: "ruc", label: "RUC", type: "text" },
   ]
   
 };

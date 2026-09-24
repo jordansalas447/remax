@@ -7,8 +7,24 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
-function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+function Dialog(
+  { 
+    preventOutsideClose = true,
+    onOpenChange,
+    ...props 
+  }: DialogPrimitive.Root.Props & {
+    preventOutsideClose?: boolean
+  }) {
+  return <DialogPrimitive.Root 
+  onOpenChange={(open, details) => {
+    if (!open && preventOutsideClose) {
+      return
+    }
+
+    onOpenChange?.(open, details)
+  }}
+  data-slot="dialog"
+  {...props} />
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {

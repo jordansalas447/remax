@@ -17,6 +17,8 @@ export interface FieldInputProps {
   options: SelectOption[];
   disabled?: boolean;
   required?: boolean;
+  htmlName?: string;
+  htmlId?: string;
   onChange?: (val: string) => void;
   onQuickCreate?: (field: FieldConfig) => void;
 }
@@ -53,6 +55,8 @@ export function FieldInput(props: FieldInputProps) {
   const { field, value, options, onChange, onQuickCreate } = props;
   const disabled = Boolean(props.disabled || field.disabled);
   const required = props.required ?? field.required;
+  const inputName = props.htmlName ?? field.name;
+  const inputId = props.htmlId ?? field.name;
   const baseClass = "w-full";
   const inputValue = normalizeInputValue(field, value);
   const placeholder = field.ui?.placeholder;
@@ -65,8 +69,8 @@ export function FieldInput(props: FieldInputProps) {
   if (field.type === "textarea") {
     return (
       <Textarea
-        id={field.name}
-        name={field.name}
+        id={inputId}
+        name={inputName}
         rows={3}
         value={inputValue}
         placeholder={placeholder}
@@ -81,8 +85,8 @@ export function FieldInput(props: FieldInputProps) {
   if (field.type === "boolean") {
     return (
       <NativeSelect
-        id={field.name}
-        name={field.name}
+        id={inputId}
+        name={inputName}
         value={inputValue}
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
@@ -102,7 +106,7 @@ export function FieldInput(props: FieldInputProps) {
     // 'search' es estado local solo para filtrar; NO se propaga al form.
     // 'onChange' solo se llama al seleccionar un ítem, pasando su ID como string.
     const selectElement = (<InputSearchWrapper
-      name={field.name}
+      name={inputName}
       selectedValue={inputValue}
       className={baseClass}
       options={options}
@@ -138,8 +142,8 @@ export function FieldInput(props: FieldInputProps) {
     const enumOptions = field.options ?? [];
     return (
       <NativeSelect
-        id={field.name}
-        name={field.name}
+        id={inputId}
+        name={inputName}
         value={inputValue}
         onChange={(e) => onChange?.(e.target.value)}
         required={required}
@@ -160,8 +164,8 @@ export function FieldInput(props: FieldInputProps) {
     const showQuickCreate = !disabled && Boolean(field.foreignKey) && Boolean(onQuickCreate);
     const selectElement = (
       <NativeSelect
-        id={field.name}
-        name={field.name}
+        id={inputId}
+        name={inputName}
         value={inputValue}
         onChange={(e) => onChange?.(e.target.value)}
         required={required}
@@ -204,8 +208,8 @@ export function FieldInput(props: FieldInputProps) {
   if (field.type === "date") {
     return (
       <DatePicker
-        id={field.name}
-        name={field.name}
+        id={inputId}
+        name={inputName}
         value={inputValue}
         onChange={(newDate) => onChange?.(newDate)}
         required={required}
@@ -221,8 +225,8 @@ export function FieldInput(props: FieldInputProps) {
     const isReadOnly = field.readOnlyOnEdit || !onChange;
     return (
       <Input
-        id={field.name}
-        name={field.name}
+        id={inputId}
+        name={inputName}
         type="date"
         value={inputValue}
         required={required}
@@ -240,8 +244,8 @@ export function FieldInput(props: FieldInputProps) {
 
   return (
     <Input
-      id={field.name}
-      name={field.name}
+      id={inputId}
+      name={inputName}
       type={field.type === "number" ? "number" : "text"}
       step={field.type === "number" ? "any" : undefined}
       value={inputValue}

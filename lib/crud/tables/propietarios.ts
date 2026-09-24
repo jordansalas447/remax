@@ -32,6 +32,7 @@ export const propietariosConfig: TableConfig = {
     {
       name: "id_situacion",
       label: "Situacion",
+      defaultValue:"3",
       type: "select",
       foreignKey: {
         table: "situaciones",

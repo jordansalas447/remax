@@ -92,6 +92,14 @@ export interface FieldConfig {
    * Permite limitar el calendario a un rango, días específicos o fechas exactas.
    */
   dateConstraints?: DateConstraints;
+  /**
+   * Valor por defecto que se aplica **solo en modo "create"** (cuando no hay `row`).
+   * - `select` / `inputsearch`: ID del ítem a preseleccionar (string o number).
+   * - `enum` / `boolean`: el string de la opción (ej. `"USD"`, `"true"`).
+   * - `text` / `number` / `date` / etc.: el valor literal.
+   * En modo "edit" siempre prevalece el valor del registro existente.
+   */
+  defaultValue?: string | number | boolean;
 
   /** Array de subcampos, si corresponde (para campos compuestos o anidados) */
   fields?: FieldConfig[];
@@ -119,6 +127,28 @@ export interface FormConfig {
   sections?: FormSectionConfig[];
 }
 
+/**
+ * Colección 1:N renderizada en el formulario del maestro.
+ * Cada fila se persiste en `table` al guardar la cabecera.
+ */
+export interface DetailCollectionConfig {
+  name: string;
+  label: string;
+  description?: string;
+  table: TableName;
+  /** Columna en la tabla hija que apunta a la PK del maestro. */
+  parentKey: string;
+  /** Campo del maestro que aporta el valor de `parentKey`. Por defecto, la PK. */
+  parentValueField?: string;
+  /** Columnas hijas copiadas desde campos de la cabecera: { hija: padre }. */
+  copyFromParent?: Record<string, string>;
+  /** Nombres de campos de la tabla hija que se muestran en cada fila. */
+  fields: string[];
+  min?: number;
+  max?: number;
+  addLabel?: string;
+}
+
 export interface TableConfig {
   name: TableName;
   label: string;
@@ -126,6 +156,7 @@ export interface TableConfig {
   primaryKey: string | string[];
   fields: FieldConfig[];
   form?: FormConfig;
+  details?: DetailCollectionConfig[];
   /**
    * Reglas de negocio por campo (ocultar, deshabilitar, exigir, omitir del payload)
    * y/o validaciones de negocio que bloquean el guardado.

@@ -773,13 +773,13 @@ function ContratoCard({
               </Badge>
             )}
           </div>
-          <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300">
+          {/* <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300">
             <Calendar className="size-4 shrink-0" />
             <span>
-              Observaciones: {formatDate(contrato.observaciones)}
+              Observaciones: {contrato.observaciones}
             </span>
 
-          </div>
+          </div> */}
         </dl>
         <div
           className={cn(

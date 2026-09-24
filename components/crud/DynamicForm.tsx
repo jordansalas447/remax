@@ -2,10 +2,13 @@
 
 import { FormField } from "@/components/crud/FormField";
 import { FormSection } from "@/components/crud/FormSection";
+import { DetailsRepeater } from "@/components/crud/DetailsRepeater";
 import { resolveFieldState } from "@/lib/crud/rules";
 import type { FieldConfig, TableConfig } from "@/lib/crud/config";
 import type { SelectOption } from "@/lib/crud/actions";
 import type { FormColumns, FormLayout, FormSectionConfig } from "@/lib/crud/types";
+import type { DetailRow } from "@/lib/crud/details";
+import type { TableName } from "@/lib/types/database";
 
 type FormMode = "create" | "edit";
 
@@ -14,8 +17,12 @@ interface DynamicFormProps {
   mode: FormMode;
   values: Record<string, string | number | boolean | null | undefined>;
   options: Record<string, SelectOption[]>;
+  details?: Record<string, DetailRow[]>;
+  detailOptions?: Record<string, Record<string, SelectOption[]>>;
   onChange: (fieldName: string, value: string) => void;
-  onQuickCreate: (field: FieldConfig) => void;
+  onDetailChange?: (name: string, rows: DetailRow[]) => void;
+  onQuickCreate: (field: FieldConfig, sourceTable?: TableName) => void;
+  onDetailQuickCreate?: (collection: string, index: number, field: FieldConfig) => void;
 }
 
 interface ResolvedSection {
@@ -119,10 +126,15 @@ export function DynamicForm({
   mode,
   values,
   options,
+  details,
+  detailOptions,
   onChange,
+  onDetailChange,
   onQuickCreate,
+  onDetailQuickCreate,
 }: DynamicFormProps) {
   const sections = resolveSections(config, mode).filter((section) => section.fields.length > 0);
+  const detailCollections = config.details ?? [];
 
   return (
     <div className="space-y-6">
@@ -152,6 +164,22 @@ export function DynamicForm({
             );
           })}
         </FormSection>
+      ))}
+
+      {/* ── Colecciones de detalle (Master/Detail) ─────────────────── */}
+      {detailCollections.map((detail) => (
+        <DetailsRepeater
+          key={detail.name}
+          detail={detail}
+          rows={details?.[detail.name] ?? []}
+          options={detailOptions?.[detail.name] ?? {}}
+          onChange={(rows) => onDetailChange?.(detail.name, rows)}
+          onQuickCreate={
+            onDetailQuickCreate
+              ? (field, index) => onDetailQuickCreate(detail.name, index, field)
+              : undefined
+          }
+        />
       ))}
     </div>
   );

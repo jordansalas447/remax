@@ -44,7 +44,20 @@ export const propiedadPropietarioConfig: TableConfig = {
         labelField: "nro_contrato",
       },
     },
-    { name: "observacion", label: "Observacion", type: "textarea"},
-    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true },
+    // { name: "observacion", label: "Observacion", type: "textarea"},
+    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true ,hiddenInForm:true },
+  ],
+  details: [
+    {
+      name: "Observaciones",
+      label: "Observaciones",
+      description: "Historial Observaciones",
+      table: "historial_observaciones",
+      parentKey: "id_inmueble_propietario_contrato",
+      /** Campos de propiedad_propietario que se muestran en cada fila del repeater. */
+      fields: ["observacion"],
+      min: 0,
+      addLabel: "Agregar Observacion",
+    },
   ],
 };

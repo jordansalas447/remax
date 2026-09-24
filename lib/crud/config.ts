@@ -3,6 +3,7 @@ import { tableConfigs } from "@/lib/crud/tables";
 
 export type {
   DateConstraints,
+  DetailCollectionConfig,
   FieldConfig,
   FieldUiConfig,
   FormConfig,

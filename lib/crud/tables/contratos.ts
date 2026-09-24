@@ -19,24 +19,25 @@ export const contratosConfig: TableConfig = {
       label: "Contrato (Renovación)",
       type: "select",
       selectplus: false,
-      foreignKey: { 
-        table: "contratos", 
-        valueField: "id_contrato", 
-        labelField: "nro_contrato" },
+      foreignKey: {
+        table: "contratos",
+        valueField: "id_contrato",
+        labelField: "nro_contrato"
+      },
     },
     {
       name: "id_propiedad",
-      label: "Propiedad (Nº de partida)",
+      label: "Propiedad (ID Remax)",
       type: "inputsearch",
       required: true,
       foreignKey: {
         table: "inmuebles",
         valueField: "id_propiedad",
-        labelField: "n_partida",
-        sublabelField: "id_remax"
+        labelField: "id_remax",
+        sublabelField: "n_partida"
       },
     },
-    { name: "nro_contrato", label: "Nro Contrato", type: "text" , disabled:true },
+    { name: "nro_contrato", label: "Nro Contrato", type: "text", disabled: true },
     {
       name: "id_asociado",
       label: "Asociado",
@@ -51,7 +52,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_operacion",
       label: "Operación",
-      required:true,
+      required: true,
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -63,7 +64,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_tipo_contrato",
       label: "Tipo contrato",
-      required:true,
+      required: true,
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -72,13 +73,13 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_contrato",
       },
     },
-    {
-      name: "id_mes_vencimiento",
-      label: "Mes vencimiento",
-      type: "select",
-      selectplus: false,
-      foreignKey: { table: "mes", valueField: "id", labelField: "mes" },
-    },
+    // {
+    //   name: "id_mes_vencimiento",
+    //   label: "Mes vencimiento",
+    //   type: "select",
+    //   selectplus: false,
+    //   foreignKey: { table: "mes", valueField: "id", labelField: "mes" },
+    // },
     {
       name: "id_conformidad",
       label: "Conformidad",
@@ -93,6 +94,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_estado",
       label: "Estado",
+      defaultValue: "12",
       selectplus: false,
       type: "select",
       foreignKey: {
@@ -112,8 +114,8 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
-    { name: "precio_inicio", label: "Precio Acordado", type: "number" },
-    { name: "fecha_inicio", label: "Fecha inicio", type: "datenative" },
+    { name: "precio_inicio", label: "Precio Acordado", type: "number", required:true },
+    { name: "fecha_inicio", label: "Fecha inicio", type: "datenative", required:true },
     {
       name: "id_tipo_moneda_precio_venta",
       label: "Medición / Moneda Precio de Venta",
@@ -125,7 +127,7 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
-    { name: "precio_venta", label: "Precio Venta", type: "number"},
+    { name: "precio_venta", label: "Precio Venta", type: "number" },
     { name: "fecha_fin", label: "Fecha fin", type: "datenative" },
     {
       name: "id_tipo_moneda_comision",
@@ -143,6 +145,7 @@ export const contratosConfig: TableConfig = {
     { name: "fecha_contrato_entregado", label: "Fecha Contrato Entregado", type: "datenative" },
     { name: "fecha_contrato_sigi", label: "Fecha Contrato Sigi", type: "datenative" },
     { name: "observaciones", label: "Observaciones", type: "text" },
+    { name: "fecha_operacion_ejecutada", label: "Fecha de Cierre Operación", type: "datenative" },
 
     // {
     //   name: "id_resource",

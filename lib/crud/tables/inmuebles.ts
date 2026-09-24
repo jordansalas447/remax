@@ -29,14 +29,16 @@ export const inmueblesConfig: TableConfig = {
         valueField: "id_propiedad",
         labelField: "n_partida",
         sublabelField: "id_remax"
-    },
+      },
     },
     // { name: "captacion", label: "Captación", type: "date" },
-    { name: "id_remax", label: "ID REMAX", type: "number", required:true },
-    { name: "n_partida", label: "N° Partida", type: "text" , required: true },
+    { name: "id_remax", label: "ID REMAX", type: "number", required: true },
+    { name: "n_partida", label: "N° Partida", type: "text", required: true },
+    { name: "constancia", label: "Constancia", type: "text" },
     {
       name: "id_mes_captacion",
       label: "Mes Captacion",
+      required: true,
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -70,8 +72,10 @@ export const inmueblesConfig: TableConfig = {
         labelField: "distrito",
       },
     },
-    { name: "fotos", label: "Tiene fotos", type: "boolean" },    
+    // { name: "fotos", label: "Tiene fotos", type: "boolean" },
+    { name: "descripcion", label: "Descripción", type: "text" },
     { name: "observacion", label: "Observación", type: "textarea" },
+
     // {
     //   name: "id_resource_partida",
     //   label: "Documento (Partida)",

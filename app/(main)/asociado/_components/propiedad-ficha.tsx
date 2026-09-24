@@ -90,7 +90,7 @@ export function PropiedadFicha({
                         ? `Conformidad: ${propiedad.inmueble.conformidad.tipo}`
                         : "Sin conformidad"}
                     </Badge> */}
-                    <span className="text-base font-bold text-black">{propiedad.inmueble.n_partida}</span>
+                    <span className="text-base font-bold text-black">ID REMAX: {propiedad.inmueble.id_remax}</span>
                
                     <span className="text-xs text-gray-400">#{propiedad.id_propiedad}</span>
                   </div>
