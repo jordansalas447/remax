@@ -5,6 +5,14 @@ export const propiedadPropietarioConfig: TableConfig = {
   label: "I ↔ P ↔ C",
   description: "Relación entre inmuebles y propietarios y contratos",
   primaryKey: "id",
+  form: {
+    title: "Relación Inmueble ↔ Propietario ↔ Contrato",
+    description: "Asocia propietarios y contratos a un inmueble.",
+    submitLabel: "Guardar y cerrar",
+    allowSaveAndContinue: true,
+    saveAndContinueLabel: "Guardar y agregar otro propietario",
+    clearOnSaveAndContinue: ["id_propietario"],
+  },
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     {
@@ -21,18 +29,6 @@ export const propiedadPropietarioConfig: TableConfig = {
       },
     },
     {
-      name: "id_propietario",
-      label: "Propietario / Representante",
-      type: "inputsearch",
-      required: true,
-      readOnlyOnEdit: true,
-      foreignKey: {
-        table: "propietarios",
-        valueField: "id_propietario",
-        labelField: "nombre_completo"
-      },
-    },
-    {
       name: "id_contrato",
       label: "Contrato",
       type: "inputsearch",
@@ -42,6 +38,18 @@ export const propiedadPropietarioConfig: TableConfig = {
         table: "contratos",
         valueField: "id_contrato",
         labelField: "nro_contrato",
+      },
+    },
+    {
+      name: "id_propietario",
+      label: "Propietario / Representante",
+      type: "inputsearch",
+      required: true,
+      readOnlyOnEdit: true,
+      foreignKey: {
+        table: "propietarios",
+        valueField: "id_propietario",
+        labelField: "nombre_completo"
       },
     },
     // { name: "observacion", label: "Observacion", type: "textarea"},

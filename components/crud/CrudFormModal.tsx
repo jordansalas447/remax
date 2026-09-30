@@ -89,6 +89,9 @@ export function CrudFormModal<T extends TableName>({
     [options, optionOverrides],
   );
 
+  // ── Modo de envío (guardar y cerrar vs guardar y continuar) ─────────────
+  const submitActionRef = useRef<"save_and_close" | "save_and_continue">("save_and_close");
+
   // ── Valores de campos de la cabecera ────────────────────────────────────
   const [formValues, setFormValues] = useState<Record<string, string | number | boolean | null | undefined>>(
     () => {
@@ -282,6 +285,8 @@ export function CrudFormModal<T extends TableName>({
       timeout: 0,
     });
 
+    const isSaveAndContinue = submitActionRef.current === "save_and_continue" && mode === "create";
+
     startTransition(async () => {
       const result =
         mode === "create" ? await createRecord(table, formData) : await updateRecord(table, formData);
@@ -299,7 +304,11 @@ export function CrudFormModal<T extends TableName>({
 
       toast.update(loadingId, {
         title: "Guardado",
-        description: mode === "create" ? "Registro creado correctamente." : "Cambios guardados.",
+        description: isSaveAndContinue
+          ? "Registro creado correctamente. Listo para agregar el siguiente."
+          : mode === "create"
+            ? "Registro creado correctamente."
+            : "Cambios guardados.",
         type: "success",
         timeout: 3000,
       });
@@ -308,7 +317,36 @@ export function CrudFormModal<T extends TableName>({
         onCreated(result.data as Record<string, unknown>);
       }
       router.refresh();
-      onClose();
+
+      if (isSaveAndContinue) {
+        const clearFields = config.form?.clearOnSaveAndContinue;
+        const keepFields = config.form?.keepOnSaveAndContinue;
+
+        setFormValues((prev) => {
+          const next: Record<string, string | number | boolean | null | undefined> = {};
+          for (const field of config.fields) {
+            if (clearFields && clearFields.includes(field.name)) {
+              next[field.name] = "";
+            } else if (keepFields && !keepFields.includes(field.name)) {
+              next[field.name] = "";
+            } else {
+              next[field.name] = prev[field.name] ?? "";
+            }
+          }
+          return next;
+        });
+
+        // Limpiar colecciones de detalle para el nuevo registro
+        const resetDetails: Record<string, DetailRow[]> = {};
+        for (const detail of detailCollections) {
+          const childConfig = getTableConfig(detail.table);
+          resetDetails[detail.name] = childConfig ? initialDetailRows(detail, childConfig) : [];
+        }
+        setDetailRows(resetDetails);
+        submitActionRef.current = "save_and_close";
+      } else {
+        onClose();
+      }
     });
   }
 
@@ -350,11 +388,30 @@ export function CrudFormModal<T extends TableName>({
                 {error}
               </p>
             )}
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
+            <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 {cancelLabel}
               </Button>
-              <Button type="submit" disabled={isPending}>
+              {mode === "create" && config.form?.allowSaveAndContinue && (
+                <Button
+                  type="submit"
+                  variant="outline"
+                  disabled={isPending}
+                  onClick={() => {
+                    submitActionRef.current = "save_and_continue";
+                  }}
+                  className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-300 dark:hover:bg-blue-900/60"
+                >
+                  {config.form?.saveAndContinueLabel ?? "Guardar y agregar otro"}
+                </Button>
+              )}
+              <Button
+                type="submit"
+                disabled={isPending}
+                onClick={() => {
+                  submitActionRef.current = "save_and_close";
+                }}
+              >
                 {isPending ? "Guardando…" : submitLabel}
               </Button>
             </DialogFooter>

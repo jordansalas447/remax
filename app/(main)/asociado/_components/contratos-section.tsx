@@ -73,6 +73,29 @@ function getParentId(
   return null;
 }
 
+
+/**
+ * Calcula si la fecha de entrada ha expirado comparándola con la fecha actual.
+ * @param fechaEntrada Fecha de entrada (string o Date).
+ * @returns 
+ *   - "Expirada" si la fecha de entrada es anterior a la fecha actual (hoy).
+ *   - "Vigente" en caso contrario.
+ *   - "Sin fecha" si no se proporciona fecha.
+ */
+export function verificarFechaEntradaExpirada(fechaEntrada?: string | Date | null): "Expirada" | "Vigente" | "Sin fecha" {
+  if (!fechaEntrada) return "Sin fecha";
+  const fecha = typeof fechaEntrada === "string" ? new Date(fechaEntrada) : fechaEntrada;
+  // Quitar parte de hora para comparar sólo fechas
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  fecha.setHours(0, 0, 0, 0);
+  if (fecha < hoy) {
+    return "Expirada";
+  }
+  return "Vigente";
+}
+
+
 function calcularComision(contrato: {
   precio_inicio?: number | string | null,
   precio_venta?: number | string | null,
@@ -115,12 +138,20 @@ function calcularComision(contrato: {
     if (esConformidad6) {
       return `${simboloPrecio ?? "—"} ${valorPrev} ( ${contrato.comision} ${simboloComision ?? "—"} )`;
     }
+    // Si hay P.Venta, no agregar "Aprox."
+    if (tienePrecioVenta) {
+      return `${simboloPrecio ?? "—"} ${valorPrev} ( ${contrato.comision} ${simboloComision ?? "—"} )`;
+    }
     return `Aprox. ${simboloPrecio ?? "—"} ${valorPrev} ( ${contrato.comision} ${simboloComision ?? "—"} )`;
   } else {
     if (contrato.comision == null || isNaN(comisionNum)) {
       return "—";
     }
     if (esConformidad6) {
+      return `${simboloComision ?? "—"} ${contrato.comision} ( Fijo )`;
+    }
+    // Si hay P.Venta, no agregar "Aprox."
+    if (tienePrecioVenta) {
       return `${simboloComision ?? "—"} ${contrato.comision} ( Fijo )`;
     }
     return `Aprox. ${simboloComision ?? "—"} ${contrato.comision} ( Fijo )`;
@@ -645,15 +676,38 @@ function ContratoCard({
   const documentoUrl: string | undefined =
     (contrato as any).resources?.url_resource ||
     (contrato as any).resource?.url_resource; // Por compat
+
+  // Detecta si existe precio de venta (p.venta)
+  const tienePrecioVenta =
+    contrato.precio_venta !== null &&
+    contrato.precio_venta !== undefined &&
+    contrato.precio_venta !== 0;
+
+  // Determina la tonalidad verdusca (fondo/borde) si hay p.venta
+  const verdeCard =
+    "border-green-400 bg-green-50/80 ring-2 ring-green-300/20 dark:border-green-500 dark:bg-green-950/30";
+  // Tonalidad de selección (azul)
+  const seleccionCard =
+    "border-blue-500 bg-blue-50/100 ring-2 ring-blue-500/20 dark:border-blue-400 dark:bg-blue-950/30";
+  // Default
+  const defaultCard =
+    "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950";
+
+  // Lógica para prioridad de color:
+  // Si está seleccionado, SIEMPRE se pinta como seleccionado (azul)
+  // Si NO está seleccionado pero tiene precio_venta, se pinta verdusco
+  // Si no, default.
+  let cardClasses = "relative h-full rounded-xl border p-4 text-left transition-all hover:border-blue-300 hover:shadow-sm dark:hover:border-blue-700";
+  if (isSelected) {
+    cardClasses = `${cardClasses} ${seleccionCard}`;
+  } else if (tienePrecioVenta) {
+    cardClasses = `${cardClasses} ${verdeCard}`;
+  } else {
+    cardClasses = `${cardClasses} ${defaultCard}`;
+  }
+
   return (
-    <div
-      className={cn(
-        "relative h-full rounded-xl border p-4 text-left transition-all hover:border-blue-300 hover:shadow-sm dark:hover:border-blue-700",
-        isSelected
-          ? "border-blue-500 bg-blue-50/100 ring-2 ring-blue-500/20 dark:border-blue-400 dark:bg-blue-950/30"
-          : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950",
-      )}
-    >
+    <div className={cardClasses}>
       {/* Nuevo botón con icono de documento en la esquina superior derecha */}
       <div className="relative">
         <div className="absolute right-0">
@@ -672,8 +726,8 @@ function ContratoCard({
         <div className="mb-3 flex items-start justify-between gap-2">
           <div>
             <div className="font-medium text-zinc-900 dark:text-zinc-50">
-            <span className="text-base text-gray-800">C: {contrato.nro_contrato}</span>
-       
+              <span className="text-base text-gray-800">C: {contrato.nro_contrato}</span>
+
               <span className="text-xs text-gray-400"> #{contrato.id_contrato}
                 {/* {stackVariant && stackTotal && stackTotal > 1 && (
                   <Badge variant="outline" className="mx-2 text-[10px]">
@@ -703,12 +757,6 @@ function ContratoCard({
             <Badge variant={"outline"}>
               {contrato.tipo_contrato?.tipo_contrato}
             </Badge>
-       
-            {/* {!hideTipoContrato && (
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                {contrato.tipo_contrato?.tipo_contrato ?? "No definido"}
-              </p>
-            )} */}
           </div>
         </div>
 
@@ -725,12 +773,23 @@ function ContratoCard({
           </div>
           <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300">
             <HandCoins className="size-4 shrink-0" />
-            <span>P.Venta:  {contrato.tipo_moneda_precio_venta?.simbolo} {contrato.precio_venta ?? "—"}</span>
+            <span>
+              <strong>
+                P.Concretado:  {contrato.tipo_moneda_precio_venta?.simbolo} {contrato.precio_venta ?? "—"}
+              </strong>
+              {tienePrecioVenta && (
+                <Badge variant="green" className="ml-2">
+                  Operación concretada
+                </Badge>
+              )}
+            </span>
           </div>
+
           <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300">
             <Calendar className="size-4 shrink-0" />
             <span>
               Fecha:  {formatDate(contrato.fecha_inicio)} – {formatDate(contrato.fecha_fin)}
+              <Badge className="mx-2" variant={verificarFechaEntradaExpirada(contrato.fecha_fin) == "Expirada" ? "red" : "green"}> {verificarFechaEntradaExpirada(contrato.fecha_fin)} </Badge>
             </span>
           </div>
 

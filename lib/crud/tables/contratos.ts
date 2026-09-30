@@ -17,7 +17,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_renovacion_contrato",
       label: "Contrato (Renovación)",
-      type: "select",
+      type: "inputsearch",
       selectplus: false,
       foreignKey: {
         table: "contratos",
@@ -37,7 +37,7 @@ export const contratosConfig: TableConfig = {
         sublabelField: "n_partida"
       },
     },
-    { name: "nro_contrato", label: "Nro Contrato", type: "text", disabled: true },
+    { name: "nro_contrato", label: "Nro Contrato", type: "text", disabled: false },
     {
       name: "id_asociado",
       label: "Asociado",
@@ -118,7 +118,7 @@ export const contratosConfig: TableConfig = {
     { name: "fecha_inicio", label: "Fecha inicio", type: "datenative", required:true },
     {
       name: "id_tipo_moneda_precio_venta",
-      label: "Medición / Moneda Precio de Venta",
+      label: "Medición / Moneda de Operacion Concreatada",
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -127,7 +127,7 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
-    { name: "precio_venta", label: "Precio Venta", type: "number" },
+    { name: "precio_venta", label: "Precio Operación Concretada", type: "number" },
     { name: "fecha_fin", label: "Fecha fin", type: "datenative" },
     {
       name: "id_tipo_moneda_comision",
@@ -146,7 +146,7 @@ export const contratosConfig: TableConfig = {
     { name: "fecha_contrato_sigi", label: "Fecha Contrato Sigi", type: "datenative" },
     { name: "observaciones", label: "Observaciones", type: "text" },
     { name: "fecha_operacion_ejecutada", label: "Fecha de Cierre Operación", type: "datenative" },
-
+    { name: "descripcion", label: "Descripción", type: "text" },
     // {
     //   name: "id_resource",
     //   label: "Documento (URL)",

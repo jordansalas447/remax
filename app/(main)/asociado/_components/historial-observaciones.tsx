@@ -84,7 +84,7 @@ export const HistorialObservaciones: React.FC<HistorialObservacionesProps> = ({
             <TimelineItem step={idx + 1} key={idx} >
               <TimelineHeader>
                  <TimelineTitle>
-                 {obs.alcance.alcance}
+                 {obs.alcance?.alcance}
                 </TimelineTitle> 
               </TimelineHeader>
               <TimelineIndicator />

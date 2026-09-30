@@ -8,7 +8,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { getTableConfig, type FieldConfig } from "@/lib/crud/config";
 import type { SelectOption } from "@/lib/crud/actions";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { InputSearch } from "@/components/input-search/input-search";
 
 export interface FieldInputProps {
@@ -284,6 +284,12 @@ function InputSearchWrapper({
   onChange,
 }: InputSearchWrapperProps) {
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (!selectedValue) {
+      setSearch("");
+    }
+  }, [selectedValue]);
 
   const selectedId = selectedValue ? Number(selectedValue) : null;
 

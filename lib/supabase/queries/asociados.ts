@@ -22,6 +22,7 @@ export async function getAsociados(): Promise<AsociadoListItem[]> {
   const { data, error } = await supabase
     .from("asociados")
     .select("id_asociado, nombre_completo, descripcion, fecha_creacion")
+    .eq("eliminado",false)
     .order("nombre_completo", { ascending: true });
 
   if (error) {
@@ -47,6 +48,7 @@ export async function getAsociadoDetalle(id_asociado: number): Promise<AsociadoD
     `,
     )
     .eq("id_asociado", id_asociado)
+    .eq("eliminado",false)
     .maybeSingle();
 
   if (error) {

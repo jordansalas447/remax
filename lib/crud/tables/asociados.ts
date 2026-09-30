@@ -39,8 +39,8 @@ export const asociadosConfig: TableConfig = {
       label: "Estado",
       type: "enum",
       options: [
-        { value: "activo", label: "Activo" },
-        { value: "deshafiliado", label: "Deshafiliado" }
+        { value: "Activo", label: "Activo" },
+        { value: "Deshafiliado", label: "Deshafiliado" }
       ],
     }
   ],

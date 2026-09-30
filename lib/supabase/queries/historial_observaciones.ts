@@ -31,6 +31,10 @@ export async function getHistorialObservacionById(id: number): Promise<Historial
 }
 
 export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_inmueble_propietario_contrato: number): Promise<HistorialObservacionesDetalle[] | null> {
+  if (typeof id_inmueble_propietario_contrato !== 'number' || isNaN(id_inmueble_propietario_contrato)) {
+    // Puedes lanzar error o retornar null según la lógica de tu app
+    return null;
+  }
   const supabase = createClient();
   const { data, error } = await supabase
     .from('historial_observaciones')
@@ -38,8 +42,8 @@ export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_
       alcance:id_alcance(*)
       `)
     .eq('id_inmueble_propietario_contrato', id_inmueble_propietario_contrato)
-    .eq('eliminado',false)
-    .order('fecha_creacion', { ascending: true });;
+    .eq('eliminado', false)
+    .order('fecha_creacion', { ascending: true });
   if (error) throw new Error(error.message);
   return data ?? null;
 }

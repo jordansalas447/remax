@@ -125,6 +125,14 @@ export interface FormConfig {
   cancelLabel?: string;
   fields?: string[];
   sections?: FormSectionConfig[];
+  /** Permite mostrar el botón 'Guardar y agregar otro' en modo creación */
+  allowSaveAndContinue?: boolean;
+  /** Texto del botón de guardar y continuar */
+  saveAndContinueLabel?: string;
+  /** Lista de campos a limpiar al pulsar 'Guardar y agregar otro' */
+  clearOnSaveAndContinue?: string[];
+  /** Lista de campos a conservar al pulsar 'Guardar y agregar otro' (los demás se limpian) */
+  keepOnSaveAndContinue?: string[];
 }
 
 /**

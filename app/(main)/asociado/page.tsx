@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Search, User, UsersRound } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { Search, User, UsersRound, RefreshCcw } from "lucide-react";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
 import { AsociadoProfileCard } from "./_components/asociado-profile-card";
@@ -35,7 +35,6 @@ import { createHistorialObservacion, getHistorialObservacionById, getHistorialOb
 import { toast } from "@/components/ui/toast";
 import { AlcanceDetalle, getAlcances } from "@/lib/supabase/queries/alcance";
 
-
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
   const [search, setSearch] = useState("");
@@ -57,16 +56,15 @@ export default function AsociadoPage() {
 
   const [ContratoSelecionado, setContratoSelecionado] = useState<InmuebleDetalle | null>(null);
 
-
   const [Observaciones, setObservaciones] = useState<string>("");
   const [AlcanceSeleccionado, setAlcanceSeleccionado] = useState<number>(1)
   const [guardandoObservacion, setGuardandoObservacion] = useState(false);
 
   const [RevisionesData, setRevisionesData] = useState<any[]>([]);
 
-  const [historialObservacionesData,sethistorialObservacionesData] = useState<HistorialObservacionesDetalle[] | null>([]);
+  const [historialObservacionesData, sethistorialObservacionesData] = useState<HistorialObservacionesDetalle[] | null>([]);
 
-  const [alcancesData,setalcancesData] = useState<AlcanceDetalle[]>([]);
+  const [alcancesData, setalcancesData] = useState<AlcanceDetalle[]>([]);
 
   const [RevisionesCheckDataContrato, setRevisionesCheckDataContrato] = useState<any[]>([]);
   const [RevisionesCheckDataPropiedad, setRevisionesCheckDataPropiedad] = useState<any[]>([]);
@@ -77,6 +75,10 @@ export default function AsociadoPage() {
   const [loadingContratos, setLoadingContratos] = useState(false);
   const [loadingPropiedad, setLoadingPropiedad] = useState(false);
   const [loadingPropietarios, setLoadingPropietarios] = useState(false);
+
+  // Ref para saber si hubo ya una selección de asociado (esto se usa para mostrar el botón de refrescar una vez)
+  const hasSelectedOnce = useRef(false);
+  const [refreshKey, setRefreshKey] = useState(0); // Para forzar refresco por el boton
 
   useEffect(() => {
     let cancelled = false;
@@ -106,6 +108,11 @@ export default function AsociadoPage() {
     });
   }, [asociados, search]);
 
+  // --------------------------
+  // DATA FETCHING PRINCIPAL 
+  // --------------------------
+
+  // Cuando cambia el asociado seleccionado o refrescamos (refreshKey), traer datos
   useEffect(() => {
 
     if (selectedAsociadoId == null) {
@@ -115,6 +122,8 @@ export default function AsociadoPage() {
       setSelectedPropiedadId(null);
       return;
     }
+
+    hasSelectedOnce.current = true; // Ya hubo una selección de asociado
 
     let cancelled = false;
 
@@ -151,7 +160,7 @@ export default function AsociadoPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedAsociadoId]);
+  }, [selectedAsociadoId, refreshKey]);
 
   useEffect(() => {
     if (selectedPropiedadId == null) {
@@ -186,8 +195,8 @@ export default function AsociadoPage() {
         ]);
 
 
-        const [HistorialObservacionesData,AlcancesData] = await Promise.all([
-          getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0].id),
+        const [HistorialObservacionesData, AlcancesData] = await Promise.all([
+          getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0]?.id),
           getAlcances()
 
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
@@ -222,7 +231,7 @@ export default function AsociadoPage() {
 
         setPropiedad(propiedadData);
 
-        console.log(propietariosData);
+        //console.log(propietariosData);
 
         setPropietarios(propietariosData);
 
@@ -247,7 +256,6 @@ export default function AsociadoPage() {
       cancelled = true;
     };
   }, [selectedPropiedadId, selectedContratoId]);
-
 
   const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number) => {
     setSelectedContratoId(id_contrato);
@@ -274,9 +282,6 @@ export default function AsociadoPage() {
         id_inmueble_propietario_contrato: operacion.id,
       });
 
-
-
-
       setPropiedad((prev) => {
         if (prev.length === 0) return prev;
         const [first, ...rest] = prev;
@@ -295,11 +300,8 @@ export default function AsociadoPage() {
         type: "success",
       });
 
-
       const [HistorialObservacionesData] = await Promise.all([
         getHistorialObservacionByIdInmueblePropietarioContrato(propiedad[0].id),
-
-        //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
       ]);
 
       sethistorialObservacionesData(HistorialObservacionesData)
@@ -317,6 +319,11 @@ export default function AsociadoPage() {
       setGuardandoObservacion(false);
     }
   }, [propiedad, Observaciones, AlcanceSeleccionado]);
+
+  // Handler para el Botón de Refrescar
+  const handleRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
   return (
     <div className="mx-auto flex w-full max-w-lxl flex-col gap-6">
@@ -357,6 +364,21 @@ export default function AsociadoPage() {
               inputPlaceholder="Buscar por nombre o ID..."
               selectPlaceholder="Seleccionar asociado"
             />
+            {/* REFRESCAR: Boton de refrescar datos (sólo después de seleccionar un asociado) */}
+            {
+              selectedAsociadoId !== null && hasSelectedOnce.current && (
+                <button
+                  type="button"
+                  onClick={handleRefresh}
+                  className="mt-3 inline-flex items-center gap-2 rounded border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100 dark:border-indigo-700/40 dark:bg-indigo-950/10 dark:text-indigo-300 dark:hover:bg-indigo-900/30 transition"
+                  disabled={loadingDetalle || loadingContratos}
+                  title="Refrescar datos del asociado"
+                >
+                  <RefreshCcw className="size-4 animate-spin transition motion-reduce:animate-none" style={{ animationPlayState: (loadingDetalle || loadingContratos) ? "running" : "paused" }} />
+                  {loadingDetalle || loadingContratos ? "Actualizando..." : "Refrescar"}
+                </button>
+              )
+            }
           </section>
 
           <AsociadoProfileCard asociado={asociadoDetalle} loading={loadingDetalle} />
@@ -373,15 +395,12 @@ export default function AsociadoPage() {
             CheckRevision={RevisionesCheckDataContrato}
           />
 
-
-
           {selectedContrato?.observaciones && (
             <section className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
               <p className="mb-1 font-medium">Observaciones del contrato</p>
               <p>{selectedContrato.observaciones}</p>
             </section>
           )}
-
 
           {propiedad[0]?.observaciones && propiedad[0].observaciones.length > 0 && (
             <section className="border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-100">
@@ -391,7 +410,6 @@ export default function AsociadoPage() {
               ))}
             </section>
           )}
-
 
           {propiedad &&
             propiedad.map(
@@ -410,18 +428,18 @@ export default function AsociadoPage() {
           {
             contratos[0] &&
             <div>
-            <HistorialObservaciones loading={loadingPropiedad} historial_observacioness={historialObservacionesData}></HistorialObservaciones>
-            <ObservacionInput
-              nuevaObservacion={Observaciones}
-              setNuevaObservacion={setObservaciones}
-              alcance={AlcanceSeleccionado}
-              setAlcance={setAlcanceSeleccionado}
-              onGuardar={handleGuardarObservacion}
-              guardando={guardandoObservacion} 
-              AlcancesOptions={alcancesData}/>
-            </div>                  
+              <HistorialObservaciones loading={loadingPropiedad} historial_observacioness={historialObservacionesData}></HistorialObservaciones>
+              <ObservacionInput
+                nuevaObservacion={Observaciones}
+                setNuevaObservacion={setObservaciones}
+                alcance={AlcanceSeleccionado}
+                setAlcance={setAlcanceSeleccionado}
+                onGuardar={handleGuardarObservacion}
+                guardando={guardandoObservacion}
+                AlcancesOptions={alcancesData} />
+            </div>
           }
-          
+
           <PropiedadFicha
             propiedades={propiedad}
             loading={loadingPropiedad}
@@ -445,4 +463,3 @@ export default function AsociadoPage() {
     </div>
   );
 }
-
