@@ -47,7 +47,7 @@ export const inmueblesConfig: TableConfig = {
         labelField: "mes",
       },
     },
-    { name: "direccion", label: "Dirección", type: "text" },
+    { name: "direccion", label: "Dirección", type: "textarea" },
     { name: "area_terreno", label: "Área terreno (m²)", type: "number" },
     { name: "area_construida", label: "Área construida (m²)", type: "number" },
     { name: "fecha_est_titulo", label: "Fecha Estudio Titulo", type: "datenative" },

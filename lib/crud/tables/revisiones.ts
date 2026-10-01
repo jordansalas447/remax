@@ -14,6 +14,7 @@ export const revisionesConfig: TableConfig = {
     { name: "id_revision", label: "ID", type: "number", readOnlyOnEdit: true },
     {
         name: "id_estado_oficina",
+        defaultValue: "35",
         label: "Estado Oficina",
         type: "select",
         foreignKey: {
@@ -24,6 +25,7 @@ export const revisionesConfig: TableConfig = {
       },
     {
         name: "id_estado_sigi",
+        defaultValue: "35",
         label: "Estado Sigi",
         type: "select",
         foreignKey: {
@@ -46,7 +48,7 @@ export const revisionesConfig: TableConfig = {
     { name: "fecha_recibido", label: "Fecha Recibido", type: "date" },
     {
         name: "id_revisiones_configuracion",
-        label: "Revisiones",
+        label: "Revision",
         type: "select",
         foreignKey: {
           table: "configuracion_revisiones",
@@ -57,7 +59,7 @@ export const revisionesConfig: TableConfig = {
       {
         name: "id_propietario",
         label: "Propietario",
-        type: "select",
+        type: "inputsearch",
         foreignKey: {
           table: "propietarios",
           valueField: "id_propietario",
@@ -67,7 +69,7 @@ export const revisionesConfig: TableConfig = {
       {
         name: "id_contrato",
         label: "Contrato",
-        type: "select",
+        type: "inputsearch",
         foreignKey: {
           table: "contratos",
           valueField: "id_contrato",
@@ -77,7 +79,7 @@ export const revisionesConfig: TableConfig = {
       {
         name: "id_inmueble",
         label: "Inmueble",
-        type: "select",
+        type: "inputsearch",
         foreignKey: {
           table: "inmuebles",
           valueField: "id_propiedad",
@@ -98,5 +100,31 @@ export const revisionesConfig: TableConfig = {
   rules: {
     id_estado_sigi: { omit : "create" },
     id_estado_oficina: { omit : "create" },
+    fields: {
+      id_contrato: {
+            when: {
+                field: "id_contrato",
+                onlyOneSelected: true,
+                groupFields: ["id_contrato", "id_inmueble","id_propietario"],
+            },
+            hide: true,
+        },
+        id_inmueble: {
+            when: {
+                field: "id_inmueble",
+                onlyOneSelected: true,
+                groupFields: ["id_contrato", "id_inmueble","id_propietario"],
+            },
+            hide: true,
+        },
+        id_propietario: {
+            when: {
+                field: "id_propietario",
+                onlyOneSelected: true,
+                groupFields: ["id_contrato", "id_inmueble","id_propietario"],
+            },
+            hide: true,
+        }
+    },
   },
 };

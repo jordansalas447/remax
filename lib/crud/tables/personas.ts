@@ -14,7 +14,7 @@ export const personasConfig: TableConfig = {
     { name: "apellido_paterno", label: "Apellido paterno", type: "text" },
     { name: "apellido_materno", label: "Apellido materno", type: "text" },
     { name: "fecha_nacimiento", label: "Fecha de nacimiento", type: "date" },
-    { name: "fecha_registro", label: "Fecha de registro", type: "date" },
+    // { name: "fecha_registro", label: "Fecha de registro", type: "date" },
     { name: "numero_telefono", label: "Teléfono", type: "text" },
     { name: "numero_telefono_2", label: "Teléfono 2", type: "text" },
     { name: "documento_identidad", label: "Documento Identidad", type: "text" },
@@ -22,17 +22,17 @@ export const personasConfig: TableConfig = {
     { name: "nombre_completo", label: "Nombre Completo", type: "text" },
     { name: "correo_electronico", label: "Correo Electronico", type: "text" },
     { name: "correo_electronico_2", label: "Correo Electronico 2", type: "text" },
-    {
-      name: "id_resource",
-      label: "Documento DNI",
-      type: "select",
-      readOnlyOnEdit: false,
-      foreignKey: {
-        table: "resource",
-        valueField: "id_resource",
-        labelField: "url_resource",
-      },
-    },
+    // {
+    //   name: "id_resource",
+    //   label: "Documento DNI",
+    //   type: "select",
+    //   readOnlyOnEdit: false,
+    //   foreignKey: {
+    //     table: "resource",
+    //     valueField: "id_resource",
+    //     labelField: "url_resource",
+    //   },
+    // },
   ],
   rules: {
     nombre_completo: { hide: true },

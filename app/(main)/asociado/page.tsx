@@ -57,7 +57,7 @@ export default function AsociadoPage() {
   const [ContratoSelecionado, setContratoSelecionado] = useState<InmuebleDetalle | null>(null);
 
   const [Observaciones, setObservaciones] = useState<string>("");
-  const [AlcanceSeleccionado, setAlcanceSeleccionado] = useState<number>(1)
+  const [AlcanceSeleccionado, setAlcanceSeleccionado] = useState<number>(5)
   const [guardandoObservacion, setGuardandoObservacion] = useState(false);
 
   const [RevisionesData, setRevisionesData] = useState<any[]>([]);

@@ -10,7 +10,8 @@ export async function getAlcances(): Promise<AlcanceRow[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('alcances')
-    .select('*');
+    .select('*')
+    .order('id_alcance');
   if (error) throw new Error(error.message);
   return data ?? [];
 }

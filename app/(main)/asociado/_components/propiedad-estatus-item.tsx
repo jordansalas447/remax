@@ -265,12 +265,18 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
                         <AccordionTrigger className="!no-underline text-left py-1 px-0 group">
                           <div className="w-full flex flex-col gap-1.5">
                             <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="font-semibold text-foreground">
+                            {/*   <h3 className="font-semibold text-foreground">
                                 {doc.operacion}
+                              </h3>
+                              
+                              */}
+                             {/* <span className="text-muted-foreground">•</span> */}
+                             <h3 className="font-semibold text-foreground">
+                                {doc.nombre_item}
                               </h3>
                               <span className="text-muted-foreground">•</span>
                               <span className="text-sm text-muted-foreground">
-                                {doc.nombre_item} | <strong>{doc.rev}</strong>  |
+                                 <strong>{doc.rev}</strong>  |
                                 Oficina:
                                 <Badge variant={"secondary"} className="ml-2">
                                  {oficina}
@@ -283,10 +289,11 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
                             </div>
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mt-0.5">
                               <span>ID #{doc.id_revision}</span>
-                              <span className="hidden sm:inline">•</span>
-                              <span>
-                                Creado el {new Date(doc.fecha_creado).toLocaleDateString()}
-                              </span>
+                              {/* <span className="hidden sm:inline">•</span> */}
+                              {/* <span>
+                                Creado el {new Date(new Date(doc.fecha_creado).getTime() - (5 * 60 * 60 * 1000)).toLocaleString()}
+                           
+                              </span> */}
                             </div>
                           </div>
                         </AccordionTrigger>
