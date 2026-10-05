@@ -62,6 +62,7 @@ export type Database = {
           eliminado: boolean | null
           id_alcance: number
           nombre_propiedad: string | null
+          orden: number | null
         }
         Insert: {
           alcance?: string | null
@@ -69,6 +70,7 @@ export type Database = {
           eliminado?: boolean | null
           id_alcance?: number
           nombre_propiedad?: string | null
+          orden?: number | null
         }
         Update: {
           alcance?: string | null
@@ -76,6 +78,7 @@ export type Database = {
           eliminado?: boolean | null
           id_alcance?: number
           nombre_propiedad?: string | null
+          orden?: number | null
         }
         Relationships: []
       }
@@ -100,8 +103,8 @@ export type Database = {
           estado: string
           fecha_hora_registro: string
           id: number
+          id_asociado: number | null
           id_evento: number | null
-          id_persona: number | null
           id_tardanza: number | null
           observacion: string | null
           updated_at: string | null
@@ -111,8 +114,8 @@ export type Database = {
           estado?: string
           fecha_hora_registro: string
           id?: number
+          id_asociado?: number | null
           id_evento?: number | null
-          id_persona?: number | null
           id_tardanza?: number | null
           observacion?: string | null
           updated_at?: string | null
@@ -122,25 +125,25 @@ export type Database = {
           estado?: string
           fecha_hora_registro?: string
           id?: number
+          id_asociado?: number | null
           id_evento?: number | null
-          id_persona?: number | null
           id_tardanza?: number | null
           observacion?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
+            foreignKeyName: "asistencias_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
             foreignKeyName: "asistencias_id_evento_fkey"
             columns: ["id_evento"]
             isOneToOne: false
             referencedRelation: "eventos"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "asistencias_id_persona_fkey"
-            columns: ["id_persona"]
-            isOneToOne: false
-            referencedRelation: "personas"
             referencedColumns: ["id"]
           },
           {
@@ -161,6 +164,8 @@ export type Database = {
           eliminado: boolean
           estado: Database["public"]["Enums"]["estado_asociado"] | null
           fecha_creacion: string | null
+          fecha_ingreso: string
+          fecha_retiro: string | null
           id_asociado: number
           id_detalle_asociado: number | null
           id_persona: number | null
@@ -175,6 +180,8 @@ export type Database = {
           eliminado?: boolean
           estado?: Database["public"]["Enums"]["estado_asociado"] | null
           fecha_creacion?: string | null
+          fecha_ingreso: string
+          fecha_retiro?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
           id_persona?: number | null
@@ -189,6 +196,8 @@ export type Database = {
           eliminado?: boolean
           estado?: Database["public"]["Enums"]["estado_asociado"] | null
           fecha_creacion?: string | null
+          fecha_ingreso?: string
+          fecha_retiro?: string | null
           id_asociado?: number
           id_detalle_asociado?: number | null
           id_persona?: number | null
@@ -208,6 +217,42 @@ export type Database = {
             columns: ["id_persona"]
             isOneToOne: false
             referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asociados_eventos: {
+        Row: {
+          created_at: string
+          id: number
+          id_asociados: number | null
+          id_eventos: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          id_asociados?: number | null
+          id_eventos?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          id_asociados?: number | null
+          id_eventos?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asociados_eventos_id_asociados_fkey"
+            columns: ["id_asociados"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "asociados_eventos_id_eventos_fkey"
+            columns: ["id_eventos"]
+            isOneToOne: false
+            referencedRelation: "eventos"
             referencedColumns: ["id"]
           },
         ]
@@ -349,7 +394,9 @@ export type Database = {
       contratos: {
         Row: {
           comision: number | null
+          created_at: string | null
           deleted_at: string | null
+          descripcion: string | null
           eliminado: boolean
           estado: boolean
           fecha_contrato_entregado: string | null
@@ -358,6 +405,7 @@ export type Database = {
           fecha_creacion: string | null
           fecha_fin: string | null
           fecha_inicio: string | null
+          fecha_operacion_ejecutada: string | null
           id_asociado: number | null
           id_conformidad: number | null
           id_contrato: number
@@ -365,7 +413,7 @@ export type Database = {
           id_mes_captacion: number | null
           id_mes_vencimiento: number | null
           id_operacion: number | null
-          id_propiedad: number
+          id_propiedad: number | null
           id_renovacion_contrato: number | null
           id_resource: number | null
           id_tipo_contrato: number | null
@@ -384,7 +432,9 @@ export type Database = {
         }
         Insert: {
           comision?: number | null
+          created_at?: string | null
           deleted_at?: string | null
+          descripcion?: string | null
           eliminado?: boolean
           estado?: boolean
           fecha_contrato_entregado?: string | null
@@ -393,6 +443,7 @@ export type Database = {
           fecha_creacion?: string | null
           fecha_fin?: string | null
           fecha_inicio?: string | null
+          fecha_operacion_ejecutada?: string | null
           id_asociado?: number | null
           id_conformidad?: number | null
           id_contrato?: number
@@ -400,7 +451,7 @@ export type Database = {
           id_mes_captacion?: number | null
           id_mes_vencimiento?: number | null
           id_operacion?: number | null
-          id_propiedad: number
+          id_propiedad?: number | null
           id_renovacion_contrato?: number | null
           id_resource?: number | null
           id_tipo_contrato?: number | null
@@ -419,7 +470,9 @@ export type Database = {
         }
         Update: {
           comision?: number | null
+          created_at?: string | null
           deleted_at?: string | null
+          descripcion?: string | null
           eliminado?: boolean
           estado?: boolean
           fecha_contrato_entregado?: string | null
@@ -428,6 +481,7 @@ export type Database = {
           fecha_creacion?: string | null
           fecha_fin?: string | null
           fecha_inicio?: string | null
+          fecha_operacion_ejecutada?: string | null
           id_asociado?: number | null
           id_conformidad?: number | null
           id_contrato?: number
@@ -435,7 +489,7 @@ export type Database = {
           id_mes_captacion?: number | null
           id_mes_vencimiento?: number | null
           id_operacion?: number | null
-          id_propiedad?: number
+          id_propiedad?: number | null
           id_renovacion_contrato?: number | null
           id_resource?: number | null
           id_tipo_contrato?: number | null
@@ -717,6 +771,7 @@ export type Database = {
           activo: boolean
           created_at: string
           descripcion: string | null
+          eliminado: boolean | null
           fecha: string | null
           hora_fin: string | null
           hora_inicio: string
@@ -730,6 +785,7 @@ export type Database = {
           activo?: boolean
           created_at?: string
           descripcion?: string | null
+          eliminado?: boolean | null
           fecha?: string | null
           hora_fin?: string | null
           hora_inicio: string
@@ -743,6 +799,7 @@ export type Database = {
           activo?: boolean
           created_at?: string
           descripcion?: string | null
+          eliminado?: boolean | null
           fecha?: string | null
           hora_fin?: string | null
           hora_inicio?: string
@@ -759,6 +816,7 @@ export type Database = {
           eliminado: boolean | null
           fecha_creacion: string | null
           id: number
+          id_administrativo: number | null
           id_alcance: number | null
           id_contratos: number | null
           id_inmueble_propietario_contrato: number | null
@@ -770,6 +828,7 @@ export type Database = {
           eliminado?: boolean | null
           fecha_creacion?: string | null
           id?: number
+          id_administrativo?: number | null
           id_alcance?: number | null
           id_contratos?: number | null
           id_inmueble_propietario_contrato?: number | null
@@ -781,6 +840,7 @@ export type Database = {
           eliminado?: boolean | null
           fecha_creacion?: string | null
           id?: number
+          id_administrativo?: number | null
           id_alcance?: number | null
           id_contratos?: number | null
           id_inmueble_propietario_contrato?: number | null
@@ -789,6 +849,13 @@ export type Database = {
           observacion?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "historial_observaciones_id_administrativo_fkey"
+            columns: ["id_administrativo"]
+            isOneToOne: false
+            referencedRelation: "administrativos"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "historial_observaciones_id_alcance_fkey"
             columns: ["id_alcance"]
@@ -845,6 +912,7 @@ export type Database = {
           area_construida: number | null
           area_terreno: number | null
           captacion: string | null
+          constancia: string | null
           create_at: string | null
           deleted_at: string | null
           descripcion: string | null
@@ -870,6 +938,7 @@ export type Database = {
           area_construida?: number | null
           area_terreno?: number | null
           captacion?: string | null
+          constancia?: string | null
           create_at?: string | null
           deleted_at?: string | null
           descripcion?: string | null
@@ -895,6 +964,7 @@ export type Database = {
           area_construida?: number | null
           area_terreno?: number | null
           captacion?: string | null
+          constancia?: string | null
           create_at?: string | null
           deleted_at?: string | null
           descripcion?: string | null
@@ -1043,33 +1113,60 @@ export type Database = {
       }
       multas: {
         Row: {
-          estado: string
+          created_at: string | null
+          descripcion: string
+          eliminado: boolean | null
+          estado: string | null
           fecha: string | null
-          fecha_creacion: string | null
+          fecha_multa: string | null
           id: number
+          id_asociado: number | null
+          id_tipo_multa: number | null
           monto: number | null
-          motivo: string
           tipo: string | null
         }
         Insert: {
-          estado?: string
+          created_at?: string | null
+          descripcion: string
+          eliminado?: boolean | null
+          estado?: string | null
           fecha?: string | null
-          fecha_creacion?: string | null
+          fecha_multa?: string | null
           id?: number
+          id_asociado?: number | null
+          id_tipo_multa?: number | null
           monto?: number | null
-          motivo: string
           tipo?: string | null
         }
         Update: {
-          estado?: string
+          created_at?: string | null
+          descripcion?: string
+          eliminado?: boolean | null
+          estado?: string | null
           fecha?: string | null
-          fecha_creacion?: string | null
+          fecha_multa?: string | null
           id?: number
+          id_asociado?: number | null
+          id_tipo_multa?: number | null
           monto?: number | null
-          motivo?: string
           tipo?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "multas_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "multas_id_tipo_multa_fkey"
+            columns: ["id_tipo_multa"]
+            isOneToOne: false
+            referencedRelation: "tipo_multa"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       nivel_asociado: {
         Row: {
@@ -1415,13 +1512,14 @@ export type Database = {
       }
       revisiones: {
         Row: {
+          configuracion: Database["public"]["Enums"]["configuracion_revision"]
           created_at: string
           eliminado: boolean
           fecha_creado: string | null
           fecha_recibido: string | null
           finalizado: boolean
           id_contrato: number | null
-          id_estado_oficina: number
+          id_estado_oficina: number | null
           id_estado_sigi: number
           id_inmueble: number | null
           id_propietario: number | null
@@ -1432,13 +1530,14 @@ export type Database = {
           observacion: string | null
         }
         Insert: {
+          configuracion?: Database["public"]["Enums"]["configuracion_revision"]
           created_at?: string
           eliminado?: boolean
           fecha_creado?: string | null
           fecha_recibido?: string | null
           finalizado?: boolean
           id_contrato?: number | null
-          id_estado_oficina?: number
+          id_estado_oficina?: number | null
           id_estado_sigi?: number
           id_inmueble?: number | null
           id_propietario?: number | null
@@ -1449,13 +1548,14 @@ export type Database = {
           observacion?: string | null
         }
         Update: {
+          configuracion?: Database["public"]["Enums"]["configuracion_revision"]
           created_at?: string
           eliminado?: boolean
           fecha_creado?: string | null
           fecha_recibido?: string | null
           finalizado?: boolean
           id_contrato?: number | null
-          id_estado_oficina?: number
+          id_estado_oficina?: number | null
           id_estado_sigi?: number
           id_inmueble?: number | null
           id_propietario?: number | null
@@ -1612,43 +1712,35 @@ export type Database = {
       tardanzas: {
         Row: {
           created_at: string
+          eliminado: boolean | null
           hora_llegada: string | null
           hora_programada: string
           id: number
-          id_multa: number | null
           justificada: boolean
           minutos_tardanza: number
           motivo: string | null
         }
         Insert: {
           created_at?: string
+          eliminado?: boolean | null
           hora_llegada?: string | null
           hora_programada: string
           id?: number
-          id_multa?: number | null
           justificada?: boolean
           minutos_tardanza: number
           motivo?: string | null
         }
         Update: {
           created_at?: string
+          eliminado?: boolean | null
           hora_llegada?: string | null
           hora_programada?: string
           id?: number
-          id_multa?: number | null
           justificada?: boolean
           minutos_tardanza?: number
           motivo?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "tardanzas_id_multa_fkey"
-            columns: ["id_multa"]
-            isOneToOne: false
-            referencedRelation: "multas"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       tipo_contrato: {
         Row: {
@@ -1698,6 +1790,39 @@ export type Database = {
         }
         Relationships: []
       }
+      tipo_multa: {
+        Row: {
+          aviso: string | null
+          concepto_de_la_multa: string | null
+          created_at: string
+          descripcion: string | null
+          eliminado: boolean | null
+          id: number
+          monto: number | null
+          nro: number | null
+        }
+        Insert: {
+          aviso?: string | null
+          concepto_de_la_multa?: string | null
+          created_at?: string
+          descripcion?: string | null
+          eliminado?: boolean | null
+          id?: number
+          monto?: number | null
+          nro?: number | null
+        }
+        Update: {
+          aviso?: string | null
+          concepto_de_la_multa?: string | null
+          created_at?: string
+          descripcion?: string | null
+          eliminado?: boolean | null
+          id?: number
+          monto?: number | null
+          nro?: number | null
+        }
+        Relationships: []
+      }
       tipo_propiedad: {
         Row: {
           deleted_at: string | null
@@ -1724,6 +1849,14 @@ export type Database = {
       }
     }
     Views: {
+      vista_asociados_categoria: {
+        Row: {
+          categoria: string | null
+          nombre_completo: string | null
+          total: number | null
+        }
+        Relationships: []
+      }
       vista_contratos: {
         Row: {
           fecha_contrato: string | null
@@ -1756,9 +1889,12 @@ export type Database = {
       }
       vw_revisiones_detalle: {
         Row: {
+          configuracion:
+            | Database["public"]["Enums"]["configuracion_revision"]
+            | null
+          created_at: string | null
           estado_oficina: string | null
           estado_sigi: string | null
-          fecha_creado: string | null
           fecha_recibido: string | null
           finalizado: boolean | null
           id_contrato: number | null
@@ -1814,7 +1950,8 @@ export type Database = {
       }
     }
     Enums: {
-      estado_asociado: "activo" | "deshafiliado"
+      configuracion_revision: "Sigi" | "Oficina" | "Ambos"
+      estado_asociado: "Activo" | "Deshafiliado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1942,7 +2079,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      estado_asociado: ["activo", "deshafiliado"],
+      configuracion_revision: ["Sigi", "Oficina", "Ambos"],
+      estado_asociado: ["Activo", "Deshafiliado"],
     },
   },
 } as const

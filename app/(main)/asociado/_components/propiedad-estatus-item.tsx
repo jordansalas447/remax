@@ -37,6 +37,7 @@ type PendingChangeMap = {
 };
 
 export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckProps) {
+
   const [estadosRevision, setEstadosRevision] = useState<EstadoRevisionRow[]>([]);
   const [selectedOficinas, setSelectedOficinas] = useState<{ [id: number]: number }>({});
   const [selectedSigi, setSelectedSigi] = useState<{ [id: number]: number }>({});
@@ -274,26 +275,30 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
                              <h3 className="font-semibold text-foreground">
                                 {doc.nombre_item}
                               </h3>
-                              <span className="text-muted-foreground">•</span>
+                              {/* <span className="text-muted-foreground">•</span> */}
                               <span className="text-sm text-muted-foreground">
-                                 <strong>{doc.rev}</strong>  |
-                                Oficina:
-                                <Badge variant={"secondary"} className="ml-2">
-                                 {oficina}
-                                </Badge> |
-                                Sigi: 
-                                <Badge variant={"secondary"} className="ml-2">
+                                 {/* <strong>{doc.rev}</strong> */}
+                                  {doc.configuracion === "Ambos" && ( 
+                                  
+                                  <>|  Oficina:
+                                  <Badge variant={"secondary"} className="ml-2">
+                                   {oficina}
+                                  </Badge> | </>    )}
+                              
+                                < >  Sigi: <Badge variant={"secondary"} className="ml-2">
                                 {sigi}
-                                </Badge>
+                                </Badge> </> 
+                              
+                                
                               </span>
                             </div>
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mt-0.5">
                               <span>ID #{doc.id_revision}</span>
                               {/* <span className="hidden sm:inline">•</span> */}
-                              {/* <span>
-                                Creado el {new Date(new Date(doc.fecha_creado).getTime() - (5 * 60 * 60 * 1000)).toLocaleString()}
+                               <span>
+                                Creado el {new Date(doc.created_at).toLocaleString()}
                            
-                              </span> */}
+                              </span> 
                             </div>
                           </div>
                         </AccordionTrigger>
@@ -303,44 +308,47 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
                               {/* Estados */}
                               <div className="grid gap-3 sm:grid-cols-2">
                                 {/* Oficina */}
-                                <div className="rounded-lg border bg-muted/20 p-3">
-                                  <div className="mb-2 flex items-center justify-between gap-2">
-                                    <div>
-                                      <p className="text-xs font-medium text-muted-foreground">
-                                        Estado Oficina
-                                      </p>
-                                      <p className="text-[11px] text-muted-foreground/70">
-                                        Estado de revisión
-                                      </p>
-                                    </div>
-                                    <Badge
-                                      variant="outline"
-                                      className={cn(
-                                        "rounded-full px-2.5 py-0.5 text-xs font-medium",
-                                        getStatusStyles(oficina)
-                                      )}
-                                    >
-                                      {oficina}
-                                    </Badge>
-                                  </div>
-                                  <NativeSelect
-                                    aria-label="Seleccionar estado oficina"
-                                    value={String(oficinaId ?? "")}
-                                    onChange={(e) => {
-                                      handleOficinaChange(doc, e.target.value);
-                                    }}
-                                    className="h-9 w-full border-border bg-background"
-                                  >
-                                    {estadosRevision.map((estado) => (
-                                      <option
-                                        value={String(estado.id)}
-                                        key={estado.id}
+                                {doc.configuracion === "Ambos" && (
+                                  <div className="rounded-lg border bg-muted/20 p-3">
+                                    <div className="mb-2 flex items-center justify-between gap-2">
+                                      <div>
+                                        <p className="text-xs font-medium text-muted-foreground">
+                                          Estado Oficina
+                                        </p>
+                                        <p className="text-[11px] text-muted-foreground/70">
+                                          Estado de revisión
+                                        </p>
+                                      </div>
+                                      <Badge
+                                        variant="outline"
+                                        className={cn(
+                                          "rounded-full px-2.5 py-0.5 text-xs font-medium",
+                                          getStatusStyles(oficina)
+                                        )}
                                       >
-                                        {estado.descripcion}
-                                      </option>
-                                    ))}
-                                  </NativeSelect>
-                                </div>
+                                        {oficina}
+                                      </Badge>
+                                    </div>
+                                    <NativeSelect
+                                      aria-label="Seleccionar estado oficina"
+                                      value={String(oficinaId ?? "")}
+                                      onChange={(e) => {
+                                        handleOficinaChange(doc, e.target.value);
+                                      }}
+                                      className="h-9 w-full border-border bg-background"
+                                    >
+                                      {estadosRevision.map((estado) => (
+                                        <option
+                                          value={String(estado.id)}
+                                          key={estado.id}
+                                        >
+                                          {estado.descripcion}
+                                        </option>
+                                      ))}
+                                    </NativeSelect>
+                                  </div>
+                                )}
+                           
                                 {/* SIGI */}
                                 <div className="rounded-lg border bg-muted/20 p-3">
                                   <div className="mb-2 flex items-center justify-between gap-2">
@@ -431,8 +439,7 @@ export function RevisionesEstatusItem({ revisiones, loading }: DocumentsCheckPro
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
-                  </div>
-            
+                  </div> 
                 </div>
               </div>
             );

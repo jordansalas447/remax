@@ -28,6 +28,10 @@ import { situacionesConfig } from "./situaciones";
 import { empresasConfig } from "./empresas";
 import { historial_observacionesConfig } from "./historial-observaciones";
 import { alcanceConfig } from "./alcance";
+import { eventosConfig } from "./eventos";
+import { multasConfig } from "./multas";
+import { tardanzasConfig } from "./tardanzas";
+import { tipo_multaConfig } from "./tipo_multa";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -49,6 +53,10 @@ export const tableConfigs: Record<string, TableConfig> = {
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,
+  eventos: eventosConfig,
+  multas:multasConfig,
+  tipo_multa:tipo_multaConfig,
+  tardanzas:tardanzasConfig,
   propiedad_propietario: propiedadPropietarioConfig,
   propietarios: propietariosConfig,
   revisiones: revisionesConfig,

@@ -84,6 +84,11 @@ export interface FieldConfig {
   hiddenInList?: boolean;
   /** No renderiza el campo en el formulario (sí puede aparecer en la tabla). */
   hiddenInForm?: boolean;
+  /**
+   * El campo se oculta detrás de «Más campos» en el formulario.
+   * Útil para datos secundarios que no hacen falta en el flujo principal.
+   */
+  collapsedInForm?: boolean;
   /** En modo edit, el campo se muestra deshabilitado y no se envía al actualizar. */
   readOnlyOnEdit?: boolean;
   ui?: FieldUiConfig;
@@ -133,6 +138,8 @@ export interface FormConfig {
   clearOnSaveAndContinue?: string[];
   /** Lista de campos a conservar al pulsar 'Guardar y agregar otro' (los demás se limpian) */
   keepOnSaveAndContinue?: string[];
+  /** Texto del botón que despliega los campos con `collapsedInForm`. */
+  collapsedFieldsLabel?: string;
 }
 
 /**

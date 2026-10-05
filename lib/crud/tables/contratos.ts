@@ -11,14 +11,16 @@ export const contratosConfig: TableConfig = {
     columns: 3,
     submitLabel: "Guardar Contrato",
     cancelLabel: "Cancelar",
+    collapsedFieldsLabel: "Más campos",
   },
   fields: [
     { name: "id_contrato", label: "ID", type: "number", readOnlyOnEdit: true },
     {
       name: "id_renovacion_contrato",
-      label: "Contrato (Renovación)",
+      label: "Nro. Contrato (Renovación)",
       type: "inputsearch",
       selectplus: false,
+      collapsedInForm: true,
       foreignKey: {
         table: "contratos",
         valueField: "id_contrato",
@@ -37,7 +39,7 @@ export const contratosConfig: TableConfig = {
         sublabelField: "n_partida"
       },
     },
-    { name: "nro_contrato", label: "Nro Contrato", type: "text", disabled: false },
+    { name: "nro_contrato", label: "Nro Contrato (Autogenerado)", type: "text", disabled: false, collapsedInForm: true },
     {
       name: "id_asociado",
       label: "Asociado",
@@ -118,7 +120,8 @@ export const contratosConfig: TableConfig = {
     { name: "fecha_inicio", label: "Fecha inicio", type: "datenative", required:true },
     {
       name: "id_tipo_moneda_precio_venta",
-      label: "Medición / Moneda de Operacion Concreatada",
+      label: "Medición / Moneda de Cierre",
+      collapsedInForm: true,
       type: "select",
       selectplus: false,
       foreignKey: {
@@ -127,8 +130,7 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
-    { name: "precio_venta", label: "Precio Operación Concretada", type: "number" },
-    { name: "fecha_fin", label: "Fecha fin", type: "datenative" },
+    { name: "fecha_fin", label: "Fecha fin", type: "datenative",required:true },
     {
       name: "id_tipo_moneda_comision",
       label: "Medición / Moneda Comisión",
@@ -144,9 +146,10 @@ export const contratosConfig: TableConfig = {
     { name: "fecha_contrato_recibido", label: "Fecha Contrato Recibido", type: "datenative" },
     { name: "fecha_contrato_entregado", label: "Fecha Contrato Entregado", type: "datenative" },
     { name: "fecha_contrato_sigi", label: "Fecha Contrato Sigi", type: "datenative" },
-    { name: "observaciones", label: "Observaciones", type: "text" },
-    { name: "fecha_operacion_ejecutada", label: "Fecha de Cierre Operación", type: "datenative" },
-    { name: "descripcion", label: "Descripción", type: "text" },
+    { name: "observaciones", label: "Observaciones", type: "text", collapsedInForm: true },
+    { name: "fecha_operacion_ejecutada", label: "Fecha de Cierre", type: "datenative", collapsedInForm: true },
+    { name: "precio_venta", label: "Precio Cierre", type: "number", collapsedInForm: true },
+    { name: "descripcion", label: "Descripción", type: "text", collapsedInForm: true },
     // {
     //   name: "id_resource",
     //   label: "Documento (URL)",

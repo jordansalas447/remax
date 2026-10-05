@@ -5,7 +5,10 @@ export type EstadoRevisionRow = Database['public']['Tables']['estados_revision']
 
 export async function getEstadosRevision(): Promise<EstadoRevisionRow[]> {
   const supabase = createClient();
-  const { data, error } = await supabase.from('estados_revision').select('*');
+  const { data, error } = await supabase
+  .from('estados_revision')
+  .select('*')
+  .order('descripcion', { ascending: true });
   if (error) throw new Error(error.message);
   return data ?? [];
 }

@@ -33,6 +33,8 @@ export const asociadosConfig: TableConfig = {
     { name: "url_resource", label: "Imagen Perfil", type: "text" },
     { name: "descripcion", label: "Descripción", type: "textarea" },
     { name: "nombre_completo", label: "Nombre Completo", type: "text" },
+    { name: "fecha_ingreso", label: "Fecha Ingreso", type: "datenative" },
+    { name: "fecha_retiro", label: "Fecha Retiro", type: "datenative" },
     // En tu TableConfig:
     {
       name: "estado",

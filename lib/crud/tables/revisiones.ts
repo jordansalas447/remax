@@ -96,6 +96,16 @@ export const revisionesConfig: TableConfig = {
           labelField: "resumen_operacion",
         },
       },
+      {
+        name: "configuracion",
+        label: "Configuracion",
+        type: "enum",
+        options: [
+          { value: "Sigi", label: "Sigi" },
+          { value: "Oficina", label: "Oficina" },
+          { value: "Ambos", label: "Ambos" },
+        ],
+      }
   ],
   rules: {
     id_estado_sigi: { omit : "create" },

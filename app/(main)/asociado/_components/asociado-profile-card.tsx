@@ -17,6 +17,23 @@ interface AsociadoProfileCardProps {
 export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProfileCardProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
 
+  function getLiga(asociado: AsociadoDetalle | null): "Emprendedor" | "General" | null {
+    if (!asociado?.fecha_ingreso) return null;
+    const fechaIngreso = new Date(asociado.fecha_ingreso);
+    const ahora = new Date();
+
+    // Calcular la diferencia en meses
+    const years = ahora.getFullYear() - fechaIngreso.getFullYear();
+    const months = ahora.getMonth() - fechaIngreso.getMonth();
+    const totalMonths = years * 12 + months;
+
+    if (totalMonths < 6) {
+      return "Emprendedor";
+    } else {
+      return "General";
+    }
+  }
+
   if (loading) {
     return (
 <Card>
@@ -122,6 +139,7 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
           {detalle.nivel_asociado.descripcion}
         </Badge>
       )}
+      <Badge className="mx-1">Liga {getLiga(asociado)}</Badge>
     </div>
 
     {/* Detalles */}
@@ -133,7 +151,7 @@ export function AsociadoProfileCard({ asociado, loading, fotoUrl }: AsociadoProf
       <DetailField label="Teléfono" value={persona?.numero_telefono} />
       <DetailField label="Dirección" value={persona?.direccion} />
       <DetailField label="Fecha nacimiento" value={formatDate(persona?.fecha_nacimiento)} />
-      <DetailField label="Registro asociado" value={formatDate(asociado.fecha_creacion)} />
+      <DetailField label="Ingreso asociado" value={formatDate(asociado.fecha_ingreso)} />
       <DetailField label="Correo Electronico" value={persona?.correo_electronico ?? persona?.correo_electronico} />
       <DetailField label="Estado" badge={true} badgeVariant={"default"} value={asociado?.estado} />
     </dl>

@@ -34,7 +34,7 @@ export const inmueblesConfig: TableConfig = {
     // { name: "captacion", label: "Captación", type: "date" },
     { name: "id_remax", label: "ID Sigi", type: "number", required: true },
     { name: "n_partida", label: "N° Partida", type: "text", required: true },
-    { name: "constancia", label: "Constancia", type: "text" },
+    { name: "constancia", label: "Constancia", type: "text" , collapsedInForm: true},
     {
       name: "id_mes_captacion",
       label: "Mes Captacion",
@@ -73,8 +73,8 @@ export const inmueblesConfig: TableConfig = {
       },
     },
     // { name: "fotos", label: "Tiene fotos", type: "boolean" },
-    { name: "descripcion", label: "Descripción", type: "text" },
-    { name: "observacion", label: "Observación", type: "textarea" },
+    { name: "descripcion", label: "Descripción", type: "text" , collapsedInForm: true},
+    { name: "observacion", label: "Observación", type: "textarea" , collapsedInForm: true},
 
     // {
     //   name: "id_resource_partida",

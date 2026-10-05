@@ -22,12 +22,16 @@ type SupportedTableName =
   | "checklist_estado"
   | "situaciones"
   | "empresas"
+  | "eventos"
+  | "multas"
   | "alcances"
   | "estado"
+  | "tardanzas"
   | "resource"
   | "alcance"
   | "mes"
   | "operacion"
+  | "tipo_multa"
   | "tipo_contrato"
   | "tipo_propiedad"
   | "tipo_moneda"
@@ -51,6 +55,9 @@ export type Resource = TableRow<"resource">;
 export type Situacion = TableRow<"situaciones">
 export type Empresas = TableRow<"empresas">
 export type Alcances = TableRow<"alcances">
+export type Eventos = TableRow<"eventos">
+export type Multas = TableRow<"multas">
+export type Tipo_Multa = TableRow<"tipo_multa">
 export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">
 export type historial_observaciones = TableRow<"historial_observaciones">
 //export type ItemChecklist = TableRow<"items_checklist">;

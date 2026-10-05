@@ -63,7 +63,8 @@ export type RevisionDocumentoDetalle = {
   estado_sigi: string;
   color_estado_sigi: string;
   observacion: string;
-  fecha_creado: Date;
+  created_at: Date;
+  configuracion: "Sigi" | "Oficina" | "Ambos";
   id_contrato: number;
   id_propiedad: number;
   id_propietario: number;

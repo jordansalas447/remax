@@ -12,7 +12,8 @@ export async function get_tabla() {
 
   const { data, error } = await supabase
     .from(TABLE_NAME)
-    .select("*");
+    .select("*")
+    .eq('eliminado',false);
 
   if (error) {
     throw new Error(error.message);
