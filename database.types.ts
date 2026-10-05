@@ -299,6 +299,30 @@ export type Database = {
         }
         Relationships: []
       }
+      concepto_multa: {
+        Row: {
+          created_at: string
+          descripcion: string | null
+          eliminado: boolean
+          id: number
+          nro: number | null
+        }
+        Insert: {
+          created_at?: string
+          descripcion?: string | null
+          eliminado?: boolean
+          id?: number
+          nro?: number | null
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string | null
+          eliminado?: boolean
+          id?: number
+          nro?: number | null
+        }
+        Relationships: []
+      }
       configuracion_revisiones: {
         Row: {
           deleted_at: string | null
@@ -1087,6 +1111,30 @@ export type Database = {
           },
         ]
       }
+      justificaciones: {
+        Row: {
+          created_at: string
+          descripcion: string | null
+          eliminado: boolean | null
+          id: number
+          motivo: string | null
+        }
+        Insert: {
+          created_at?: string
+          descripcion?: string | null
+          eliminado?: boolean | null
+          id?: number
+          motivo?: string | null
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string | null
+          eliminado?: boolean | null
+          id?: number
+          motivo?: string | null
+        }
+        Relationships: []
+      }
       mes: {
         Row: {
           deleted_at: string | null
@@ -1121,6 +1169,7 @@ export type Database = {
           fecha_multa: string | null
           id: number
           id_asociado: number | null
+          id_justificacion: number | null
           id_tipo_multa: number | null
           monto: number | null
           tipo: string | null
@@ -1134,6 +1183,7 @@ export type Database = {
           fecha_multa?: string | null
           id?: number
           id_asociado?: number | null
+          id_justificacion?: number | null
           id_tipo_multa?: number | null
           monto?: number | null
           tipo?: string | null
@@ -1147,6 +1197,7 @@ export type Database = {
           fecha_multa?: string | null
           id?: number
           id_asociado?: number | null
+          id_justificacion?: number | null
           id_tipo_multa?: number | null
           monto?: number | null
           tipo?: string | null
@@ -1158,6 +1209,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "asociados"
             referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "multas_id_justificacion_fkey"
+            columns: ["id_justificacion"]
+            isOneToOne: false
+            referencedRelation: "justificaciones"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "multas_id_tipo_multa_fkey"
@@ -1712,31 +1770,31 @@ export type Database = {
       tardanzas: {
         Row: {
           created_at: string
+          descripcion: boolean
           eliminado: boolean | null
           hora_llegada: string | null
           hora_programada: string
           id: number
-          justificada: boolean
           minutos_tardanza: number
           motivo: string | null
         }
         Insert: {
           created_at?: string
+          descripcion?: boolean
           eliminado?: boolean | null
           hora_llegada?: string | null
           hora_programada: string
           id?: number
-          justificada?: boolean
           minutos_tardanza: number
           motivo?: string | null
         }
         Update: {
           created_at?: string
+          descripcion?: boolean
           eliminado?: boolean | null
           hora_llegada?: string | null
           hora_programada?: string
           id?: number
-          justificada?: boolean
           minutos_tardanza?: number
           motivo?: string | null
         }
@@ -1792,36 +1850,47 @@ export type Database = {
       }
       tipo_multa: {
         Row: {
-          aviso: string | null
-          concepto_de_la_multa: string | null
+          aviso: Database["public"]["Enums"]["aviso"]
           created_at: string
           descripcion: string | null
           eliminado: boolean | null
           id: number
+          id_concepto_multa: number | null
           monto: number | null
           nro: number | null
+          resumen: string | null
         }
         Insert: {
-          aviso?: string | null
-          concepto_de_la_multa?: string | null
+          aviso: Database["public"]["Enums"]["aviso"]
           created_at?: string
           descripcion?: string | null
           eliminado?: boolean | null
           id?: number
+          id_concepto_multa?: number | null
           monto?: number | null
           nro?: number | null
+          resumen?: string | null
         }
         Update: {
-          aviso?: string | null
-          concepto_de_la_multa?: string | null
+          aviso?: Database["public"]["Enums"]["aviso"]
           created_at?: string
           descripcion?: string | null
           eliminado?: boolean | null
           id?: number
+          id_concepto_multa?: number | null
           monto?: number | null
           nro?: number | null
+          resumen?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tipo_multa_id_concepto_multa_fkey"
+            columns: ["id_concepto_multa"]
+            isOneToOne: false
+            referencedRelation: "concepto_multa"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tipo_propiedad: {
         Row: {
@@ -1950,6 +2019,7 @@ export type Database = {
       }
     }
     Enums: {
+      aviso: "1er. Aviso" | "2do. Aviso" | "Falta Grave"
       configuracion_revision: "Sigi" | "Oficina" | "Ambos"
       estado_asociado: "Activo" | "Deshafiliado"
     }
@@ -2079,6 +2149,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      aviso: ["1er. Aviso", "2do. Aviso", "Falta Grave"],
       configuracion_revision: ["Sigi", "Oficina", "Ambos"],
       estado_asociado: ["Activo", "Deshafiliado"],
     },

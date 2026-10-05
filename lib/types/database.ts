@@ -30,6 +30,8 @@ type SupportedTableName =
   | "resource"
   | "alcance"
   | "mes"
+  | "concepto_multa"
+  | "justificaciones"
   | "operacion"
   | "tipo_multa"
   | "tipo_contrato"
@@ -57,6 +59,7 @@ export type Empresas = TableRow<"empresas">
 export type Alcances = TableRow<"alcances">
 export type Eventos = TableRow<"eventos">
 export type Multas = TableRow<"multas">
+export type Justificaciones = TableRow<"justificaciones">
 export type Tipo_Multa = TableRow<"tipo_multa">
 export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">
 export type historial_observaciones = TableRow<"historial_observaciones">
