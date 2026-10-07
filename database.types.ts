@@ -100,6 +100,7 @@ export type Database = {
       asistencias: {
         Row: {
           created_at: string | null
+          eliminado: boolean | null
           estado: string
           fecha_hora_registro: string
           id: number
@@ -111,6 +112,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          eliminado?: boolean | null
           estado?: string
           fecha_hora_registro: string
           id?: number
@@ -122,6 +124,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          eliminado?: boolean | null
           estado?: string
           fecha_hora_registro?: string
           id?: number
@@ -169,6 +172,7 @@ export type Database = {
           id_asociado: number
           id_detalle_asociado: number | null
           id_persona: number | null
+          id_public: string
           nombre_completo: string | null
           url_resource: string | null
         }
@@ -185,6 +189,7 @@ export type Database = {
           id_asociado?: number
           id_detalle_asociado?: number | null
           id_persona?: number | null
+          id_public?: string
           nombre_completo?: string | null
           url_resource?: string | null
         }
@@ -201,6 +206,7 @@ export type Database = {
           id_asociado?: number
           id_detalle_asociado?: number | null
           id_persona?: number | null
+          id_public?: string
           nombre_completo?: string | null
           url_resource?: string | null
         }
@@ -217,42 +223,6 @@ export type Database = {
             columns: ["id_persona"]
             isOneToOne: false
             referencedRelation: "personas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      asociados_eventos: {
-        Row: {
-          created_at: string
-          id: number
-          id_asociados: number | null
-          id_eventos: number | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          id_asociados?: number | null
-          id_eventos?: number | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          id_asociados?: number | null
-          id_eventos?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "asociados_eventos_id_asociados_fkey"
-            columns: ["id_asociados"]
-            isOneToOne: false
-            referencedRelation: "asociados"
-            referencedColumns: ["id_asociado"]
-          },
-          {
-            foreignKeyName: "asociados_eventos_id_eventos_fkey"
-            columns: ["id_eventos"]
-            isOneToOne: false
-            referencedRelation: "eventos"
             referencedColumns: ["id"]
           },
         ]
@@ -636,6 +606,13 @@ export type Database = {
             referencedRelation: "tipo_moneda"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "contratos_nro_contrato_fkey"
+            columns: ["nro_contrato"]
+            isOneToOne: true
+            referencedRelation: "documentos"
+            referencedColumns: ["nro_contrato"]
+          },
         ]
       }
       detalle_asociado: {
@@ -696,24 +673,89 @@ export type Database = {
       }
       documentos: {
         Row: {
-          descripcion: string | null
-          documento: string
-          fecha_registro: string | null
+          apoderado: boolean | null
+          created_at: string | null
+          eliminado: boolean | null
+          empresa: boolean | null
+          fecha_aisgnacion: string | null
+          fecha_cierre: string | null
+          fecha_generacion: string | null
+          fecha_uso: string | null
           id: number
+          id_asociado: number | null
+          id_estado: number | null
+          id_operacion: number | null
+          id_tipo_contrato: number | null
+          motivo_anulacion: string | null
+          nro_contrato: string
+          nro_propietarios: number | null
         }
         Insert: {
-          descripcion?: string | null
-          documento: string
-          fecha_registro?: string | null
+          apoderado?: boolean | null
+          created_at?: string | null
+          eliminado?: boolean | null
+          empresa?: boolean | null
+          fecha_aisgnacion?: string | null
+          fecha_cierre?: string | null
+          fecha_generacion?: string | null
+          fecha_uso?: string | null
           id?: number
+          id_asociado?: number | null
+          id_estado?: number | null
+          id_operacion?: number | null
+          id_tipo_contrato?: number | null
+          motivo_anulacion?: string | null
+          nro_contrato: string
+          nro_propietarios?: number | null
         }
         Update: {
-          descripcion?: string | null
-          documento?: string
-          fecha_registro?: string | null
+          apoderado?: boolean | null
+          created_at?: string | null
+          eliminado?: boolean | null
+          empresa?: boolean | null
+          fecha_aisgnacion?: string | null
+          fecha_cierre?: string | null
+          fecha_generacion?: string | null
+          fecha_uso?: string | null
           id?: number
+          id_asociado?: number | null
+          id_estado?: number | null
+          id_operacion?: number | null
+          id_tipo_contrato?: number | null
+          motivo_anulacion?: string | null
+          nro_contrato?: string
+          nro_propietarios?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "documentos_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "documentos_id_estado_fkey"
+            columns: ["id_estado"]
+            isOneToOne: false
+            referencedRelation: "estado_documento"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentos_id_operacion_fkey"
+            columns: ["id_operacion"]
+            isOneToOne: false
+            referencedRelation: "operacion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentos_id_tipo_contrato_fkey"
+            columns: ["id_tipo_contrato"]
+            isOneToOne: true
+            referencedRelation: "tipo_contrato"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       empresas: {
         Row: {
@@ -762,6 +804,27 @@ export type Database = {
           descripcion?: string | null
           eliminado?: boolean
           estado?: string
+          id?: number
+        }
+        Relationships: []
+      }
+      estado_documento: {
+        Row: {
+          created_at: string
+          eliminado: boolean | null
+          estado: string | null
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          eliminado?: boolean | null
+          estado?: string | null
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          eliminado?: boolean | null
+          estado?: string | null
           id?: number
         }
         Relationships: []
@@ -1309,6 +1372,7 @@ export type Database = {
           fecha_nacimiento: string | null
           fecha_registro: string | null
           id: number
+          id_public: string | null
           id_resource: number | null
           nombre: string
           nombre_completo: string | null
@@ -1330,6 +1394,7 @@ export type Database = {
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
           id?: number
+          id_public?: string | null
           id_resource?: number | null
           nombre: string
           nombre_completo?: string | null
@@ -1351,6 +1416,7 @@ export type Database = {
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
           id?: number
+          id_public?: string | null
           id_resource?: number | null
           nombre?: string
           nombre_completo?: string | null
@@ -1368,6 +1434,39 @@ export type Database = {
             referencedColumns: ["id_resource"]
           },
         ]
+      }
+      plantillas_documentos: {
+        Row: {
+          activo: boolean | null
+          created_at: string
+          id: number
+          imagekit_file_id: number | null
+          imagekit_url: string | null
+          nombre: string | null
+          tipo: string | null
+          version: string | null
+        }
+        Insert: {
+          activo?: boolean | null
+          created_at?: string
+          id?: number
+          imagekit_file_id?: number | null
+          imagekit_url?: string | null
+          nombre?: string | null
+          tipo?: string | null
+          version?: string | null
+        }
+        Update: {
+          activo?: boolean | null
+          created_at?: string
+          id?: number
+          imagekit_file_id?: number | null
+          imagekit_url?: string | null
+          nombre?: string | null
+          tipo?: string | null
+          version?: string | null
+        }
+        Relationships: []
       }
       precios: {
         Row: {
@@ -1387,26 +1486,40 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string | null
+          eliminado: boolean | null
           email: string | null
           full_name: string | null
           id: string
+          id_persona: number | null
           role: string | null
         }
         Insert: {
           created_at?: string | null
+          eliminado?: boolean | null
           email?: string | null
           full_name?: string | null
           id: string
+          id_persona?: number | null
           role?: string | null
         }
         Update: {
           created_at?: string | null
+          eliminado?: boolean | null
           email?: string | null
           full_name?: string | null
           id?: string
+          id_persona?: number | null
           role?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_persona_fkey"
+            columns: ["id_persona"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       propiedad_propietario: {
         Row: {
@@ -1937,7 +2050,15 @@ export type Database = {
           nombre_completo: string | null
           nro_contrato: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contratos_nro_contrato_fkey"
+            columns: ["nro_contrato"]
+            isOneToOne: true
+            referencedRelation: "documentos"
+            referencedColumns: ["nro_contrato"]
+          },
+        ]
       }
       vista_revisiones: {
         Row: {

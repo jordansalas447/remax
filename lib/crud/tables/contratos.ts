@@ -27,6 +27,16 @@ export const contratosConfig: TableConfig = {
         labelField: "nro_contrato"
       },
     },
+    { name: "nro_contrato", 
+      label: "Nro Contrato (Autogenerado)", 
+      type: "select", 
+      disabled: false, 
+      foreignKey: {
+        table: "documentos",
+        valueField: "nro_contrato",
+        labelField: "nro_contrato",
+      },
+    },
     {
       name: "id_propiedad",
       label: "Propiedad (ID Remax)",
@@ -39,7 +49,6 @@ export const contratosConfig: TableConfig = {
         sublabelField: "n_partida"
       },
     },
-    { name: "nro_contrato", label: "Nro Contrato (Autogenerado)", type: "text", disabled: false, collapsedInForm: true },
     {
       name: "id_asociado",
       label: "Asociado",
@@ -109,6 +118,7 @@ export const contratosConfig: TableConfig = {
       name: "id_tipo_moneda",
       label: "Medición / Moneda Precio Acordado",
       type: "select",
+      required:true,
       selectplus: false,
       foreignKey: {
         table: "tipo_moneda",
@@ -134,6 +144,7 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_tipo_moneda_comision",
       label: "Medición / Moneda Comisión",
+      required:true,
       type: "select",
       selectplus: false,
       foreignKey: {

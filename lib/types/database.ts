@@ -25,16 +25,20 @@ type SupportedTableName =
   | "eventos"
   | "multas"
   | "alcances"
+  | "documentos"
   | "estado"
   | "tardanzas"
   | "resource"
   | "alcance"
   | "mes"
+  | "estado_documento"
+  | "asistencias"
   | "concepto_multa"
   | "justificaciones"
   | "operacion"
   | "tipo_multa"
   | "tipo_contrato"
+  | "profiles"
   | "tipo_propiedad"
   | "tipo_moneda"
   | "historial_observaciones"
@@ -59,6 +63,10 @@ export type Empresas = TableRow<"empresas">
 export type Alcances = TableRow<"alcances">
 export type Eventos = TableRow<"eventos">
 export type Multas = TableRow<"multas">
+export type Asistencias = TableRow<"asistencias">
+export type Documentos = TableRow<"documentos">
+export type EstadoDocumentos = TableRow<"estado_documento">
+export type Profiles = TableRow<"profiles">
 export type Justificaciones = TableRow<"justificaciones">
 export type Tipo_Multa = TableRow<"tipo_multa">
 export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">

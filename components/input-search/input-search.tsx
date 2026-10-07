@@ -147,8 +147,11 @@ export function InputSearch<T>({
               </CommandEmpty>
               <CommandGroup>
                 {options.map((item) => {
+
                   const value = String(getOptionValue(item));
+                  
                   const label = getOptionLabel(item);
+
                   const sublabel = getOptionSublabel?.(item);
                   const isSelected = selectedId === getOptionValue(item);
                   return (

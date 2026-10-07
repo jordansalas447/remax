@@ -34,6 +34,10 @@ import { tardanzasConfig } from "./tardanzas";
 import { tipo_multaConfig } from "./tipo_multa";
 import { concepto_multaConfig } from "./concepto_multa";
 import { justificacionesConfig } from "./justificaciones";
+import { asistenciasConfig } from "./asistencias";
+import { documentosConfig } from "./documentos";
+import { estado_documentoConfig } from "./estado_documento";
+import { profilesConfig } from "./profiles";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -57,6 +61,10 @@ export const tableConfigs: Record<string, TableConfig> = {
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,
+  asistencias:asistenciasConfig,
+  documentos:documentosConfig,
+  estado_documento:estado_documentoConfig,
+  profiles:profilesConfig,
   eventos: eventosConfig,
   multas:multasConfig,
   tipo_multa:tipo_multaConfig,

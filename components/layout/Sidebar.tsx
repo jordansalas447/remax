@@ -3,6 +3,7 @@ import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTools, faBuilding, faChartLine, faUserTie, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Options } from "./Options";
+import { UserMenu } from "./UserMenu";
 import { get_tabla } from "@/lib/crud/service";
 import {
   Sidebar,
@@ -56,6 +57,16 @@ export async function AppSidebar() {
               >
                 <FontAwesomeIcon icon={faChartLine} />
                 Dashboard
+              </Link>
+
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link
+                href="/generar-contrato"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+              >
+             
+                Generar Contrato
               </Link>
 
             </SidebarMenuItem>
@@ -133,34 +144,19 @@ export async function AppSidebar() {
               </DropdownMenu>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              {/* Herramientas group using Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger render={
-                  <SidebarMenuButton>
-                    <span className="flex items-center gap-2">
-                      <FontAwesomeIcon icon={faUser} />
-                      Usuario
-                      <ChevronRight className="ml-auto w-4 h-4" />
-                    </span>
-                  </SidebarMenuButton>
-                } />
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link
-                      href="#"
-                      className="flex items-center gap-2 px-2 py-1 text-base text-zinc-700 dark:text-zinc-200 hover:underline"
-                    >
-                      <span className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-                      Cerrar Sessión
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link
+                href="/perfil"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+              >
+                <FontAwesomeIcon icon={faUser} />
+                Mi perfil
+              </Link>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+        <UserMenu />
         <div className="mt-auto border-t border-zinc-100 dark:border-zinc-800 text-xs text-zinc-400 text-center pt-4">
           &copy; {new Date().getFullYear()} RE/MAX Adelante. Todos los derechos reservados.
         </div>
