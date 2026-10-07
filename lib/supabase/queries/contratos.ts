@@ -12,6 +12,7 @@ export type ContratoConPropiedad = ContratoRow & {
   inmuebles: (InmueblesRow & {
     distritos: Pick<DistritoRow, "distrito"> | null;
     tipo_propiedad: Pick<TipoInmueblesRow, "tipo_propiedad"> | null;
+    id_propiedad: number[] | null;
   }) | null;
   operacion?: {
     operacion: string;

@@ -257,7 +257,7 @@ export default function AsociadoPage() {
     };
   }, [selectedPropiedadId, selectedContratoId]);
 
-  const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number) => {
+  const handleSelectContrato = useCallback((id_contrato: number, id_propiedad: number | null) => {
     setSelectedContratoId(id_contrato);
     setSelectedPropiedadId(id_propiedad);
   }, []);

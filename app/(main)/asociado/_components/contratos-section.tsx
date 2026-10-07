@@ -209,7 +209,7 @@ interface ContratosSectionProps {
   contratos: ContratoConPropiedad[];
   selectedContratoId: number | null;
   CheckRevision: any[];
-  onSelectContrato: (id_contrato: number, id_propiedad: number) => void;
+  onSelectContrato: (id_contrato: number, id_propiedad: number | null) => void;
   loading: boolean;
 }
 
@@ -430,7 +430,7 @@ export function ContratosSection({
 interface RenewalStackProps {
   items: ContratoConPropiedad[];
   selectedContratoId: number | null;
-  onSelectContrato: (id_contrato: number, id_propiedad: number) => void;
+  onSelectContrato: (id_contrato: number, id_propiedad: number | null) => void;
   CheckRevision: any[];
 }
 
@@ -649,7 +649,7 @@ function RenewalBaseCard({
 interface ContratoCardProps {
   contrato: ContratoConPropiedad;
   isSelected: boolean;
-  onSelectContrato: (id_contrato: number, id_propiedad: number) => void;
+  onSelectContrato: (id_contrato: number, id_propiedad: number | null) => void;
   CheckRevision: any[];
   inChain?: boolean;
   stackVariant?: boolean;
