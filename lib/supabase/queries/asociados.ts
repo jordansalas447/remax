@@ -5,6 +5,7 @@ type AsociadoRow = Database["public"]["Tables"]["asociados"]["Row"];
 type PersonaRow = Database["public"]["Tables"]["personas"]["Row"];
 type DetalleAsociadoRow = Database["public"]["Tables"]["detalle_asociado"]["Row"];
 type NivelAsociadoRow = Database["public"]["Tables"]["nivel_asociado"]["Row"];
+type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
 export type AsociadoListItem = Pick<
   AsociadoRow,
@@ -16,13 +17,19 @@ export type AsociadoDetalle = AsociadoRow & {
   detalle_asociado: (DetalleAsociadoRow & { nivel_asociado: NivelAsociadoRow | null }) | null;
 };
 
+export type ProfilesDetalle = {
+  personas: {
+      asociados: AsociadoRow[];
+  } | null;
+} | null
+
 export async function getAsociados(): Promise<AsociadoListItem[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from("asociados")
     .select("id_asociado, nombre_completo, descripcion, fecha_creacion")
-    .eq("eliminado",false)
+    .eq("eliminado", false)
     .order("nombre_completo", { ascending: true });
 
   if (error) {
@@ -39,20 +46,42 @@ export async function getAsociadoDetalle(id_asociado: number): Promise<AsociadoD
     .from("asociados")
     .select(
       `
-      *,
-      personas (*),
-      detalle_asociado (
         *,
-        nivel_asociado (*)
-      )
-    `,
+        personas (*),
+        detalle_asociado (
+          *,
+          nivel_asociado (*)
+        )
+      `
     )
     .eq("id_asociado", id_asociado)
-    .eq("eliminado",false)
+    .eq("eliminado", false)
     .maybeSingle();
 
   if (error) {
     throw new Error(error.message);
   }
-  return data;
+  return data ?? null;
+}
+
+export async function getAsociadoByProfileId(id: string): Promise<ProfilesDetalle | null> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(`
+      *,
+      personas (
+        asociados (*)
+      )
+    `)
+    .eq("id", id)
+    .eq("eliminado", false)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? null;
 }

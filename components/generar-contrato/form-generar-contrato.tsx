@@ -4,57 +4,70 @@ import React, { useEffect, useState } from "react";
 // IMPORTA TUS QUERIES REALES DE LOS ENDPOINTS AQUÍ:
 
 import PizZip from "pizzip";
-import { getTiposContrato } from "@/lib/supabase/queries/tipos_contratos";
-import { getOperaciones } from "@/lib/supabase/queries/operaciones";
+import { getTiposContrato, TipoContratoRow } from "@/lib/supabase/queries/tipos_contratos";
+import { getOperaciones, OperacionesRow } from "@/lib/supabase/queries/operaciones";
 import { getEstadoDocumentos } from "@/lib/supabase/queries/estados_documento";
 import { NativeSelect } from "../ui/native-select";
-
+import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/documentos";
+import Ruta from '@/lib/data/file.json'
 // Generar número de contrato automático (dummy, reemplaza con lógica real)
-async function generarNumeroContrato() {
-  return Math.floor(Math.random() * 900000 + 100000).toString(); // 6 dígitos como string
+// async function generarNumeroContrato() {
+//   return Math.floor(Math.random() * 900000 + 100000).toString(); // 6 dígitos como string
+// }
+
+interface FormularioProps {
+  TipoContratos: TipoContratoRow[]
+  TipoOperaciones: OperacionesRow[]
+  Asociado: number
+  onResultado: (valor: string) => void;
 }
 
 // Simula descarga de contrato. Lógica dummy.
-async function descargarContratoDummy(data: any) {
-  const zip = new PizZip();
-  zip.file(
-    "word/document.xml",
-    `
-    <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-      <w:body>
-        <w:p><w:r><w:t>Contrato generado</w:t></w:r></w:p>
-        <w:p><w:r><w:t>Nº: ${data.nro_contrato}</w:t></w:r></w:p>
-        <w:p><w:r><w:t>Tipo: ${data.id_tipo_contrato || ""}</w:t></w:r></w:p>
-      </w:body>
-    </w:document>
-  `
-  );
-  zip.file(
-    "[Content_Types].xml",
-    `<?xml version="1.0" encoding="UTF-8"?>
-    <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-      <Default Extension="xml" ContentType="application/xml"/>
-      <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-    </Types>`
-  );
-  const blob = zip.generate({ type: "blob" });
-  // Descarga autom.:
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `contrato_${data.nro_contrato}.docx`;
-  a.click();
-}
+// async function descargarContratoDummy(data: any) {
+//   const zip = new PizZip();
+//   zip.file(
+//     "word/document.xml",
+//     `
+//     <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+//       <w:body>
+//         <w:p><w:r><w:t>Contrato generado</w:t></w:r></w:p>
+//         <w:p><w:r><w:t>Nº: ${data.nro_contrato}</w:t></w:r></w:p>
+//         <w:p><w:r><w:t>Tipo: ${data.id_tipo_contrato || ""}</w:t></w:r></w:p>
+//       </w:body>
+//     </w:document>
+//   `
+//   );
+//   zip.file(
+//     "[Content_Types].xml",
+//     `<?xml version="1.0" encoding="UTF-8"?>
+//     <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+//       <Default Extension="xml" ContentType="application/xml"/>
+//       <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+//     </Types>`
+//   );
+//   const blob = zip.generate({ type: "blob" });
+//   // Descarga autom.:
+//   const a = document.createElement("a");
+//   a.href = URL.createObjectURL(blob);
+//   a.download = `contrato_${data.nro_contrato}.docx`;
+//   a.click();
+// }
 
-export default function FormGenerarContrato() {
+export default function FormGenerarContrato({
+  TipoContratos,
+  TipoOperaciones,
+  Asociado,
+  onResultado 
+}: FormularioProps) {
   // Form fields state
-  const [form, setForm] = useState({
-    id_tipo_contrato: "",
-    id_asociado: "",
+  const [form, setForm] = useState<DocumentosRow>({
+    id_tipo_contrato: 0,
+    id_asociado: Asociado,
     nro_propietarios: 1,
     empresa: false,
     apoderado: false,
-    id_operacion: "",
-  });
+    id_operacion: 0,
+  } as DocumentosRow);
 
   // Catalogos para selects
   const [tiposContrato, setTiposContrato] = useState<any[]>([]);
@@ -70,16 +83,8 @@ export default function FormGenerarContrato() {
   useEffect(() => {
     async function fetchAll() {
       try {
-        const [tipos, operaciones] = await Promise.all([
-          getTiposContrato(), // Llena tipos de contrato
-       //   getEstadoDocumentos(),      // Llena estados
-         // getAsociados(),    // Llena asociados/agentes (usuarios?)
-          getOperaciones(),  // Llena operaciones
-        ]);
-        setTiposContrato(tipos ?? []);
-        setEstados(estados ?? []);
-        setAsociados(asociados ?? []);
-        setOperaciones(operaciones ?? []);
+        setTiposContrato(TipoContratos ?? []);
+        setOperaciones(TipoOperaciones ?? []);
       } catch (err) {
         setError("Error al cargar catálogos. " + (err as any).message);
       }
@@ -92,7 +97,7 @@ export default function FormGenerarContrato() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
-  
+
     setForm((f) => ({
       ...f,
       [name]:
@@ -111,23 +116,72 @@ export default function FormGenerarContrato() {
 
     try {
       // Genera número de contrato único
-      const nro_contrato = await generarNumeroContrato();
+      const nro_contrato = await createDocumentos(form);
 
-      // Prepara el payload para la API/DB según tu modelo
-      const nuevoContrato = {
-        ...form,
-        nro_contrato,
-        // Otros campos pueden incluir: fecha_generacion, created_at, etc - manejados por backend
-      };
+      console.log(form)
 
+      const LabelTipoContrato:string = TipoContratos.filter(i => i.id == form.id_tipo_contrato)[0].tipo_contrato
+      const LabelOperacion:string = TipoOperaciones.filter(i => i.id == form.id_operacion )[0].operacion
 
-      console.log(nuevoContrato )
+      // // Aquí: descarga el archivo y edítalo usando pizzip
+      const docUrl = "https://ik.imagekit.io/7lobev0ug/Documentos/CONTRATOS/";
 
-      // Llama a tu endpoint para crear el contrato (implementa en tu API)
-      // await createContratoDocumento(nuevoContrato);
+       // 1. Descargar el archivo docx como ArrayBuffer
+       const response = await fetch(docUrl);
+       if (!response.ok) {
+         throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
+       }
+       const arrayBuffer = await response.arrayBuffer();
 
-      await descargarContratoDummy(nuevoContrato);
-      setNroContrato(nro_contrato);
+       // 2. PizZip para manipular el zip (docx)
+       // @ts-ignore
+       const PizZip = (await import("pizzip")).default;
+
+       let zip;
+       try {
+         zip = new PizZip(arrayBuffer);
+       } catch (zipError) {
+         throw new Error("Error al descomprimir el archivo docx.");
+       }
+
+       // 3. Editar el docx utilizando PizZip
+       // Busca y reemplaza el marcador exacto {{nro_contrato}}
+       const documentXml = zip.file("word/document.xml")?.asText();
+       if (!documentXml) {
+         throw new Error("No se pudo leer el contenido de word/document.xml");
+       }
+
+       // Reemplaza todos los marcadores {{nro_contrato}} por el número de contrato generado
+       let nuevoXml = documentXml.replace(/\{\{nro_contrato\}\}/g, nro_contrato.nro_contrato);
+
+       // Sobrescribe el xml en el zip
+       zip.file("word/document.xml", nuevoXml);
+
+       // 4. Volver a generar el archivo docx (Blob)
+       const editedContent = zip.generate({
+         type: "blob",
+         mimeType:
+           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+       });
+
+       // 5. Descargar el archivo en el navegador
+       const downloadFile = (blob: Blob, fileName: string) => {
+         const link = document.createElement("a");
+         link.href = URL.createObjectURL(blob);
+         link.download = fileName;
+         document.body.appendChild(link);
+         link.click();
+         document.body.removeChild(link);
+       };
+
+       downloadFile(
+         editedContent,
+         `ANTICRESIS_EXCLUSIVO_${nro_contrato.nro_contrato}.docx`
+       );
+    
+       onResultado(nro_contrato.nro_contrato)
+       setNroContrato(nro_contrato.nro_contrato);
+
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
     } finally {
@@ -138,7 +192,7 @@ export default function FormGenerarContrato() {
   // Render
   return (
     <div className="max-w-lg mx-auto">
-      <div className="bg-white/95 dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-100 dark:border-zinc-800 p-8">
+      <div className="bg-white/95 dark:bg-zinc-900 rounded-xl shadow border border-zinc-100 dark:border-zinc-800 p-8">
         <h1 className="text-3xl font-extrabold text-blue-900 dark:text-blue-200 mb-8 text-center">
           <span className="inline-block align-text-top mr-2">✍️</span>
           Generar contrato
@@ -152,7 +206,7 @@ export default function FormGenerarContrato() {
             <NativeSelect
               id="id_tipo_contrato"
               name="id_tipo_contrato"
-              value={form.id_tipo_contrato}
+              value={form.id_tipo_contrato || 0}
               onChange={handleChange}
               required
               disabled={enviando}
@@ -165,7 +219,7 @@ export default function FormGenerarContrato() {
                 </option>
               ))}
             </NativeSelect>
-       
+
           </div>
           <div>
             <label htmlFor="id_operacion" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
@@ -174,7 +228,7 @@ export default function FormGenerarContrato() {
             <NativeSelect
               id="id_operacion"
               name="id_operacion"
-              value={form.id_operacion}
+              value={form.id_operacion || 0}
               onChange={handleChange}
               required
               disabled={enviando}
@@ -187,7 +241,7 @@ export default function FormGenerarContrato() {
                 </option>
               ))}
             </NativeSelect>
-       
+
           </div>
 
           {/* id_estado: SELECT */}
@@ -244,7 +298,7 @@ export default function FormGenerarContrato() {
               id="nro_propietarios"
               name="nro_propietarios"
               className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
-              value={form.nro_propietarios}
+              value={form.nro_propietarios || 0}
               min={1}
               onChange={handleChange}
               disabled={enviando}
@@ -257,7 +311,7 @@ export default function FormGenerarContrato() {
               type="checkbox"
               id="empresa"
               name="empresa"
-              checked={form.empresa}
+              checked={form.empresa || false}
               onChange={handleChange}
               className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
               disabled={enviando}
@@ -273,7 +327,7 @@ export default function FormGenerarContrato() {
               type="checkbox"
               id="apoderado"
               name="apoderado"
-              checked={form.apoderado}
+              checked={form.apoderado || false}
               onChange={handleChange}
               className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
               disabled={enviando}

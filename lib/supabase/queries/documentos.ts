@@ -3,6 +3,20 @@ import type { Database } from '@/database.types';
 
 export type DocumentosRow = Database['public']['Tables']['documentos']['Row'];
 
+
+export type DocumentosRowDetalle = DocumentosRow & {
+  operacion?: {
+    operacion: string;
+  } | null;
+  tipo_contrato?: {
+    tipo_contrato: string;
+  } | null;
+  estado_documento?: {
+    estado: string;
+  } | null;
+};
+
+
 export async function getDocumentoss(): Promise<DocumentosRow[]> {
     const supabase = createClient();
     const { data, error } = await supabase.from('documentos').select('*');
@@ -25,8 +39,14 @@ export async function getDocumentoss(): Promise<DocumentosRow[]> {
     const supabase = createClient();
     const { data, error } = await supabase
       .from('documentos')
-      .select('*');
-      //.eq('id', id);
+      .select(`
+        *,
+        tipo_contrato(*),
+        asociados(*),
+        operacion(*),
+        estado_documento(*)
+        `)
+      .eq('id_asociado', id);
     if (error) throw new Error(error.message);
     return data ?? null;
   }

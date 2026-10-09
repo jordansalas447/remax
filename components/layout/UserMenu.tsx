@@ -9,6 +9,7 @@ export async function UserMenu() {
   if (!session) return null;
 
   const name = getDisplayName(session);
+
   const photo = session.persona?.url_foto;
 
   return (

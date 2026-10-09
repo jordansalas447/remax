@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/database.types';
 
-type TipoContratoRow = Database['public']['Tables']['tipo_contrato']['Row'];
+export type TipoContratoRow = Database['public']['Tables']['tipo_contrato']['Row'];
 
 export async function getTiposContrato(): Promise<TipoContratoRow[]> {
   const supabase = createClient();

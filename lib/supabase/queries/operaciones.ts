@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/database.types';
 
-type OperacionesRow = Database['public']['Tables']['operacion']['Row'];
+export type OperacionesRow = Database['public']['Tables']['operacion']['Row'];
 
 export async function getOperaciones(): Promise<OperacionesRow[]> {
   const supabase = createClient();
