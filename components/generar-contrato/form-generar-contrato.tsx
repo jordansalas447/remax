@@ -9,7 +9,7 @@ import { getOperaciones, OperacionesRow } from "@/lib/supabase/queries/operacion
 import { getEstadoDocumentos } from "@/lib/supabase/queries/estados_documento";
 import { NativeSelect } from "../ui/native-select";
 import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/documentos";
-import Ruta from '@/lib/data/file.json'
+import RutaDocumento from '@/lib/data/file.json'
 // Generar número de contrato automático (dummy, reemplaza con lógica real)
 // async function generarNumeroContrato() {
 //   return Math.floor(Math.random() * 900000 + 100000).toString(); // 6 dígitos como string
@@ -118,69 +118,86 @@ export default function FormGenerarContrato({
       // Genera número de contrato único
       const nro_contrato = await createDocumentos(form);
 
-      console.log(form)
+      //console.log(form)
 
-      const LabelTipoContrato:string = TipoContratos.filter(i => i.id == form.id_tipo_contrato)[0].tipo_contrato
-      const LabelOperacion:string = TipoOperaciones.filter(i => i.id == form.id_operacion )[0].operacion
+      const LabelTipoContrato: string = TipoContratos.find(i => i.id == form.id_tipo_contrato)?.tipo_contrato ?? "";
+      const LabelOperacion: string = TipoOperaciones.find(i => i.id == form.id_operacion)?.operacion ?? "";
+      const LabelPoder:boolean = form.apoderado ?? false;
+      const LabelEmpresa:boolean = form.empresa ?? false;
+      const NroPropietarios:number = form.nro_propietarios ?? 1;
+
+      // Buscar en RutaDocumento (un array de objetos) el documento que coincide con LabelTipoContrato y LabelOperacion
+      const documentoEncontrado = RutaDocumento.find(
+        (doc: any) =>
+          doc.tipo_contrato === LabelTipoContrato &&
+          doc.operacion === LabelOperacion && 
+          doc.empresa === LabelEmpresa &&
+          doc.apoderado === LabelPoder &&
+          doc.propietarios === NroPropietarios
+      );
+
+      //console.log(documentoEncontrado?.documento)
+
+      // Puedes usar documentoEncontrado.documento para obtener la ruta si se encontró
 
       // // Aquí: descarga el archivo y edítalo usando pizzip
-      const docUrl = "https://ik.imagekit.io/7lobev0ug/Documentos/CONTRATOS/";
+      const docUrl = "https://ik.imagekit.io/7lobev0ug/Documentos/CONTRATOS/" + documentoEncontrado?.documento;
+      
+      // 1. Descargar el archivo docx como ArrayBuffer
+      const response = await fetch(docUrl);
+      if (!response.ok) {
+        throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
+      }
+      const arrayBuffer = await response.arrayBuffer();
 
-       // 1. Descargar el archivo docx como ArrayBuffer
-       const response = await fetch(docUrl);
-       if (!response.ok) {
-         throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
-       }
-       const arrayBuffer = await response.arrayBuffer();
+      // 2. PizZip para manipular el zip (docx)
+      // @ts-ignore
+      const PizZip = (await import("pizzip")).default;
 
-       // 2. PizZip para manipular el zip (docx)
-       // @ts-ignore
-       const PizZip = (await import("pizzip")).default;
+      let zip;
+      try {
+        zip = new PizZip(arrayBuffer);
+      } catch (zipError) {
+        throw new Error("Error al descomprimir el archivo docx.");
+      }
 
-       let zip;
-       try {
-         zip = new PizZip(arrayBuffer);
-       } catch (zipError) {
-         throw new Error("Error al descomprimir el archivo docx.");
-       }
+      // 3. Editar el docx utilizando PizZip
+      // Busca y reemplaza el marcador exacto {{nro_contrato}}
+      const documentXml = zip.file("word/document.xml")?.asText();
+      if (!documentXml) {
+        throw new Error("No se pudo leer el contenido de word/document.xml");
+      }
 
-       // 3. Editar el docx utilizando PizZip
-       // Busca y reemplaza el marcador exacto {{nro_contrato}}
-       const documentXml = zip.file("word/document.xml")?.asText();
-       if (!documentXml) {
-         throw new Error("No se pudo leer el contenido de word/document.xml");
-       }
+      // Reemplaza todos los marcadores {{nro_contrato}} por el número de contrato generado
+      let nuevoXml = documentXml.replace(/\{\{nro_contrato\}\}/g, nro_contrato.nro_contrato);
 
-       // Reemplaza todos los marcadores {{nro_contrato}} por el número de contrato generado
-       let nuevoXml = documentXml.replace(/\{\{nro_contrato\}\}/g, nro_contrato.nro_contrato);
+      // Sobrescribe el xml en el zip
+      zip.file("word/document.xml", nuevoXml);
 
-       // Sobrescribe el xml en el zip
-       zip.file("word/document.xml", nuevoXml);
+      // 4. Volver a generar el archivo docx (Blob)
+      const editedContent = zip.generate({
+        type: "blob",
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      });
 
-       // 4. Volver a generar el archivo docx (Blob)
-       const editedContent = zip.generate({
-         type: "blob",
-         mimeType:
-           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-       });
+      // 5. Descargar el archivo en el navegador
+      const downloadFile = (blob: Blob, fileName: string) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
 
-       // 5. Descargar el archivo en el navegador
-       const downloadFile = (blob: Blob, fileName: string) => {
-         const link = document.createElement("a");
-         link.href = URL.createObjectURL(blob);
-         link.download = fileName;
-         document.body.appendChild(link);
-         link.click();
-         document.body.removeChild(link);
-       };
-
-       downloadFile(
-         editedContent,
-         `ANTICRESIS_EXCLUSIVO_${nro_contrato.nro_contrato}.docx`
-       );
+      downloadFile(
+        editedContent,
+        documentoEncontrado?.nombre_documento || "No_encontrado"
+      );
     
-       onResultado(nro_contrato.nro_contrato)
-       setNroContrato(nro_contrato.nro_contrato);
+      onResultado(nro_contrato.nro_contrato)
+      setNroContrato(nro_contrato.nro_contrato);
 
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");

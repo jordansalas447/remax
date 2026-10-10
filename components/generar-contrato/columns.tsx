@@ -25,6 +25,13 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     ),
   },
   {
+    accessorKey: "operacion.operacion",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Operación" />
+    ),
+    cell: ({ row }) => formatCell(row.original.operacion?.operacion),
+  },
+  {
     accessorKey: "tipo_contrato.tipo_contrato",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -35,13 +42,6 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     cell: ({ row }) =>
       formatCell(row.original.tipo_contrato?.tipo_contrato),
   },
-  {
-    accessorKey: "id_estado",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Estado" />
-    ),
-    cell: ({ row }) => formatCell(row.original.estado_documento?.estado),
-  },
   // {
   //   accessorKey: "id_asociado",
   //   header: ({ column }) => (
@@ -49,13 +49,7 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
   //   ),
   //   cell: ({ row }) => formatCell(row.getValue("id_asociado")),
   // },
-  {
-    accessorKey: "nro_propietarios",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Propietarios" />
-    ),
-    cell: ({ row }) => formatCell(row.getValue("nro_propietarios")),
-  },
+
   {
     accessorKey: "empresa",
     header: ({ column }) => (
@@ -70,12 +64,13 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => formatBoolean(row.getValue("apoderado")),
   },
+
   {
-    accessorKey: "operacion.operacion",
+    accessorKey: "nro_propietarios",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Operación" />
+      <DataTableColumnHeader column={column} title="Nro Propietario(s)" />
     ),
-    cell: ({ row }) => formatCell(row.original.operacion?.operacion),
+    cell: ({ row }) => formatCell(row.getValue("nro_propietarios")),
   },
   {
     accessorKey: "eliminado",
@@ -85,10 +80,31 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     cell: ({ row }) => formatBoolean(row.getValue("eliminado")),
   },
   {
+    accessorKey: "id_estado",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Estado" />
+    ),
+    cell: ({ row }) => formatCell(row.original.estado_documento?.estado),
+  },
+  {
     accessorKey: "motivo_anulacion",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Motivo Anulación" />
     ),
     cell: ({ row }) => row.getValue("motivo_anulacion") ?? "",
+  },
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Fecha Registro" />
+    ),
+    cell: ({ row }) => {
+      const value = row.getValue("created_at");
+      if (!value) return "";
+      const date = typeof value === "string" || typeof value === "number"
+        ? new Date(value)
+        : value; // fallback if already Date
+      return date.toLocaleString();
+    },
   },
 ]

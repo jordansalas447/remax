@@ -1,58 +1,37 @@
-{
-    "ANTICRESIS": {
-      "EXCLUSIVO": [
-        "ANTICRESIS/EXCLUSIVO/ANTICRESIS_EXCLUSIVO_1_PROPIETARIO.docx",
-        "ANTICRESIS/EXCLUSIVO/ANTICRESIS_EXCLUSIVO_2_PROPIETARIOS.docx"
-      ],
-      "NO_EXCLUSIVO": [
-        "ANTICRESIS/NO_EXCLUSIVO/ANTICRESIS_NO_EXCLUSIVO_1_PROPIETARIO.docx",
-        "ANTICRESIS/NO_EXCLUSIVO/ANTICRESIS_NO_EXCLUSIVO_2_PROPIETARIOS.docx"
-      ]
-    },
-    "ARRENDAMIENTO": {
-      "EXCLUSIVO": [
-        "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO.docx",
-        "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO_EXCLUSIVIDAD_COMPARTIDA.docx",
-        "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO_PODER.docx",
-        "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_2_PROPIETARIOS.docx",
-        "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_3_PROPIETARIOS.docx",
-        "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_EMPRESA_REPRESENTANTE.docx"
-      ],
-      "NO_EXCLUSIVO": [
-        "ARRENDAMIENTO/NO_EXCLUSIVO/ARRENDAMIENTO_NO_EXCLUSIVO_1_PROPIETARIO.docx",
-        "ARRENDAMIENTO/NO_EXCLUSIVO/ARRENDAMIENTO_NO_EXCLUSIVO_2_PROPIETARIOS.docx",
-        "ARRENDAMIENTO/NO_EXCLUSIVO/ARRENDAMIENTO_NO_EXCLUSIVO_3_PROPIETARIOS.docx"
-      ]
-    },
-    "TRASPASO": {
-      "EXCLUSIVO": [
-        "TRASPASO/EXCLUSIVO/TRASPASO_EXCLUSIVO_1_PROPIETARIO.docx"
-      ],
-      "NO_EXCLUSIVO": [
-        "TRASPASO/NO_EXCLUSIVO/TRASPASO_NO_EXCLUSIVO_1_PROPIETARIO.docx"
-      ]
-    },
-    "VENTA": {
-      "EXCLUSIVO": [
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_1_PROPIETARIO.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_1_PROPIETARIO_EMPRESA.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_1_PROPIETARIO_PODER.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_2_PROPIETARIOS.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_2_PROPIETARIOS_PODER.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_3_PROPIETARIOS.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_4_PROPIETARIOS.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_5_PROPIETARIOS.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_6_PROPIETARIOS.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_6_PROPIETARIOS_PODER.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_8_PROPIETARIOS.docx",
-        "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_LIMITADA_2_PROPIETARIOS_COMISION_COMPARTIDA.docx"
-      ],
-      "NO_EXCLUSIVO": [
-        "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_1_PROPIETARIO.docx",
-        "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_1_PROPIETARIO_PODER.docx",
-        "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_2_PROPIETARIOS.docx",
-        "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_3_PROPIETARIOS.docx",
-        "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_4_PROPIETARIOS.docx"
-      ]
-    }
-  }
+[
+  { "tipo_contrato": "Exclusiva", "operacion": "Anticrisis", "documento": "ANTICRESIS/EXCLUSIVO/ANTICRESIS_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "ANTICRESIS_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Anticrisis", "documento": "ANTICRESIS/EXCLUSIVO/ANTICRESIS_EXCLUSIVO_2_PROPIETARIOS.docx", "nombre_documento": "ANTICRESIS_EXCLUSIVO_2_PROPIETARIOS.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Anticrisis", "documento": "ANTICRESIS/NO_EXCLUSIVO/ANTICRESIS_NO_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "ANTICRESIS_NO_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Anticrisis", "documento": "ANTICRESIS/NO_EXCLUSIVO/ANTICRESIS_NO_EXCLUSIVO_2_PROPIETARIOS.docx", "nombre_documento": "ANTICRESIS_NO_EXCLUSIVO_2_PROPIETARIOS.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+
+  { "tipo_contrato": "Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO_EXCLUSIVIDAD_COMPARTIDA.docx", "nombre_documento": "ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO_EXCLUSIVIDAD_COMPARTIDA.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO_PODER.docx", "nombre_documento": "ARRENDAMIENTO_EXCLUSIVO_1_PROPIETARIO_PODER.docx", "propietarios": 1, "apoderado": true, "empresa": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_2_PROPIETARIOS.docx", "nombre_documento": "ARRENDAMIENTO_EXCLUSIVO_2_PROPIETARIOS.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_3_PROPIETARIOS.docx", "nombre_documento": "ARRENDAMIENTO_EXCLUSIVO_3_PROPIETARIOS.docx", "propietarios": 3, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/EXCLUSIVO/ARRENDAMIENTO_EXCLUSIVO_EMPRESA_REPRESENTANTE.docx", "nombre_documento": "ARRENDAMIENTO_EXCLUSIVO_EMPRESA_REPRESENTANTE.docx", "propietarios": 1, "empresa": true, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/NO_EXCLUSIVO/ARRENDAMIENTO_NO_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "ARRENDAMIENTO_NO_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/NO_EXCLUSIVO/ARRENDAMIENTO_NO_EXCLUSIVO_2_PROPIETARIOS.docx", "nombre_documento": "ARRENDAMIENTO_NO_EXCLUSIVO_2_PROPIETARIOS.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Arrendamiento", "documento": "ARRENDAMIENTO/NO_EXCLUSIVO/ARRENDAMIENTO_NO_EXCLUSIVO_3_PROPIETARIOS.docx", "nombre_documento": "ARRENDAMIENTO_NO_EXCLUSIVO_3_PROPIETARIOS.docx", "propietarios": 3, "empresa": false, "apoderado": false },
+
+  { "tipo_contrato": "Exclusiva", "operacion": "Traspaso", "documento": "TRASPASO/EXCLUSIVO/TRASPASO_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "TRASPASO_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Traspaso", "documento": "TRASPASO/NO_EXCLUSIVO/TRASPASO_NO_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "TRASPASO_NO_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "VENTA_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_1_PROPIETARIO_EMPRESA.docx", "nombre_documento": "VENTA_EXCLUSIVO_1_PROPIETARIO_EMPRESA.docx", "propietarios": 1, "empresa": true, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_1_PROPIETARIO_PODER.docx", "nombre_documento": "VENTA_EXCLUSIVO_1_PROPIETARIO_PODER.docx", "propietarios": 1, "apoderado": true, "empresa": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_2_PROPIETARIOS.docx", "nombre_documento": "VENTA_EXCLUSIVO_2_PROPIETARIOS.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_2_PROPIETARIOS_PODER.docx", "nombre_documento": "VENTA_EXCLUSIVO_2_PROPIETARIOS_PODER.docx", "propietarios": 2, "apoderado": true, "empresa": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_3_PROPIETARIOS.docx", "nombre_documento": "VENTA_EXCLUSIVO_3_PROPIETARIOS.docx", "propietarios": 3, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_4_PROPIETARIOS.docx", "nombre_documento": "VENTA_EXCLUSIVO_4_PROPIETARIOS.docx", "propietarios": 4, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_5_PROPIETARIOS.docx", "nombre_documento": "VENTA_EXCLUSIVO_5_PROPIETARIOS.docx", "propietarios": 5, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_6_PROPIETARIOS.docx", "nombre_documento": "VENTA_EXCLUSIVO_6_PROPIETARIOS.docx", "propietarios": 6, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_6_PROPIETARIOS_PODER.docx", "nombre_documento": "VENTA_EXCLUSIVO_6_PROPIETARIOS_PODER.docx", "propietarios": 6, "apoderado": true, "empresa": false },
+  { "tipo_contrato": "Exclusiva", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_8_PROPIETARIOS.docx", "nombre_documento": "VENTA_EXCLUSIVO_8_PROPIETARIOS.docx", "propietarios": 8, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "Exclusiva Limitada", "operacion": "Venta", "documento": "VENTA/EXCLUSIVO/VENTA_EXCLUSIVO_LIMITADA_2_PROPIETARIOS_COMISION_COMPARTIDA.docx", "nombre_documento": "VENTA_EXCLUSIVO_LIMITADA_2_PROPIETARIOS_COMISION_COMPARTIDA.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Venta", "documento": "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_1_PROPIETARIO.docx", "nombre_documento": "VENTA_NO_EXCLUSIVO_1_PROPIETARIO.docx", "propietarios": 1, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Venta", "documento": "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_1_PROPIETARIO_PODER.docx", "nombre_documento": "VENTA_NO_EXCLUSIVO_1_PROPIETARIO_PODER.docx", "propietarios": 1, "apoderado": true, "empresa": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Venta", "documento": "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_2_PROPIETARIOS.docx", "nombre_documento": "VENTA_NO_EXCLUSIVO_2_PROPIETARIOS.docx", "propietarios": 2, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Venta", "documento": "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_3_PROPIETARIOS.docx", "nombre_documento": "VENTA_NO_EXCLUSIVO_3_PROPIETARIOS.docx", "propietarios": 3, "empresa": false, "apoderado": false },
+  { "tipo_contrato": "No Exclusiva", "operacion": "Venta", "documento": "VENTA/NO_EXCLUSIVO/VENTA_NO_EXCLUSIVO_4_PROPIETARIOS.docx", "nombre_documento": "VENTA_NO_EXCLUSIVO_4_PROPIETARIOS.docx", "propietarios": 4, "empresa": false, "apoderado": false }
+]
