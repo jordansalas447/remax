@@ -10,10 +10,8 @@ import { getEstadoDocumentos } from "@/lib/supabase/queries/estados_documento";
 import { NativeSelect } from "../ui/native-select";
 import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/documentos";
 import RutaDocumento from '@/lib/data/file.json'
-// Generar número de contrato automático (dummy, reemplaza con lógica real)
-// async function generarNumeroContrato() {
-//   return Math.floor(Math.random() * 900000 + 100000).toString(); // 6 dígitos como string
-// }
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { Button } from "../ui/button";
 
 interface FormularioProps {
   TipoContratos: TipoContratoRow[]
@@ -21,37 +19,6 @@ interface FormularioProps {
   Asociado: number
   onResultado: (valor: string) => void;
 }
-
-// Simula descarga de contrato. Lógica dummy.
-// async function descargarContratoDummy(data: any) {
-//   const zip = new PizZip();
-//   zip.file(
-//     "word/document.xml",
-//     `
-//     <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-//       <w:body>
-//         <w:p><w:r><w:t>Contrato generado</w:t></w:r></w:p>
-//         <w:p><w:r><w:t>Nº: ${data.nro_contrato}</w:t></w:r></w:p>
-//         <w:p><w:r><w:t>Tipo: ${data.id_tipo_contrato || ""}</w:t></w:r></w:p>
-//       </w:body>
-//     </w:document>
-//   `
-//   );
-//   zip.file(
-//     "[Content_Types].xml",
-//     `<?xml version="1.0" encoding="UTF-8"?>
-//     <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-//       <Default Extension="xml" ContentType="application/xml"/>
-//       <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-//     </Types>`
-//   );
-//   const blob = zip.generate({ type: "blob" });
-//   // Descarga autom.:
-//   const a = document.createElement("a");
-//   a.href = URL.createObjectURL(blob);
-//   a.download = `contrato_${data.nro_contrato}.docx`;
-//   a.click();
-// }
 
 export default function FormGenerarContrato({
   TipoContratos,
@@ -78,6 +45,8 @@ export default function FormGenerarContrato({
   const [enviando, setEnviando] = useState(false);
   const [nroContrato, setNroContrato] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [aceptado, setAceptado] = useState(false); // Estado para la declaración
+  const [paso, setPaso] = useState<1 | 2>(1); // 1: declaración, 2: formulario
 
   // Pide los datos a los endpoints al cargar
   useEffect(() => {
@@ -109,22 +78,36 @@ export default function FormGenerarContrato({
     }));
   };
 
+  // Para el checkbox de declaración de uso restringido
+  const handleDeclaracionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAceptado(e.target.checked);
+  };
+
+  // Paso de declaración a formulario
+  const handleSiguiente = () => {
+    if (!aceptado) {
+      setError("Debes aceptar la Declaración de Uso Restringido de Documentos Contractuales para continuar.");
+      return;
+    }
+    setError(null);
+    setPaso(2);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
     setEnviando(true);
 
     try {
       // Genera número de contrato único
       const nro_contrato = await createDocumentos(form);
 
-      //console.log(form)
-
       const LabelTipoContrato: string = TipoContratos.find(i => i.id == form.id_tipo_contrato)?.tipo_contrato ?? "";
       const LabelOperacion: string = TipoOperaciones.find(i => i.id == form.id_operacion)?.operacion ?? "";
-      const LabelPoder:boolean = form.apoderado ?? false;
-      const LabelEmpresa:boolean = form.empresa ?? false;
-      const NroPropietarios:number = form.nro_propietarios ?? 1;
+      const LabelPoder: boolean = form.apoderado ?? false;
+      const LabelEmpresa: boolean = form.empresa ?? false;
+      const NroPropietarios: number = form.nro_propietarios ?? 1;
 
       // Buscar en RutaDocumento (un array de objetos) el documento que coincide con LabelTipoContrato y LabelOperacion
       const documentoEncontrado = RutaDocumento.find(
@@ -136,11 +119,7 @@ export default function FormGenerarContrato({
           doc.propietarios === NroPropietarios
       );
 
-      //console.log(documentoEncontrado?.documento)
-
-      // Puedes usar documentoEncontrado.documento para obtener la ruta si se encontró
-
-      // // Aquí: descarga el archivo y edítalo usando pizzip
+      // Aquí: descarga el archivo y edítalo usando pizzip
       const docUrl = "https://ik.imagekit.io/7lobev0ug/Documentos/CONTRATOS/" + documentoEncontrado?.documento;
       
       // 1. Descargar el archivo docx como ArrayBuffer
@@ -206,192 +185,200 @@ export default function FormGenerarContrato({
     }
   };
 
-  // Render
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="bg-white/95 dark:bg-zinc-900 rounded-xl shadow border border-zinc-100 dark:border-zinc-800 p-8">
-        <h1 className="text-3xl font-extrabold text-blue-900 dark:text-blue-200 mb-8 text-center">
-          <span className="inline-block align-text-top mr-2">✍️</span>
-          Generar contrato
-        </h1>
-        <form className="grid gap-6" onSubmit={handleSubmit} autoComplete="off">
-          {/* id_tipo_contrato: SELECT */}
-          <div>
-            <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
-              Tipo de contrato <span className="text-red-500">*</span>
-            </label>
-            <NativeSelect
-              id="id_tipo_contrato"
-              name="id_tipo_contrato"
-              value={form.id_tipo_contrato || 0}
-              onChange={handleChange}
-              required
-              disabled={enviando}
-              className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
-            >
-              <option value="">Selecciona un tipo</option>
-              {tiposContrato.map((tipo: any) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.tipo_contrato}
-                </option>
-              ))}
-            </NativeSelect>
-
-          </div>
-          <div>
-            <label htmlFor="id_operacion" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
-              Operación
-            </label>
-            <NativeSelect
-              id="id_operacion"
-              name="id_operacion"
-              value={form.id_operacion || 0}
-              onChange={handleChange}
-              required
-              disabled={enviando}
-              className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
-            >
-              <option value="">Selecciona una operación</option>
-              {operaciones.map((op: any) => (
-                <option key={op.id} value={op.id}>
-                  {op.operacion}
-                </option>
-              ))}
-            </NativeSelect>
-
-          </div>
-
-          {/* id_estado: SELECT */}
-          {/* <div>
-            <label htmlFor="id_estado" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
-              Estado
-            </label>
-            <NativeSelect
-              id="id_estado"
-              name="id_estado"
-              value={form.id_estado}
-              onChange={handleChange}
-              required={false}
-              disabled={enviando}
-              className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
-            >
-              <option value="">Selecciona un estado</option>
-              {estados.map((estado: any) => (
-                <option key={estado.id} value={estado.id}>
-                  {estado.estado}
-                </option>
-              ))}
-            </NativeSelect>
-       
-          </div> */}
-
-          {/* id_asociado: SELECT */}
-          {/* <div>
-            <label htmlFor="id_asociado" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
-              Asociado
-            </label>
-            <select
-              name="id_asociado"
-              id="id_asociado"
-              className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
-              value={form.id_asociado}
-              onChange={handleChange}
-              disabled={enviando}
-            >
-              <option value="">Selecciona un asociado</option>
-              {asociados.map((asoc: any) => (
-                <option key={asoc.id} value={asoc.id}>{asoc.nombre ?? asoc.full_name ?? asoc.id}</option>
-              ))}
-            </select>
-          </div> */}
-
-          {/* nro_propietarios: number */}
-          <div>
-            <label htmlFor="nro_propietarios" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
-              Nro. de propietarios
-            </label>
-            <input
-              type="number"
-              id="nro_propietarios"
-              name="nro_propietarios"
-              className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
-              value={form.nro_propietarios || 0}
-              min={1}
-              onChange={handleChange}
-              disabled={enviando}
-            />
-          </div>
-
-          {/* empresa: checkbox */}
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="empresa"
-              name="empresa"
-              checked={form.empresa || false}
-              onChange={handleChange}
-              className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
-              disabled={enviando}
-            />
-            <label htmlFor="empresa" className="font-medium text-blue-900 dark:text-blue-100 select-none">
-              ¿Empresa?
-            </label>
-          </div>
-
-          {/* apoderado: checkbox */}
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="apoderado"
-              name="apoderado"
-              checked={form.apoderado || false}
-              onChange={handleChange}
-              className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
-              disabled={enviando}
-            />
-            <label htmlFor="apoderado" className="font-medium text-blue-900 dark:text-blue-100 select-none">
-              ¿Apoderado?
-            </label>
-          </div>
-
-          {/* id_operacion: SELECT */}
-
-
-          {/* ERROR */}
-          {error && (
-            <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
-              <span className="font-semibold">Error:</span> {error}
-            </div>
-          )}
-
-          {/* SUBMIT */}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 hover:from-blue-800 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-lg font-semibold shadow transition disabled:opacity-60 disabled:cursor-not-allowed"
-            disabled={enviando}
-          >
-            {enviando ? (
-              <span className="flex items-center gap-2 justify-center">
-                <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-70" fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                </svg>
-                Generando...
-              </span>
+    <div className="max-w-lg">
+      <Dialog>
+        <div>
+          <DialogTrigger render={<Button variant="outline">Generar Documento</Button>} />
+          <DialogContent className="sm:max-w-sm">
+            {paso === 1 ? (
+              <>
+                {/* Declaración de Uso Restringido */}
+                <div className="mb-6">
+                  <div className="text-center mb-4">
+                    <span className="text-blue-800 dark:text-blue-200 font-bold text-lg block mb-2">
+                      DECLARACIÓN DE USO RESTRINGIDO DE DOCUMENTOS CONTRACTUALES
+                    </span>
+                  </div>
+                  <div className="bg-blue-50 dark:bg-zinc-800/40 border border-blue-300 dark:border-blue-800 rounded-lg p-4 text-blue-900 dark:text-blue-100 text-sm">
+                    <p className="mb-2">
+                      Declaro que el contrato que estoy por descargar ha sido proporcionado para su utilización en el marco de las actividades y operaciones autorizadas por RE/MAX Adelante.
+                    </p>
+                    <p className="mb-2">
+                      Me comprometo a utilizar dicho documento exclusivamente para los fines relacionados con las actividades autorizadas por la empresa, respetando sus políticas internas y las obligaciones de confidencialidad aplicables.
+                    </p>
+                    <p className="mb-2">
+                      Asimismo, me comprometo a no utilizar, reproducir, distribuir, comercializar, modificar ni facilitar el documento para fines ajenos a los autorizados por RE/MAX Adelante, ni a utilizarlo en beneficio de terceros o de otras empresas sin la autorización correspondiente.
+                    </p>
+                    <p className="mb-2">
+                      Declaro conocer que el uso no autorizado del documento podría dar lugar a medidas internas y, cuando corresponda legalmente, a las acciones legales pertinentes.
+                    </p>
+                    <p>
+                      Al aceptar esta declaración, dejo constancia de que he leído y comprendido las condiciones anteriores.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 mt-4">
+                    <input
+                      type="checkbox"
+                      id="declaracion_acepto"
+                      checked={aceptado}
+                      onChange={handleDeclaracionChange}
+                      className="w-5 h-5 border-blue-400 rounded"
+                      disabled={enviando}
+                    />
+                    <label htmlFor="declaracion_acepto" className="select-none text-blue-900 dark:text-blue-100">
+                      Acepto la Declaración de Uso Restringido de Documentos Contractuales <span className="text-red-500">*</span>
+                    </label>
+                  </div>
+                  {error && (
+                    <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
+                      <span className="font-semibold">Error:</span> {error}
+                    </div>
+                  )}
+                  <div className="flex justify-end mt-6">
+                    <Button
+                      type="button"
+                      variant="default"
+                      onClick={handleSiguiente}
+                      disabled={!aceptado || enviando}
+                    >
+                      Siguiente
+                    </Button>
+                  </div>
+                </div>
+              </>
             ) : (
-              <span>Generar y Descargar</span>
+              <form className="grid gap-6" onSubmit={handleSubmit} autoComplete="off">
+                {/* id_tipo_contrato: SELECT */}
+                <div>
+                  <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
+                    Tipo de contrato <span className="text-red-500">*</span>
+                  </label>
+                  <NativeSelect
+                    id="id_tipo_contrato"
+                    name="id_tipo_contrato"
+                    value={form.id_tipo_contrato || 0}
+                    onChange={handleChange}
+                    required
+                    disabled={enviando}
+                    className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
+                  >
+                    <option value="">Selecciona un tipo</option>
+                    {tiposContrato.map((tipo: any) => (
+                      <option key={tipo.id} value={tipo.id}>
+                        {tipo.tipo_contrato}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </div>
+                <div>
+                  <label htmlFor="id_operacion" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
+                    Operación
+                  </label>
+                  <NativeSelect
+                    id="id_operacion"
+                    name="id_operacion"
+                    value={form.id_operacion || 0}
+                    onChange={handleChange}
+                    required
+                    disabled={enviando}
+                    className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
+                  >
+                    <option value="">Selecciona una operación</option>
+                    {operaciones.map((op: any) => (
+                      <option key={op.id} value={op.id}>
+                        {op.operacion}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </div>
+
+                {/* nro_propietarios: number */}
+                <div>
+                  <label htmlFor="nro_propietarios" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
+                    Nro. de propietarios
+                  </label>
+                  <input
+                    type="number"
+                    id="nro_propietarios"
+                    name="nro_propietarios"
+                    className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
+                    value={form.nro_propietarios || 0}
+                    min={1}
+                    onChange={handleChange}
+                    disabled={enviando}
+                  />
+                </div>
+
+                {/* empresa: checkbox */}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="empresa"
+                    name="empresa"
+                    checked={form.empresa || false}
+                    onChange={handleChange}
+                    className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
+                    disabled={enviando}
+                  />
+                  <label htmlFor="empresa" className="font-medium text-blue-900 dark:text-blue-100 select-none">
+                    ¿Empresa?
+                  </label>
+                </div>
+
+                {/* apoderado: checkbox */}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="apoderado"
+                    name="apoderado"
+                    checked={form.apoderado || false}
+                    onChange={handleChange}
+                    className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
+                    disabled={enviando}
+                  />
+                  <label htmlFor="apoderado" className="font-medium text-blue-900 dark:text-blue-100 select-none">
+                    ¿Apoderado?
+                  </label>
+                </div>
+
+                {/* ERROR */}
+                {error && (
+                  <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
+                    <span className="font-semibold">Error:</span> {error}
+                  </div>
+                )}
+                {/* SUBMIT */}
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 hover:from-blue-800 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-lg font-semibold shadow transition disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={enviando}
+                >
+                  {enviando ? (
+                    <span className="flex items-center gap-2 justify-center">
+                      <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                        <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-70" fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                      </svg>
+                      Generando...
+                    </span>
+                  ) : (
+                    <span>Generar y Descargar</span>
+                  )}
+                </button>
+              </form>
             )}
-          </button>
-        </form>
-        {nroContrato &&
-          <div className="mt-8 border-2 border-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl p-6 shadow text-green-900 dark:text-green-100 text-center animate-fade-in">
-            <p className="mb-2 text-lg font-semibold">✅ Contrato generado exitosamente</p>
-            <p className="mb-1">Número de contrato: <span className="font-bold text-green-700 dark:text-green-300">{nroContrato}</span></p>
-            <p className="text-sm text-green-800 dark:text-green-200">Tu descarga debería comenzar automáticamente.<br />Si no, verifica el bloqueador de popups.</p>
-          </div>
-        }
-      </div>
+          </DialogContent>
+          {nroContrato &&
+            <div className="mt-8 border-2 border-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl p-6 shadow text-green-900 dark:text-green-100 text-center animate-fade-in">
+              <p className="mb-2 text-lg font-semibold">✅ Contrato generado exitosamente</p>
+              <p className="mb-1">Número de contrato: <span className="font-bold text-green-700 dark:text-green-300">{nroContrato}</span></p>
+              <p className="text-sm text-green-800 dark:text-green-200">Tu descarga debería comenzar automáticamente.<br />Si no, verifica el bloqueador de popups.</p>
+            </div>
+          }
+        </div>
+      </Dialog>
     </div>
   );
 }

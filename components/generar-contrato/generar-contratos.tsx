@@ -46,22 +46,23 @@ export default function GenerarContratos({
   };
 
   return (
-    <main className="mx-auto">
+    <main>
       <h1 className="text-3xl font-bold mb-6">Generar Contrato</h1>
-      <div className="flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row 2xl:flex-row gap-2 items-start">
-        <div className="w-full sm:w-full md:w-1/3 lg:w-2/4 xl:w-2/5 2xl:w-2/6">
-          <FormGenerarContrato
-            TipoContratos={TipoContratos}
-            TipoOperaciones={TipoOperaciones}
-            Asociado={Asociado}
-            onResultado={handleResultado}
-          />
-        </div>
-        <div className="w-full sm:w-full md:w-2/3 lg:w-3/4 xl:w-4/5 2xl:w-5/6">
-          <TablaGenerarContrato documentos={documentos} />
-          {/* Can add loading/fallback UI if desired:
-           {fetching && <div className="mt-4 text-blue-600">Cargando documentos...</div>} */}
-        </div>
+      {/* Botón para abrir el modal */}
+      <div className="mb-2">
+        <FormGenerarContrato
+          TipoContratos={TipoContratos}
+          TipoOperaciones={TipoOperaciones}
+          Asociado={Asociado}
+          onResultado={handleResultado}
+           // Asumiendo que FormGenerarContrato soporta modo modal via prop, si no editar dentro de FormGenerarContrato
+        />
+      </div>
+      {/* La tabla ocupa el 100% del ancho */}
+      <div className="w-full">
+        <TablaGenerarContrato documentos={documentos} />
+        {/* Puede agregar un loading/fallback UI si se desea */}
+        {/* {fetching && <div className="mt-4 text-blue-600">Cargando documentos...</div>} */}
       </div>
     </main>
   );

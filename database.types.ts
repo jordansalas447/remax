@@ -82,7 +82,7 @@ export type Database = {
         }
         Relationships: []
       }
-      area: {
+      areas: {
         Row: {
           area: string
           id: number
@@ -689,6 +689,7 @@ export type Database = {
           motivo_anulacion: string | null
           nro_contrato: string
           nro_propietarios: number | null
+          plazo: number | null
         }
         Insert: {
           apoderado?: boolean | null
@@ -707,6 +708,7 @@ export type Database = {
           motivo_anulacion?: string | null
           nro_contrato: string
           nro_propietarios?: number | null
+          plazo?: number | null
         }
         Update: {
           apoderado?: boolean | null
@@ -725,6 +727,7 @@ export type Database = {
           motivo_anulacion?: string | null
           nro_contrato?: string
           nro_propietarios?: number | null
+          plazo?: number | null
         }
         Relationships: [
           {
@@ -751,7 +754,7 @@ export type Database = {
           {
             foreignKeyName: "documentos_id_tipo_contrato_fkey"
             columns: ["id_tipo_contrato"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "tipo_contrato"
             referencedColumns: ["id"]
           },
@@ -1198,6 +1201,50 @@ export type Database = {
         }
         Relationships: []
       }
+      llamadas: {
+        Row: {
+          created_at: string
+          curso_llamada: string | null
+          eliminado: boolean | null
+          fecha_bienvenida: string | null
+          fecha_seguimiento_llamada: string | null
+          id: number
+          id_seguimiento: number | null
+          observacion: string | null
+          observacion_seguimiento: string | null
+        }
+        Insert: {
+          created_at?: string
+          curso_llamada?: string | null
+          eliminado?: boolean | null
+          fecha_bienvenida?: string | null
+          fecha_seguimiento_llamada?: string | null
+          id?: number
+          id_seguimiento?: number | null
+          observacion?: string | null
+          observacion_seguimiento?: string | null
+        }
+        Update: {
+          created_at?: string
+          curso_llamada?: string | null
+          eliminado?: boolean | null
+          fecha_bienvenida?: string | null
+          fecha_seguimiento_llamada?: string | null
+          id?: number
+          id_seguimiento?: number | null
+          observacion?: string | null
+          observacion_seguimiento?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Llamadas_id_seguimiento_fkey"
+            columns: ["id_seguimiento"]
+            isOneToOne: false
+            referencedRelation: "seguimientos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mes: {
         Row: {
           deleted_at: string | null
@@ -1358,6 +1405,67 @@ export type Database = {
         }
         Relationships: []
       }
+      perfil_roles: {
+        Row: {
+          area_id: number | null
+          created_at: string
+          id: number
+          perfil_id: string | null
+          rol_id: number | null
+        }
+        Insert: {
+          area_id?: number | null
+          created_at?: string
+          id?: number
+          perfil_id?: string | null
+          rol_id?: number | null
+        }
+        Update: {
+          area_id?: number | null
+          created_at?: string
+          id?: number
+          perfil_id?: string | null
+          rol_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "perfil_roles_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "perfil_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "perfil_roles_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "perfil_roles_rol_id_fkey"
+            columns: ["rol_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permisos: {
+        Row: {
+          created_at: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       personas: {
         Row: {
           apellido_materno: string | null
@@ -1485,6 +1593,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          activo: boolean | null
+          area_id: number | null
           created_at: string | null
           eliminado: boolean | null
           email: string | null
@@ -1494,6 +1604,8 @@ export type Database = {
           role: string | null
         }
         Insert: {
+          activo?: boolean | null
+          area_id?: number | null
           created_at?: string | null
           eliminado?: boolean | null
           email?: string | null
@@ -1503,6 +1615,8 @@ export type Database = {
           role?: string | null
         }
         Update: {
+          activo?: boolean | null
+          area_id?: number | null
           created_at?: string | null
           eliminado?: boolean | null
           email?: string | null
@@ -1512,6 +1626,13 @@ export type Database = {
           role?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "areas"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_id_persona_fkey"
             columns: ["id_persona"]
@@ -1527,6 +1648,7 @@ export type Database = {
           eliminado: boolean | null
           id: number
           id_contrato: number | null
+          id_llamada: number | null
           id_propiedad: number | null
           id_propietario: number | null
           observacion: string | null
@@ -1537,6 +1659,7 @@ export type Database = {
           eliminado?: boolean | null
           id?: number
           id_contrato?: number | null
+          id_llamada?: number | null
           id_propiedad?: number | null
           id_propietario?: number | null
           observacion?: string | null
@@ -1547,6 +1670,7 @@ export type Database = {
           eliminado?: boolean | null
           id?: number
           id_contrato?: number | null
+          id_llamada?: number | null
           id_propiedad?: number | null
           id_propietario?: number | null
           observacion?: string | null
@@ -1573,6 +1697,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "vw_revisiones_detalle"
             referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "propiedad_propietario_id_llamada_fkey"
+            columns: ["id_llamada"]
+            isOneToOne: false
+            referencedRelation: "llamadas"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "propiedad_propietario_id_propiedad_fkey"
@@ -1808,6 +1939,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rol_permisos: {
+        Row: {
+          created_at: string
+          id: number
+          permiso_id: number | null
+          rol_id: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          permiso_id?: number | null
+          rol_id?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          permiso_id?: number | null
+          rol_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rol_permisos_permiso_id_fkey"
+            columns: ["permiso_id"]
+            isOneToOne: false
+            referencedRelation: "permisos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rol_permisos_rol_id_fkey"
+            columns: ["rol_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
+      seguimientos: {
+        Row: {
+          created_at: string
+          fecha_seguimiento: string | null
+          id: number
+          observacion: string | null
+        }
+        Insert: {
+          created_at?: string
+          fecha_seguimiento?: string | null
+          id?: number
+          observacion?: string | null
+        }
+        Update: {
+          created_at?: string
+          fecha_seguimiento?: string | null
+          id?: number
+          observacion?: string | null
+        }
+        Relationships: []
       }
       situaciones: {
         Row: {
