@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-// IMPORTA TUS QUERIES REALES DE LOS ENDPOINTS AQUÍ:
-
+import React, { useEffect, useState, useCallback } from "react";
 import PizZip from "pizzip";
 import { getTiposContrato, TipoContratoRow } from "@/lib/supabase/queries/tipos_contratos";
 import { getOperaciones, OperacionesRow } from "@/lib/supabase/queries/operaciones";
@@ -12,6 +10,8 @@ import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/document
 import RutaDocumento from '@/lib/data/file.json'
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { cn } from "cn";
+import { toast } from "../ui/toast";
 
 interface FormularioProps {
   TipoContratos: TipoContratoRow[]
@@ -26,8 +26,9 @@ export default function FormGenerarContrato({
   Asociado,
   onResultado 
 }: FormularioProps) {
-  // Form fields state
-  const [form, setForm] = useState<DocumentosRow>({
+
+  // Estado base inicial del formulario: función para garantizar siempre desde cero
+  const getInitialForm = () => ({
     id_tipo_contrato: 0,
     id_asociado: Asociado,
     nro_propietarios: 1,
@@ -36,7 +37,13 @@ export default function FormGenerarContrato({
     id_operacion: 0,
   } as DocumentosRow);
 
-  // Catalogos para selects
+  // Controla apertura del modal
+  const [open, setOpen] = useState(false);
+
+  // Form fields state
+  const [form, setForm] = useState<DocumentosRow>(getInitialForm());
+
+  // Catálogos para selects, mantenidos, pero si quieres limpiarlos también al cerrar el modal puedes incluirlos en el reset
   const [tiposContrato, setTiposContrato] = useState<any[]>([]);
   const [estados, setEstados] = useState<any[]>([]);
   const [asociados, setAsociados] = useState<any[]>([]);
@@ -48,7 +55,7 @@ export default function FormGenerarContrato({
   const [aceptado, setAceptado] = useState(false); // Estado para la declaración
   const [paso, setPaso] = useState<1 | 2>(1); // 1: declaración, 2: formulario
 
-  // Pide los datos a los endpoints al cargar
+  // Al cargar, se traen los catálogos
   useEffect(() => {
     async function fetchAll() {
       try {
@@ -59,7 +66,32 @@ export default function FormGenerarContrato({
       }
     }
     fetchAll();
-  }, []);
+  }, [TipoContratos, TipoOperaciones]);
+
+  // Importante: Al cerrar el modal, resetea absolutamente todo a cero, para que siempre que abras
+  // todo esté limpio y desde cero, sin conservar ningún dato anterior
+  const handleDialogOpenChange = useCallback((value: boolean) => {
+    if (value) {
+      // Al abrir, limpia todo desde cero por seguridad
+      setForm(getInitialForm());
+      setAceptado(false);
+      setPaso(1);
+      setError(null);
+      setEnviando(false);
+      setNroContrato(null);
+    }
+    setOpen(value);
+    if (!value) {
+      // Al cerrar, LIMPIA TODO; empieza realmente desde cero
+      setForm(getInitialForm());
+      setAceptado(false);
+      setPaso(1);
+      setError(null);
+      setEnviando(false);
+      setNroContrato(null);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Asociado]); // dependemos de Asociado para el form inicial de cada vez
 
   // Maneja cambios en el formulario
   const handleChange = (
@@ -92,6 +124,9 @@ export default function FormGenerarContrato({
     setError(null);
     setPaso(2);
   };
+
+  // Nuevo: manejar cierre programático del modal tras generar documento
+  const closeDialog = () => setOpen(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,6 +213,13 @@ export default function FormGenerarContrato({
       onResultado(nro_contrato.nro_contrato)
       setNroContrato(nro_contrato.nro_contrato);
 
+      // 💡 Nueva lógica: cerrar el modal después de generar el documento
+      // Dejar un pequeño retardo para asegurar que la descarga inicie antes de cerrar
+      setTimeout(() => {
+        closeDialog();
+        showToast(nro_contrato.nro_contrato);
+      }, 600);
+
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
     } finally {
@@ -185,22 +227,34 @@ export default function FormGenerarContrato({
     }
   };
 
+  function showToast(NroContrato:string) {
+    const id = toast.add({
+      title: "Contrato "+ NroContrato +" generado exitosamente ",
+      description: "Tu descarga debería comenzar automáticamente.",
+    })
+  }
+  
   return (
     <div className="max-w-lg">
-      <Dialog>
+      <Dialog open={open} onOpenChange={handleDialogOpenChange}>
         <div>
-          <DialogTrigger render={<Button variant="outline">Generar Documento</Button>} />
-          <DialogContent className="sm:max-w-sm">
+          <DialogTrigger render={<Button>Generar Contrato</Button>} />
+          <DialogContent
+            className={cn(
+              "max-h-[90vh] overflow-y-auto",
+              "lg:max-w-[90vh]"
+            )}
+          >
             {paso === 1 ? (
               <>
                 {/* Declaración de Uso Restringido */}
-                <div className="mb-6">
+                <div>
                   <div className="text-center mb-4">
-                    <span className="text-blue-800 dark:text-blue-200 font-bold text-lg block mb-2">
+                    <span className="  font-bold text-lg block mb-2">
                       DECLARACIÓN DE USO RESTRINGIDO DE DOCUMENTOS CONTRACTUALES
                     </span>
                   </div>
-                  <div className="bg-blue-50 dark:bg-zinc-800/40 border border-blue-300 dark:border-blue-800 rounded-lg p-4 text-blue-900 dark:text-blue-100 text-sm">
+                  <div className="bg-gray-50 dark:bg-zinc-800/40 border dark:border-blue-800 rounded-lg p-4  text-sm">
                     <p className="mb-2">
                       Declaro que el contrato que estoy por descargar ha sido proporcionado para su utilización en el marco de las actividades y operaciones autorizadas por RE/MAX Adelante.
                     </p>
@@ -226,7 +280,7 @@ export default function FormGenerarContrato({
                       className="w-5 h-5 border-blue-400 rounded"
                       disabled={enviando}
                     />
-                    <label htmlFor="declaracion_acepto" className="select-none text-blue-900 dark:text-blue-100">
+                    <label htmlFor="declaracion_acepto" className="select-none ">
                       Acepto la Declaración de Uso Restringido de Documentos Contractuales <span className="text-red-500">*</span>
                     </label>
                   </div>
@@ -236,6 +290,8 @@ export default function FormGenerarContrato({
                     </div>
                   )}
                   <div className="flex justify-end mt-6">
+                    <Button type="button" variant="outline" onClick={closeDialog}>Cancelar      
+                    </Button>
                     <Button
                       type="button"
                       variant="default"
@@ -251,7 +307,7 @@ export default function FormGenerarContrato({
               <form className="grid gap-6" onSubmit={handleSubmit} autoComplete="off">
                 {/* id_tipo_contrato: SELECT */}
                 <div>
-                  <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
+                  <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium ">
                     Tipo de contrato <span className="text-red-500">*</span>
                   </label>
                   <NativeSelect
@@ -261,7 +317,7 @@ export default function FormGenerarContrato({
                     onChange={handleChange}
                     required
                     disabled={enviando}
-                    className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
+                    className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
                   >
                     <option value="">Selecciona un tipo</option>
                     {tiposContrato.map((tipo: any) => (
@@ -272,7 +328,7 @@ export default function FormGenerarContrato({
                   </NativeSelect>
                 </div>
                 <div>
-                  <label htmlFor="id_operacion" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
+                  <label htmlFor="id_operacion" className="block mb-2 font-medium ">
                     Operación
                   </label>
                   <NativeSelect
@@ -282,7 +338,7 @@ export default function FormGenerarContrato({
                     onChange={handleChange}
                     required
                     disabled={enviando}
-                    className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
+                    className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
                   >
                     <option value="">Selecciona una operación</option>
                     {operaciones.map((op: any) => (
@@ -295,14 +351,14 @@ export default function FormGenerarContrato({
 
                 {/* nro_propietarios: number */}
                 <div>
-                  <label htmlFor="nro_propietarios" className="block mb-2 font-medium text-blue-900 dark:text-blue-100">
+                  <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
                     Nro. de propietarios
                   </label>
                   <input
                     type="number"
                     id="nro_propietarios"
                     name="nro_propietarios"
-                    className="border border-blue-300 dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
+                    className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
                     value={form.nro_propietarios || 0}
                     min={1}
                     onChange={handleChange}
@@ -318,10 +374,10 @@ export default function FormGenerarContrato({
                     name="empresa"
                     checked={form.empresa || false}
                     onChange={handleChange}
-                    className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
+                    className="border  dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
                     disabled={enviando}
                   />
-                  <label htmlFor="empresa" className="font-medium text-blue-900 dark:text-blue-100 select-none">
+                  <label htmlFor="empresa" className="font-medium  select-none">
                     ¿Empresa?
                   </label>
                 </div>
@@ -334,10 +390,10 @@ export default function FormGenerarContrato({
                     name="apoderado"
                     checked={form.apoderado || false}
                     onChange={handleChange}
-                    className="border border-blue-300 dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
+                    className="border  dark:border-zinc-700 rounded focus:ring-blue-500 w-5 h-5 transition"
                     disabled={enviando}
                   />
-                  <label htmlFor="apoderado" className="font-medium text-blue-900 dark:text-blue-100 select-none">
+                  <label htmlFor="apoderado" className="font-medium  select-none">
                     ¿Apoderado?
                   </label>
                 </div>
@@ -349,9 +405,9 @@ export default function FormGenerarContrato({
                   </div>
                 )}
                 {/* SUBMIT */}
-                <button
+                <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 hover:from-blue-800 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-lg font-semibold shadow transition disabled:opacity-60 disabled:cursor-not-allowed"
+                  
                   disabled={enviando}
                 >
                   {enviando ? (
@@ -366,17 +422,12 @@ export default function FormGenerarContrato({
                   ) : (
                     <span>Generar y Descargar</span>
                   )}
-                </button>
+                </Button>
+                <Button type="button" variant="outline" onClick={closeDialog}>Cancelar      
+                </Button>
               </form>
             )}
           </DialogContent>
-          {nroContrato &&
-            <div className="mt-8 border-2 border-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl p-6 shadow text-green-900 dark:text-green-100 text-center animate-fade-in">
-              <p className="mb-2 text-lg font-semibold">✅ Contrato generado exitosamente</p>
-              <p className="mb-1">Número de contrato: <span className="font-bold text-green-700 dark:text-green-300">{nroContrato}</span></p>
-              <p className="text-sm text-green-800 dark:text-green-200">Tu descarga debería comenzar automáticamente.<br />Si no, verifica el bloqueador de popups.</p>
-            </div>
-          }
         </div>
       </Dialog>
     </div>
