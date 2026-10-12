@@ -1,17 +1,15 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import PizZip from "pizzip";
-import { getTiposContrato, TipoContratoRow } from "@/lib/supabase/queries/tipos_contratos";
-import { getOperaciones, OperacionesRow } from "@/lib/supabase/queries/operaciones";
-import { getEstadoDocumentos } from "@/lib/supabase/queries/estados_documento";
+import { TipoContratoRow } from "@/lib/supabase/queries/tipos_contratos";
+import { OperacionesRow } from "@/lib/supabase/queries/operaciones";
 import { NativeSelect } from "../ui/native-select";
 import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/documentos";
-import RutaDocumento from '@/lib/data/file.json'
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { cn } from "cn";
 import { toast } from "../ui/toast";
+import type { ContratoPDFProps } from "./contratoPDF";
 
 interface FormularioProps {
   TipoContratos: TipoContratoRow[]
@@ -135,97 +133,50 @@ export default function FormGenerarContrato({
     setEnviando(true);
 
     try {
-      // Genera número de contrato único
-      const nro_contrato = await createDocumentos(form);
+      const documento = await createDocumentos(form);
+      const nro = documento.nro_contrato;
 
-      const LabelTipoContrato: string = TipoContratos.find(i => i.id == form.id_tipo_contrato)?.tipo_contrato ?? "";
-      const LabelOperacion: string = TipoOperaciones.find(i => i.id == form.id_operacion)?.operacion ?? "";
-      const LabelPoder: boolean = form.apoderado ?? false;
-      const LabelEmpresa: boolean = form.empresa ?? false;
-      const NroPropietarios: number = form.nro_propietarios ?? 1;
-
-      // Buscar en RutaDocumento (un array de objetos) el documento que coincide con LabelTipoContrato y LabelOperacion
-      const documentoEncontrado = RutaDocumento.find(
-        (doc: any) =>
-          doc.tipo_contrato === LabelTipoContrato &&
-          doc.operacion === LabelOperacion && 
-          doc.empresa === LabelEmpresa &&
-          doc.apoderado === LabelPoder &&
-          doc.propietarios === NroPropietarios
-      );
-
-      // Aquí: descarga el archivo y edítalo usando pizzip
-      const docUrl = "https://ik.imagekit.io/7lobev0ug/Documentos/CONTRATOS/" + documentoEncontrado?.documento;
-      
-      // 1. Descargar el archivo docx como ArrayBuffer
-      const response = await fetch(docUrl);
-      if (!response.ok) {
-        throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
-      }
-      const arrayBuffer = await response.arrayBuffer();
-
-      // 2. PizZip para manipular el zip (docx)
-      // @ts-ignore
-      const PizZip = (await import("pizzip")).default;
-
-      let zip;
-      try {
-        zip = new PizZip(arrayBuffer);
-      } catch (zipError) {
-        throw new Error("Error al descomprimir el archivo docx.");
-      }
-
-      // 3. Editar el docx utilizando PizZip
-      // Busca y reemplaza el marcador exacto {{nro_contrato}}
-      const documentXml = zip.file("word/document.xml")?.asText();
-      if (!documentXml) {
-        throw new Error("No se pudo leer el contenido de word/document.xml");
-      }
-
-      // Reemplaza todos los marcadores {{nro_contrato}} por el número de contrato generado
-      let nuevoXml = documentXml.replace(/\{\{nro_contrato\}\}/g, nro_contrato.nro_contrato);
-
-      // Sobrescribe el xml en el zip
-      zip.file("word/document.xml", nuevoXml);
-
-      // 4. Volver a generar el archivo docx (Blob)
-      const editedContent = zip.generate({
-        type: "blob",
-        mimeType:
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      });
-
-      // 5. Descargar el archivo en el navegador
-      const downloadFile = (blob: Blob, fileName: string) => {
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+      const payload: ContratoPDFProps = {
+        nroContrato: nro,
       };
 
-      downloadFile(
-        editedContent,
-        documentoEncontrado?.nombre_documento || "No_encontrado"
-      );
-    
-      onResultado(nro_contrato.nro_contrato)
-      setNroContrato(nro_contrato.nro_contrato);
+      const response = await fetch("/api/contratos/generar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-      // 💡 Nueva lógica: cerrar el modal después de generar el documento
-      // Dejar un pequeño retardo para asegurar que la descarga inicie antes de cerrar
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => null);
+        throw new Error(
+          errorBody?.error ?? "No se pudo generar el PDF del contrato"
+        );
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `contrato-${nro}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+
+      onResultado(nro);
+      setNroContrato(nro);
+
       setTimeout(() => {
         closeDialog();
-        showToast(nro_contrato.nro_contrato);
+        showToast(nro);
       }, 600);
-
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
     } finally {
       setEnviando(false);
     }
   };
+
 
   function showToast(NroContrato:string) {
     const id = toast.add({
