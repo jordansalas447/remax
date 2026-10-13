@@ -279,13 +279,52 @@ export function ContratosSection({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="relative">
         <CardTitle className="flex items-center gap-2">
           <FileText className="size-5 text-blue-600 dark:text-blue-400" />
           <span className="ml-2 font-semibold text-lg tracking-tight">
             Contratos
           </span>
         </CardTitle>
+        {/* Total contratos, esquina superior derecha */}
+        <div className="absolute right-4 top-4 flex flex-col items-end gap-2 z-10">
+          <span className="text-xs text-zinc-500 bg-zinc-100 dark:bg-zinc-900 rounded px-2 py-1 shadow-sm font-medium">
+            Total contratos: <span className="font-semibold">{contratos.length}</span>
+          </span>
+          <div className="flex gap-2 flex-wrap">
+            {/* Vencidos: estado === 'VENCIDO' */}
+            {/* <span className="bg-red-100 dark:bg-red-900/30 rounded px-2 py-1 text-xs text-zinc-700 dark:text-zinc-100 font-medium">
+              Vencidos: <span className="font-semibold">
+                {contratos.filter(contrato => contrato.estado && contrato.estado.estado?.toUpperCase() === "VENCIDO").length}
+              </span>
+            </span> */}
+            {/* Exclusiva: tipo_contrato === 'EXCLUSIVA' */}
+            <span className="bg-blue-100 dark:bg-blue-900/30 rounded px-2 py-1 text-xs text-zinc-700 dark:text-zinc-100 font-medium">
+              Exclusiva: <span className="font-semibold">
+                {contratos.filter(contrato => contrato.tipo_contrato && contrato.tipo_contrato.tipo_contrato?.toUpperCase() === "EXCLUSIVA").length}
+              </span>
+            </span>
+            {/* No Exclusiva o Limitada: tipo_contrato === 'NO EXCLUSIVA' o 'LIMITADA' */}
+            <span className="bg-yellow-100 dark:bg-yellow-900/40 rounded px-2 py-1 text-xs text-zinc-700 dark:text-zinc-100 font-medium">
+              No exclusiva: <span className="font-semibold">
+                {contratos.filter(contrato => {
+                  const tipo = contrato.tipo_contrato && contrato.tipo_contrato.tipo_contrato?.toUpperCase();
+                  return tipo === "NO EXCLUSIVA";
+                }).length}
+              </span>
+            </span>
+            <span className="bg-blue-50 dark:bg-blue-900/10 rounded px-2 py-1 text-xs text-zinc-700 dark:text-zinc-100 font-medium">
+              Exclusiva limitada: <span className="font-semibold">
+                {contratos.filter(contrato => {
+                  const tipo = contrato.tipo_contrato && contrato.tipo_contrato.tipo_contrato?.toUpperCase();
+                  return tipo === "EXCLUSIVA LIMITADA";
+                }).length}
+              </span>
+            </span>
+       
+          </div>
+        </div>
+       
         <CardDescription>
           {contratos.length === 0
             ? "Este asociado no tiene contratos registrados."
@@ -344,6 +383,8 @@ export function ContratosSection({
           </div>
         )}
       </CardHeader>
+
+
 
       {contratosFiltrados.length > 0 ? (
         <>

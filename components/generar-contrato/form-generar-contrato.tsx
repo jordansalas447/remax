@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { cn } from "cn";
 import { toast } from "../ui/toast";
-import type { ContratoPDFProps } from "./contratoPDF";
+import type { ContratoPDFProps } from "./Contratos/Anticrisis";
 
 interface FormularioProps {
   TipoContratos: TipoContratoRow[]
@@ -138,6 +138,9 @@ export default function FormGenerarContrato({
 
       const payload: ContratoPDFProps = {
         nroContrato: nro,
+        nroPropietarios: form.nro_propietarios || 1,
+        tipoContrato:form.id_tipo_contrato || 0,
+        tipoOperacion:form.id_operacion || 0
       };
 
       const response = await fetch("/api/contratos/generar", {

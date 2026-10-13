@@ -20,7 +20,7 @@ export function LoginForm({ next, initialError }: { next?: string; initialError?
         id="login-email"
         type="email"
         autoComplete="email"
-        placeholder="tu@remax.pe"
+        placeholder="usuario@ejemplo.com"
         icon={<Mail />}
         defaultValue={state.fields?.email}
         required

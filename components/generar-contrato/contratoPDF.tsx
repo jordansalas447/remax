@@ -1,4 +1,5 @@
 import React from "react";
+import path from "path";
 import {
   Document,
   Page,
@@ -10,47 +11,74 @@ import {
 } from "@react-pdf/renderer";
 
 // Desactiva la separación de palabras con guion.
-// El texto justificado solo ajustará los espacios entre palabras.
 Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
-    padding: 50,
+    paddingTop: 50,
+    paddingBottom: 84, // más espacio para el footer
+    paddingLeft: 50,
+    paddingRight: 50,
     fontSize: 11,
     lineHeight: 1.5,
+    position: "relative",
+    minHeight: '100%',
+    height: '100%',
   },
-  header: {
+  // Marca de agua
+  watermark: {
+    position: "absolute",
+    top: "35%",
+    left: 0,
+    right: 0,
+    zIndex: 0,
+    textAlign: "center",
+    width: "100%",
+    opacity: 0.10,
+    userSelect: "none",
+    pointerEvents: "none",
+    fontSize: 60,
+    fontWeight: 900,
+    color: "#005cb9",
+    transform: "rotate(-18deg)",
+    letterSpacing: 2,
+    fontFamily: "Helvetica-Bold"
+  },
+  headerContainer: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    alignItems: "flex-start",
     marginBottom: 14,
+    width: "100%",
   },
   logoSlot: {
     width: 110,
     height: 55,
-  },
-  logoLeft: {
-    alignItems: "flex-start",
-  },
-  logoRight: {
-    alignItems: "flex-end",
+    margin: 0,
+    padding: 0,
   },
   logoImage: {
     width: 110,
     height: 55,
     objectFit: "contain",
+    opacity: 0.75,
+    margin: 0,
+    padding: 0,
+  },
+  titleContainer: {
+    flexGrow: 1,
+    flexBasis: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    textAlign: "center",
+    marginLeft: 12,
+    marginRight: 12,
   },
   title: {
-    fontSize: 16,
-    marginBottom: 14,
+    fontSize: 11,
     textAlign: "center",
     fontWeight: 700,
-  },
-  subtitle: {
-    fontSize: 13,
-    textAlign: "center",
-    marginBottom: 24,
-    fontWeight: 600,
   },
   section: {
     marginBottom: 10,
@@ -98,6 +126,67 @@ const styles = StyleSheet.create({
   marginBottomSmall: {
     marginBottom: 6,
   },
+  // Footer styles
+  footerContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 50,
+    right: 50,
+    width: "auto",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    fontSize: 10,
+  },
+  footerInfoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 2,
+    fontSize: 9.5,
+    color: "#222",
+  },
+  footerWebRow: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginBottom: 4,
+    fontSize: 10,
+    color: "#191b23",
+  },
+  arequipaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    marginTop: 6,
+    marginBottom: 6,
+    opacity: 0.7,
+  },
+  arequipaLine: {
+    height: 0.5,
+    backgroundColor: "#222",
+    flexGrow: 1,
+    marginHorizontal: 10,
+  },
+  arequipaText: {
+    marginHorizontal: 12,
+    fontWeight: "bold",
+    fontSize: 11,
+    color: "#222",
+    letterSpacing: 1,
+    textAlign: "center",
+  },
+  // N° de contrato en pie de página
+  contratoNroFooter: {
+    fontSize: 9.5,
+    color: "#3f4f5d",
+    textAlign: "right",
+    marginTop: 2,
+    width: "100%",
+    fontWeight: "bold",
+    letterSpacing: 1.1,
+  }
 });
 
 export type Propietario = {
@@ -111,9 +200,10 @@ export type Propietario = {
 
 export type ContratoPDFProps = {
   nroContrato: string;
+  nroPropietarios?: number;
   // Logos de las esquinas superiores: URL, ruta absoluta o base64 (data URI)
-  logoIzquierdo?: string;
-  logoDerecho?: string;
+  logoIzquierdo?: NonSharedBuffer;
+  logoDerecho?: NonSharedBuffer;
   // Si es true, los logos se repiten en todas las páginas
   logosEnTodasLasPaginas?: boolean;
   propietarios?: Propietario[];
@@ -134,6 +224,7 @@ const val = (value: string | undefined, blank: string) =>
 
 export function ContratoPDF({
   nroContrato,
+  nroPropietarios,
   logoIzquierdo,
   logoDerecho,
   logosEnTodasLasPaginas = false,
@@ -149,33 +240,46 @@ export function ContratoPDF({
   anoFirma = "2026",
 }: ContratoPDFProps) {
   // Si no se envía ningún propietario, se muestra uno en blanco
-  const lista: Propietario[] =
-    propietarios && propietarios.length > 0 ? propietarios : [{}];
-  const varios = lista.length > 1;
-
+  const varios = nroPropietarios || 1;
+  const lista: Propietario[] =  propietarios && propietarios.length > 0 ? propietarios : Array.from({ length: varios }, () => ({}));
+  
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Encabezado con logos en las esquinas superiores */}
-        <View style={styles.header} fixed={logosEnTodasLasPaginas}>
-          <View style={[styles.logoSlot, styles.logoLeft]}>
+        {/* Marca de agua Remax Adelante y número de contrato */}
+        <View style={styles.watermark} fixed>
+          <Text>
+            REMAX ADELANTE
+            {"\n\n\n\n"}
+            {nroContrato || "RAD-ANT-26-0001"}
+          </Text>
+        </View>
+        {/* <View style={styles.watermark} fixed>
+          <Text>
+            {nroContrato || "RAD-ANT-26-0001"}
+          </Text>
+        </View> */}
+
+        {/* Encabezado combinado: Imagen izquierda, Título centro, Imagen derecha */}
+        <View style={styles.headerContainer} fixed={logosEnTodasLasPaginas}>
+          <View style={styles.logoSlot}>
             {logoIzquierdo ? (
               <Image src={logoIzquierdo} style={styles.logoImage} />
             ) : null}
           </View>
-          <View style={[styles.logoSlot, styles.logoRight]}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              AUTORIZACIÓN DE CORRETAJE INMOBILIARIO N.º {nroContrato || "RAD-ANT-26-0001"}
+            </Text>
+          </View>
+          <View style={styles.logoSlot}>
             {logoDerecho ? (
               <Image src={logoDerecho} style={styles.logoImage} />
             ) : null}
           </View>
         </View>
-
-        {/* Título principal */}
-        <Text style={styles.title}>
-          AUTORIZACIÓN DE CORRETAJE INMOBILIARIO N.º {nroContrato || "RAD-ANT-26-0001"}
-        </Text>
         {/* Subtítulo */}
-        <Text style={styles.subtitle}>CONTRATO DE CORRETAJE INMOBILIARIO</Text>
+        {/* <Text style={styles.subtitle}>CONTRATO DE CORRETAJE INMOBILIARIO</Text> */}
 
         {/* Introducción */}
         <View style={styles.section}>
@@ -338,8 +442,28 @@ export function ContratoPDF({
           ))}
           <View style={styles.signatureBox}>
             <Text style={styles.signatureText}>EL COMISIONISTA</Text>
-            <Text style={styles.signatureSubText}>
+            {/* <Text style={styles.signatureSubText}>
               ADELANTE ASESORES INMOBILIARIOS SAC.
+            </Text> */}
+          </View>
+        </View>
+        {/* Pie de página personalizado */}
+        <View style={styles.footerContainer} fixed>
+          <View style={styles.footerInfoRow}>
+            <Text>Urbanización Santo Domingo Segunda Etapa, Quinta Estancia, Mz. A, Lote 2. JLByR.</Text>
+            <Text>(054)-706202</Text>
+          </View>
+          <View style={styles.footerWebRow}>
+            <Text>www.remaxadelante.com</Text>
+          </View>
+          <View style={styles.arequipaRow}>
+            <View style={styles.arequipaLine} />
+            <Text style={styles.arequipaText}>Arequipa - Perú</Text>
+            <View style={styles.arequipaLine} />
+          </View>
+          <View>
+            <Text style={styles.contratoNroFooter}>
+              Contrato N.º {nroContrato || "RAD-ANT-26-0001"}
             </Text>
           </View>
         </View>

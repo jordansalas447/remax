@@ -23,12 +23,12 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
       <LoginForm next={next} initialError={error} />
 
-      <p className="text-center text-sm text-zinc-500">
+      {/* <p className="text-center text-sm text-zinc-500">
         ¿No tienes cuenta?{" "}
         <Link href="/registro" className="font-semibold text-[#003DA5] hover:underline dark:text-blue-400">
           Regístrate
         </Link>
-      </p>
+      </p> */}
     </div>
   );
 }

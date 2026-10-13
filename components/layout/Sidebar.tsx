@@ -1,7 +1,7 @@
 import Link from "next/link";
 import "@/lib/fontawesome";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTools, faBuilding, faChartLine, faUserTie, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faTools, faBuilding, faChartLine, faUserTie, faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Options } from "./Options";
 import { UserMenu } from "./UserMenu";
 import { get_tabla } from "@/lib/crud/service";
@@ -77,6 +77,15 @@ export async function AppSidebar() {
               >
                 <FontAwesomeIcon icon={faUserTie} />
                 Ficha de asociado
+              </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <Link
+                href="/llamadas"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+              >
+                <FontAwesomeIcon icon={faPhone} />
+                Llamadas
               </Link>
             </SidebarMenuItem>
             <SidebarMenuItem>

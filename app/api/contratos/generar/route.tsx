@@ -1,14 +1,28 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 import {
-  ContratoPDF,
+  AnticrisisPDF,
   type ContratoPDFProps,
-} from "@/components/generar-contrato/contratoPDF";
+} from "@/components/generar-contrato/Contratos/Anticrisis";
+import path from "path";
+import fs from "fs";
+import { AnticrisisPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Anticrisis No Exclusiva";
 
 export const runtime = "nodejs";
 
 function sanitizeFileName(value: string) {
   return value.replace(/[^\w.-]+/g, "_");
 }
+
+
+
+// Obtiene la ruta absoluta de las imágenes y las almacena en variables tipo Buffer
+const LOGO_ADELANTE_PATH =  path.resolve(process.cwd(), "public/image1.png");
+const LOGO_GLOBO_PATH =  path.resolve(process.cwd(), "public/image2.png");
+const LOGO_REMAX_ADELANTE_PATH =  path.resolve(process.cwd(), "public/LogoRemax.png");
+
+const LOGO_ADELANTE = fs.readFileSync(LOGO_ADELANTE_PATH);
+const LOGO_GLOBO = fs.readFileSync(LOGO_GLOBO_PATH);
+const LOGO_REMAX_ADELANTE = fs.readFileSync(LOGO_REMAX_ADELANTE_PATH);
 
 function asText(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
@@ -38,19 +52,48 @@ export async function POST(request: Request) {
 
   const datos: ContratoPDFProps = {
     nroContrato,
-    propietarios: Array.from({ length: 5 }, () => ({})),
-    nombreAsesor: asText(body.nombreAsesor),
-    inmuebleDireccion: asText(body.inmuebleDireccion),
-    inmuebleDistrito: asText(body.inmuebleDistrito),
-    inmueblePartida: asText(body.inmueblePartida),
-    comision: asText(body.comision),
-    duracionMeses: asText(body.duracionMeses),
-    diaFirma: asText(body.diaFirma),
-    mesFirma: asText(body.mesFirma),
-    anoFirma: asText(body.anoFirma),
+    nroPropietarios: body.nroPropietarios,
+    logoIzquierdo: LOGO_ADELANTE,
+    logoDerecho: LOGO_GLOBO,
+    logoMarcadeAgua: LOGO_REMAX_ADELANTE
   };
 
-  const pdfBuffer = await renderToBuffer(<ContratoPDF {...datos} />);
+
+  const tipocontrato = body.tipoContrato
+  const tipoOperacion = body.tipoOperacion
+
+  let TipoContratoLabel
+
+  // if  (tipoOperacion === 3) {
+  //   if (tipocontrato == 1) {
+  //     TipoContratoLabel = <AnticrisisPDF {...datos} />;
+  //   } else if (tipocontrato == 2) {
+  //     // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+  //     TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
+  //   } else if (tipocontrato == 3) {
+  //     // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+  //     return Response.json(
+  //       { error: "Tipo de contrato no soportado." },
+  //       { status: 400 }
+  //     );
+  //   } else {
+  //     return Response.json(
+  //       { error: "Tipo de contrato no soportado." },
+  //       { status: 400 }
+  //     );
+  //   }
+  // }
+
+
+  // Asegúrate de que TipoContratoLabel no sea undefined
+  // if (!TipoContratoLabel) {
+  //   return Response.json(
+  //     { error: "No se pudo generar el contrato PDF." },
+  //     { status: 500 }
+  //   );
+  // }
+
+  const pdfBuffer = await renderToBuffer(<AnticrisisPDF {...datos} />);
   const fileName = `contrato-${sanitizeFileName(nroContrato)}.pdf`;
 
   return new Response(new Uint8Array(pdfBuffer), {
