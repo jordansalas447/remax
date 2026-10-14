@@ -10,10 +10,58 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.15"
   }
   public: {
     Tables: {
+      aceptaciones_documento: {
+        Row: {
+          created_at: string
+          fecha_aceptacion: string | null
+          id: number
+          id_asociado: number | null
+          id_declaracion_version: number | null
+          id_documento: number | null
+          metodo_confirmacion: boolean | null
+          text_aceptado: string | null
+        }
+        Insert: {
+          created_at?: string
+          fecha_aceptacion?: string | null
+          id?: number
+          id_asociado?: number | null
+          id_declaracion_version?: number | null
+          id_documento?: number | null
+          metodo_confirmacion?: boolean | null
+          text_aceptado?: string | null
+        }
+        Update: {
+          created_at?: string
+          fecha_aceptacion?: string | null
+          id?: number
+          id_asociado?: number | null
+          id_declaracion_version?: number | null
+          id_documento?: number | null
+          metodo_confirmacion?: boolean | null
+          text_aceptado?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aceptaciones_documento_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "aceptaciones_documento_id_documento_fkey"
+            columns: ["id_documento"]
+            isOneToOne: false
+            referencedRelation: "documentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       administrativos: {
         Row: {
           area: string | null
@@ -685,6 +733,7 @@ export type Database = {
           id_asociado: number | null
           id_estado: number | null
           id_operacion: number | null
+          id_publico: string
           id_tipo_contrato: number | null
           motivo_anulacion: string | null
           nro_contrato: string
@@ -704,6 +753,7 @@ export type Database = {
           id_asociado?: number | null
           id_estado?: number | null
           id_operacion?: number | null
+          id_publico?: string
           id_tipo_contrato?: number | null
           motivo_anulacion?: string | null
           nro_contrato: string
@@ -723,6 +773,7 @@ export type Database = {
           id_asociado?: number | null
           id_estado?: number | null
           id_operacion?: number | null
+          id_publico?: string
           id_tipo_contrato?: number | null
           motivo_anulacion?: string | null
           nro_contrato?: string
@@ -2232,6 +2283,27 @@ export type Database = {
         }
         Relationships: []
       }
+      versiones_declaraciones: {
+        Row: {
+          created_at: string
+          declaracion: string | null
+          fecha_creacion: string | null
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          declaracion?: string | null
+          fecha_creacion?: string | null
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          declaracion?: string | null
+          fecha_creacion?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       vista_asociados_categoria: {
@@ -2262,6 +2334,24 @@ export type Database = {
             referencedColumns: ["nro_contrato"]
           },
         ]
+      }
+      vista_llamadas_propietarios: {
+        Row: {
+          asociado: string | null
+          curso_llamada: string | null
+          direccion: string | null
+          fecha_bienvenida: string | null
+          fecha_seguimiento_llamada: string | null
+          id_remax: number | null
+          modalidad: string | null
+          numero_telefono: string | null
+          observacion: string | null
+          observacion_seguimiento: string | null
+          propietario: string | null
+          tipo_negocio: string | null
+          tipo_propiedad: string | null
+        }
+        Relationships: []
       }
       vista_revisiones: {
         Row: {

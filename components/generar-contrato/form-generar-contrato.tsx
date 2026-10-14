@@ -134,13 +134,17 @@ export default function FormGenerarContrato({
 
     try {
       const documento = await createDocumentos(form);
+
+      console.log(documento)
+
       const nro = documento.nro_contrato;
 
       const payload: ContratoPDFProps = {
         nroContrato: nro,
         nroPropietarios: form.nro_propietarios || 1,
         tipoContrato:form.id_tipo_contrato || 0,
-        tipoOperacion:form.id_operacion || 0
+        tipoOperacion:form.id_operacion || 0,
+        id_publico: documento.id_publico || ""
       };
 
       const response = await fetch("/api/contratos/generar", {

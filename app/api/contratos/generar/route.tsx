@@ -8,6 +8,7 @@ import fs from "fs";
 import { AnticrisisPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Anticrisis No Exclusiva";
 import { getTiposContrato } from "@/lib/supabase/queries/tipos_contratos";
 import { getOperaciones } from "@/lib/supabase/queries/operaciones";
+import QRCode from "qrcode";
 
 export const runtime = "nodejs";
 
@@ -15,14 +16,10 @@ function sanitizeFileName(value: string) {
   return value.replace(/[^\w.-]+/g, "_");
 }
 
-//const DataTiposContratos = await getTiposContrato();
-//const DataTiposOperaciones = await getOperaciones();
-
-
 // Obtiene la ruta absoluta de las imágenes y las almacena en variables tipo Buffer
-const LOGO_ADELANTE_PATH =  path.resolve(process.cwd(), "public/image1.png");
-const LOGO_GLOBO_PATH =  path.resolve(process.cwd(), "public/image2.png");
-const LOGO_REMAX_ADELANTE_PATH =  path.resolve(process.cwd(), "public/LogoRemax.png");
+const LOGO_ADELANTE_PATH = path.resolve(process.cwd(), "public/image1.png");
+const LOGO_GLOBO_PATH = path.resolve(process.cwd(), "public/image2.png");
+const LOGO_REMAX_ADELANTE_PATH = path.resolve(process.cwd(), "public/LogoRemax.png");
 
 const LOGO_ADELANTE = fs.readFileSync(LOGO_ADELANTE_PATH);
 const LOGO_GLOBO = fs.readFileSync(LOGO_GLOBO_PATH);
@@ -32,6 +29,14 @@ function asText(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
+}
+
+async function generarQR(url: string) {
+  return await QRCode.toDataURL(url, {
+    width: 300,
+    margin: 2,
+    errorCorrectionLevel: "H",
+  });
 }
 
 export async function POST(request: Request) {
@@ -54,50 +59,64 @@ export async function POST(request: Request) {
     );
   }
 
+  // Generar el QR si se incluye un id_publico, si no se quiere agregar ningún qr puede ajustarse
+  let qrValue: string | undefined = undefined;
+  if (body.id_publico) {
+    try {
+      // Aquí asumimos que quieres que el QR apunte a una URL pública con el id
+      // Modifica la URL base si es necesario
+      const publicUrl = `https://adelante.remax.pe/varlidar-contrato/${body.id_publico}`;
+      qrValue = await generarQR(publicUrl);
+    } catch (e) {
+      // Continúa sin QR si falla
+      qrValue = undefined;
+    }
+  }
+
   const datos: ContratoPDFProps = {
     nroContrato,
     nroPropietarios: body.nroPropietarios,
     logoIzquierdo: LOGO_ADELANTE,
     logoDerecho: LOGO_GLOBO,
-    logoMarcadeAgua: LOGO_REMAX_ADELANTE
+    logoMarcadeAgua: LOGO_REMAX_ADELANTE,
+    id_publico: body.id_publico,
+    qr: qrValue
   };
 
+  const tipocontrato = body.tipoContrato;
+  const tipoOperacion = body.tipoOperacion;
 
-  const tipocontrato = body.tipoContrato
-  const tipoOperacion = body.tipoOperacion
+  let TipoContratoLabel;
 
-  let TipoContratoLabel
-
-
-  console.log(tipocontrato,tipoOperacion)
+  console.log(tipocontrato, tipoOperacion);
 
   if  (tipoOperacion == 3) {
-     if (tipocontrato == 1) {
-       TipoContratoLabel = <AnticrisisPDF {...datos} />;
-     } else if (tipocontrato == 2) {
-       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-       TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
-     } else if (tipocontrato == 3) {
-       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-       return Response.json(
-         { error: "Tipo de contrato no soportado." },
-         { status: 400 }
-       );
-     } else {
-       return Response.json(
-         { error: "Tipo de contrato no soportado." },
-         { status: 400 }
-       );
-     }
+    if (tipocontrato == 1) {
+      TipoContratoLabel = <AnticrisisPDF {...datos} />;
+    } else if (tipocontrato == 2) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
+    } else if (tipocontrato == 3) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    } else {
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    }
   }
 
   // Asegúrate de que TipoContratoLabel no sea undefined
-   if (!TipoContratoLabel) {
-     return Response.json(
-       { error: "No se pudo generar el contrato PDF." },
-       { status: 500 }
-     );
-   }
+  if (!TipoContratoLabel) {
+    return Response.json(
+      { error: "No se pudo generar el contrato PDF." },
+      { status: 500 }
+    );
+  }
 
   const pdfBuffer = await renderToBuffer(TipoContratoLabel);
   const fileName = `contrato-${sanitizeFileName(nroContrato)}.pdf`;

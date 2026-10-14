@@ -145,6 +145,22 @@ const styles = StyleSheet.create({
   marginBottomSmall: {
     marginBottom: 6,
   },
+  footerBottomRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  footerBottomLeft: {
+    flexGrow: 1,
+    flexBasis: 0,
+    paddingRight: 10,
+  },
+  qrFooter: {
+    width: 46,
+    height: 46,
+    objectFit: "contain",
+  },
   // Footer styles
   footerContainer: {
     position: "absolute",
@@ -205,7 +221,16 @@ const styles = StyleSheet.create({
     width: "100%",
     fontWeight: "bold",
     letterSpacing: 1.1,
-  }
+  },
+  // QR code styles - ajusta posición/tamaño aquí
+  // qrFooter: {
+  //   position: "absolute",
+  //   bottom: 8,
+  //   right: 58,
+  //   width: 46,
+  //   height: 46,
+  //   opacity: 1,
+  // }
 });
 
 export type Propietario = {
@@ -220,9 +245,11 @@ export type Propietario = {
 export type ContratoPDFProps = {
   nroContrato: string;
   nroPropietarios?: number;
-  tipoContrato?:number;
-  tipoOperacion?:number;
-  logoMarcadeAgua?:NonSharedBuffer;
+  tipoContrato?: number;
+  tipoOperacion?: number;
+  id_publico?: string;
+  qr?: string;
+  logoMarcadeAgua?: NonSharedBuffer;
   // Logos de las esquinas superiores: URL, ruta absoluta o base64 (data URI)
   logoIzquierdo?: NonSharedBuffer;
   logoDerecho?: NonSharedBuffer;
@@ -252,6 +279,7 @@ export function AnticrisisPDF({
   logoMarcadeAgua,
   logosEnTodasLasPaginas = false,
   propietarios,
+  qr,
   nombreAsesor = "____________________________________________",
   inmuebleDireccion = "__________________________________________________",
   inmuebleDistrito = "_______________",
@@ -264,8 +292,8 @@ export function AnticrisisPDF({
 }: ContratoPDFProps) {
   // Si no se envía ningún propietario, se muestra uno en blanco
   const varios = nroPropietarios || 1;
-  const lista: Propietario[] =  propietarios && propietarios.length > 0 ? propietarios : Array.from({ length: varios }, () => ({}));
-  
+  const lista: Propietario[] = propietarios && propietarios.length > 0 ? propietarios : Array.from({ length: varios }, () => ({}));
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -438,7 +466,7 @@ export function AnticrisisPDF({
 
         {/* Décima segunda cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DÉCIMA SEGUNDA:</Text> 
+          <Text style={styles.clauseTitle}>DÉCIMA SEGUNDA:</Text>
           <Text style={styles.justified}>
             Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas; y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año <Text style={styles.dataInput}>{anoFirma}</Text>.
           </Text>
@@ -475,15 +503,17 @@ export function AnticrisisPDF({
           <View style={styles.footerWebRow}>
             <Text>www.remaxadelante.com</Text>
           </View>
-          <View style={styles.arequipaRow}>
-            <View style={styles.arequipaLine} />
-            <Text style={styles.arequipaText}>Arequipa - Perú</Text>
-            <View style={styles.arequipaLine} />
-          </View>
-          <View>
-            <Text style={styles.contratoNroFooter}>
-              Contrato N.º {nroContrato || "RAD-ANT-26-0001"}
-            </Text>
+
+          <View style={styles.footerBottomRow}>
+            <View style={styles.footerBottomLeft}>
+              <View style={styles.arequipaRow}>
+                <View style={styles.arequipaLine} />
+                <Text style={styles.arequipaText}>Arequipa - Perú</Text>
+                <View style={styles.arequipaLine} />
+              </View>
+            </View>
+
+            {qr ? <Image src={qr} style={styles.qrFooter} /> : null}
           </View>
         </View>
       </Page>
