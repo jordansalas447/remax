@@ -9,6 +9,10 @@ import { AnticrisisPDFNoExclusiva } from "@/components/generar-contrato/Contrato
 import { getTiposContrato } from "@/lib/supabase/queries/tipos_contratos";
 import { getOperaciones } from "@/lib/supabase/queries/operaciones";
 import QRCode from "qrcode";
+import { VentaPDF } from "@/components/generar-contrato/Contratos/Venta";
+import { VentaPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Venta No Exclusiva";
+import { ArrendamientoPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Arrendamiento No Exclusiva";
+import { ArrendamientoPDF } from "@/components/generar-contrato/Contratos/Arrendamiento";
 
 export const runtime = "nodejs";
 
@@ -88,14 +92,48 @@ export async function POST(request: Request) {
 
   let TipoContratoLabel;
 
-  console.log(tipocontrato, tipoOperacion);
-
   if  (tipoOperacion == 3) {
     if (tipocontrato == 1) {
       TipoContratoLabel = <AnticrisisPDF {...datos} />;
     } else if (tipocontrato == 2) {
       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
       TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
+    } else if (tipocontrato == 3) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    } else {
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    }
+  } else if(tipoOperacion == 1) {
+    if (tipocontrato == 1) {
+      TipoContratoLabel = <VentaPDF {...datos} />;
+    } else if (tipocontrato == 2) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      TipoContratoLabel = <VentaPDFNoExclusiva {...datos} />;
+    } else if (tipocontrato == 3) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    } else {
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    }
+  } else if(tipoOperacion == 6) {
+    if (tipocontrato == 1) {
+      TipoContratoLabel = <ArrendamientoPDF {...datos} />;
+    } else if (tipocontrato == 2) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      TipoContratoLabel = <ArrendamientoPDFNoExclusiva {...datos} />;
     } else if (tipocontrato == 3) {
       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
       return Response.json(

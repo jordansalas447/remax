@@ -1,275 +1,17 @@
 import React from "react";
-import path from "path";
+import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Font,
-} from "@react-pdf/renderer";
+  ContratoFirmas,
+  ContratoFooter,
+  ContratoHeader,
+  ContratoWatermark,
+  contratoStyles as styles,
+  listaPropietarios,
+  val,
+  type ContratoPDFProps,
+} from "./shared";
 
-// Desactiva la separación de palabras con guion.
-Font.registerHyphenationCallback((word) => [word]);
-
-const styles = StyleSheet.create({
-  page: {
-    paddingTop: 50,
-    paddingBottom: 84, // más espacio para el footer
-    paddingLeft: 50,
-    paddingRight: 50,
-    fontSize: 11,
-    lineHeight: 1.5,
-    position: "relative",
-    minHeight: '100%',
-    height: '100%',
-  },
-  // Marca de agua
-  watermarkImageContainer: {
-    position: "absolute",
-    top: "30%",
-    left: 0,
-    right: 0,
-    zIndex: 0,
-    alignItems: "center",
-    width: "100%",
-    opacity: 0.13,
-    userSelect: "none",
-    pointerEvents: "none",
-  },
-  watermarkImage: {
-    width: 650,
-    height: 250,
-    margin: "auto",
-    objectFit: "contain",
-    opacity: 0.16,
-  },
-  watermarkContractNumber: {
-    position: "absolute",
-    top: "60%",
-    left: 0,
-    right: 0,
-    zIndex: 0,
-    textAlign: "center",
-    width: "100%",
-    opacity: 0.22,
-    fontSize: 36,
-    fontWeight: 700,
-    color: "#3F3F46",
-    fontFamily: "Helvetica-Bold",
-    letterSpacing: 2,
-    transform: "rotate(0deg)",
-    userSelect: "none",
-    pointerEvents: "none",
-  },
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 14,
-    width: "100%",
-  },
-  logoSlot: {
-    width: 110,
-    height: 55,
-    margin: 0,
-    padding: 0,
-  },
-  logoImage: {
-    width: 110,
-    height: 55,
-    objectFit: "contain",
-    opacity: 0.75,
-    margin: 0,
-    padding: 0,
-  },
-  titleContainer: {
-    flexGrow: 1,
-    flexBasis: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-    textAlign: "center",
-    marginLeft: 12,
-    marginRight: 12,
-  },
-  title: {
-    fontSize: 11,
-    textAlign: "center",
-    fontWeight: 700,
-  },
-  section: {
-    marginBottom: 10,
-  },
-  justified: {
-    textAlign: "justify",
-  },
-  clauseTitle: {
-    fontSize: 12,
-    fontWeight: 700,
-    marginTop: 8,
-    marginBottom: 3,
-  },
-  signatureSection: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 32,
-  },
-  signatureBox: {
-    width: "45%",
-    borderTop: "1px solid #000",
-    minHeight: 40,
-    paddingTop: 6,
-    marginTop: 4,
-    marginBottom: 36,
-  },
-  signatureText: {
-    fontSize: 11,
-    textAlign: "center",
-  },
-  signatureSubText: {
-    fontSize: 10,
-    textAlign: "center",
-  },
-  dataInput: {
-    fontSize: 11,
-    textDecoration: "underline",
-    minWidth: 60,
-    lineHeight: 1.4,
-  },
-  bold: {
-    fontWeight: "bold",
-  },
-  marginBottomSmall: {
-    marginBottom: 6,
-  },
-  footerBottomRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  footerBottomLeft: {
-    flexGrow: 1,
-    flexBasis: 0,
-    paddingRight: 10,
-  },
-  qrFooter: {
-    width: 46,
-    height: 46,
-    objectFit: "contain",
-  },
-  // Footer styles
-  footerContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 50,
-    right: 50,
-    width: "auto",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    fontSize: 10,
-  },
-  footerInfoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 2,
-    fontSize: 9.5,
-    color: "#222",
-  },
-  footerWebRow: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginBottom: 4,
-    fontSize: 10,
-    color: "#191b23",
-  },
-  arequipaRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    marginTop: 6,
-    marginBottom: 6,
-    opacity: 0.7,
-  },
-  arequipaLine: {
-    height: 0.5,
-    backgroundColor: "#222",
-    flexGrow: 1,
-    marginHorizontal: 10,
-  },
-  arequipaText: {
-    marginHorizontal: 12,
-    fontWeight: "bold",
-    fontSize: 11,
-    color: "#222",
-    letterSpacing: 1,
-    textAlign: "center",
-  },
-  // N° de contrato en pie de página
-  contratoNroFooter: {
-    fontSize: 9.5,
-    color: "#3f4f5d",
-    textAlign: "right",
-    marginTop: 2,
-    width: "100%",
-    fontWeight: "bold",
-    letterSpacing: 1.1,
-  },
-  // QR code styles - ajusta posición/tamaño aquí
-  // qrFooter: {
-  //   position: "absolute",
-  //   bottom: 8,
-  //   right: 58,
-  //   width: 46,
-  //   height: 46,
-  //   opacity: 1,
-  // }
-});
-
-export type Propietario = {
-  nombre?: string;
-  dni?: string;
-  estadoCivil?: string;
-  celular?: string;
-  domicilio?: string;
-  distrito?: string;
-};
-
-export type ContratoPDFProps = {
-  nroContrato: string;
-  nroPropietarios?: number;
-  tipoContrato?: number;
-  tipoOperacion?: number;
-  id_publico?: string;
-  qr?: string;
-  logoMarcadeAgua?: NonSharedBuffer;
-  // Logos de las esquinas superiores: URL, ruta absoluta o base64 (data URI)
-  logoIzquierdo?: NonSharedBuffer;
-  logoDerecho?: NonSharedBuffer;
-  // Si es true, los logos se repiten en todas las páginas
-  logosEnTodasLasPaginas?: boolean;
-  propietarios?: Propietario[];
-  nombreAsesor?: string;
-  inmuebleDireccion?: string;
-  inmuebleDistrito?: string;
-  inmueblePartida?: string;
-  comision?: string;
-  duracionMeses?: string;
-  diaFirma?: string;
-  mesFirma?: string;
-  anoFirma?: string;
-};
-
-// Devuelve el valor si existe; si no, el espacio en blanco para llenar a mano
-const val = (value: string | undefined, blank: string) =>
-  value && value.trim() !== "" ? value : blank;
+export type { ContratoPDFProps, Propietario } from "./shared";
 
 export function AnticrisisPDF({
   nroContrato,
@@ -288,45 +30,20 @@ export function AnticrisisPDF({
   duracionMeses = "____",
   diaFirma = "____",
   mesFirma = "________________",
-  anoFirma = "2026",
+  anoFirma = "______",
 }: ContratoPDFProps) {
-  // Si no se envía ningún propietario, se muestra uno en blanco
-  const varios = nroPropietarios || 1;
-  const lista: Propietario[] = propietarios && propietarios.length > 0 ? propietarios : Array.from({ length: varios }, () => ({}));
+  const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Marca de agua: Imagen y número de contrato alineado horizontal */}
-        <View style={styles.watermarkImageContainer} fixed>
-          {logoMarcadeAgua ? (
-            <Image src={logoMarcadeAgua} style={styles.watermarkImage} />
-          ) : null}
-        </View>
-        <Text style={styles.watermarkContractNumber} fixed>
-          {nroContrato || "RAD-ANT-26-0001"}
-        </Text>
-
-        {/* Encabezado combinado: Imagen izquierda, Título centro, Imagen derecha */}
-        <View style={styles.headerContainer} fixed={logosEnTodasLasPaginas}>
-          <View style={styles.logoSlot}>
-            {logoIzquierdo ? (
-              <Image src={logoIzquierdo} style={styles.logoImage} />
-            ) : null}
-          </View>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>
-              AUTORIZACIÓN DE CORRETAJE INMOBILIARIO N.º {nroContrato || "RAD-ANT-26-0001"}
-            </Text>
-          </View>
-          <View style={styles.logoSlot}>
-            {logoDerecho ? (
-              <Image src={logoDerecho} style={styles.logoImage} />
-            ) : null}
-          </View>
-        </View>
-        {/* Subtítulo */}
-        {/* <Text style={styles.subtitle}>CONTRATO DE CORRETAJE INMOBILIARIO</Text> */}
+        <ContratoWatermark nroContrato={nroContrato} logoMarcadeAgua={logoMarcadeAgua} />
+        <ContratoHeader
+          nroContrato={nroContrato}
+          logoIzquierdo={logoIzquierdo}
+          logoDerecho={logoDerecho}
+          logosEnTodasLasPaginas={logosEnTodasLasPaginas}
+        />
 
         {/* Introducción */}
         <View style={styles.section}>
@@ -472,50 +189,8 @@ export function AnticrisisPDF({
           </Text>
         </View>
 
-        {/* Firmas: una por propietario + una para EL COMISIONISTA */}
-        <View style={styles.signatureSection} wrap={false}>
-          {lista.map((p, i) => (
-            <View key={i} style={styles.signatureBox}>
-              <Text style={styles.signatureText}>
-                {varios ? `EL PROPIETARIO ${i + 1}` : "EL PROPIETARIO"}
-              </Text>
-              {p.nombre ? (
-                <Text style={styles.signatureSubText}>{p.nombre}</Text>
-              ) : null}
-              {p.dni ? (
-                <Text style={styles.signatureSubText}>DNI N° {p.dni}</Text>
-              ) : null}
-            </View>
-          ))}
-          <View style={styles.signatureBox}>
-            <Text style={styles.signatureText}>EL COMISIONISTA</Text>
-            {/* <Text style={styles.signatureSubText}>
-              ADELANTE ASESORES INMOBILIARIOS SAC.
-            </Text> */}
-          </View>
-        </View>
-        {/* Pie de página personalizado */}
-        <View style={styles.footerContainer} fixed>
-          <View style={styles.footerInfoRow}>
-            <Text>Urbanización Santo Domingo Segunda Etapa, Quinta Estancia, Mz. A, Lote 2. JLByR.</Text>
-            <Text>(054)-706202</Text>
-          </View>
-          <View style={styles.footerWebRow}>
-            <Text>www.remaxadelante.com</Text>
-          </View>
-
-          <View style={styles.footerBottomRow}>
-            <View style={styles.footerBottomLeft}>
-              <View style={styles.arequipaRow}>
-                <View style={styles.arequipaLine} />
-                <Text style={styles.arequipaText}>Arequipa - Perú</Text>
-                <View style={styles.arequipaLine} />
-              </View>
-            </View>
-
-            {qr ? <Image src={qr} style={styles.qrFooter} /> : null}
-          </View>
-        </View>
+        <ContratoFirmas lista={lista} varios={varios} />
+        <ContratoFooter qr={qr} />
       </Page>
     </Document>
   );
