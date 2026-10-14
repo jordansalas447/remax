@@ -6,7 +6,7 @@ export const profilesConfig: TableConfig = {
   description: "Catálogo de Perfiles de Usuario",
   primaryKey: "id",
   fields: [
-    { name: "id", label: "ID", type: "text", readOnlyOnEdit: true },
+    { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "email", label: "Correo", type: "text", required: true },
     { name: "full_name", label: "Nombre Completo", type: "textarea" },
     { name: "role", label: "Rol", type: "text" },
