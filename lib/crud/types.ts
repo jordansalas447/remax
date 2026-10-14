@@ -11,6 +11,7 @@ export type FieldType =
   | "select"
   | "enum"
   | "inputsearch"
+  | "textplus"
   | "detailselect"
   | "custom";
 

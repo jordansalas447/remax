@@ -10,7 +10,7 @@ export const llamadasConfig: TableConfig = {
     { name: "fecha_bienvenida", label: "Fecha Bienvenida", type: "datenative", required: true },
     { name: "curso_llamada", label: "Curso Llamada", type: "textarea" },
     { name: "observacion", label: "Observacion", type: "textarea" },
-    { name: "fecha_seguimiento", label: "Fecha Seguimiento", type: "datenative" },
+    { name: "fecha_seguimiento_llamada", label: "Fecha Seguimiento llamada", type: "datenative" },
     { name: "observacion_seguimiento", label: "Observacion de Seguimiento", type: "textarea" },
   ],
 };

@@ -242,6 +242,88 @@ export function FieldInput(props: FieldInputProps) {
     );
   }
 
+  if (field.type === "textplus") {
+    // El input principal donde el usuario ve y edita el valor legible.
+    // Además, creamos un input hidden para guardar el ID interno/valor real.
+    const showQuickCreateInput = !disabled && Boolean(field.foreignKey) && Boolean(onQuickCreate);
+
+    // inputValue podría ser el ID real, pero mostramos el label. 
+    // Asumimos que options están presentes (opcional: manejar caso contrario).
+    let displayLabel = inputValue;
+
+    // Si hay foreignKey y options, busca el label que corresponde al valor
+    if (field.foreignKey && Array.isArray(options) && options.length > 0 && inputValue) {
+      // Buscar el label correspondiente al value guardado
+      const found = options.find(option => option.value === inputValue);
+      if (found) displayLabel = found.label;
+    }
+
+    console.log(showQuickCreateInput)
+
+    // El input visible para mostrar/editar el label (NO envía el id internamente)
+    const textInput = (
+      <Input
+        id={inputId}
+        name={`visible_${inputName}`}
+        type={"text"}
+        value={inputValue}
+        contentEditable={false}
+        placeholder={placeholder}
+        disabled={disabled}
+        className={baseClass}
+        autoComplete="off"
+        onChange={
+          (e) => {
+            // Si el usuario borra el campo, borramos el hidden también
+            const valueToSend = e.target.value === "" ? "" : inputValue;
+            onChange?.(valueToSend);
+          }
+        }
+      />
+    );
+
+    // El input oculto que guarda realmente el value/id seleccionado
+    const hiddenInput = (
+      <input
+        type="hidden"
+        id={inputId}
+        name={inputName}
+        value={inputValue ?? ""}
+      />
+    );
+
+    // Si hay quick create, agrega el botón al lado.
+    if (showQuickCreateInput && field.selectplus !== false) {
+      const targetTableConfig = field.foreignKey ? getTableConfig(field.foreignKey.table) : null;
+      const targetLabel = targetTableConfig?.label ?? field.label;
+      return (
+        <div className="flex items-center gap-2">
+          {textInput}
+          {hiddenInput}
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => onQuickCreate?.(field)}
+            title={`Crear nuevo (${targetLabel})`}
+            className="shrink-0 border-zinc-300 dark:border-zinc-700 transition-colors hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+          >
+            <Plus className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
+          </Button>
+        </div>
+      );
+    }
+
+    // Si no, solo devuelve input visible + oculto
+    return (
+      <>
+        {textInput}
+        {hiddenInput}
+      </>
+    );
+  }
+
+  
   return (
     <Input
       id={inputId}

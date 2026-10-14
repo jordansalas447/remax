@@ -52,6 +52,18 @@ export const propiedadPropietarioConfig: TableConfig = {
         labelField: "nombre_completo"
       },
     },
+    {
+      name: "id_llamada",
+      label: "Llamada",
+      type: "textplus",
+      selectplus:true,
+      required: true,
+      foreignKey: {
+        table: "llamadas",
+        valueField: "id",
+        labelField: "observacion"
+      },
+    },
     // { name: "observacion", label: "Observacion", type: "textarea"},
     { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true ,hiddenInForm:true },
   ],
