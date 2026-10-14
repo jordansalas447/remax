@@ -6,6 +6,8 @@ import {
 import path from "path";
 import fs from "fs";
 import { AnticrisisPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Anticrisis No Exclusiva";
+import { getTiposContrato } from "@/lib/supabase/queries/tipos_contratos";
+import { getOperaciones } from "@/lib/supabase/queries/operaciones";
 
 export const runtime = "nodejs";
 
@@ -13,6 +15,8 @@ function sanitizeFileName(value: string) {
   return value.replace(/[^\w.-]+/g, "_");
 }
 
+//const DataTiposContratos = await getTiposContrato();
+//const DataTiposOperaciones = await getOperaciones();
 
 
 // Obtiene la ruta absoluta de las imágenes y las almacena en variables tipo Buffer
@@ -64,36 +68,38 @@ export async function POST(request: Request) {
 
   let TipoContratoLabel
 
-  // if  (tipoOperacion === 3) {
-  //   if (tipocontrato == 1) {
-  //     TipoContratoLabel = <AnticrisisPDF {...datos} />;
-  //   } else if (tipocontrato == 2) {
-  //     // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-  //     TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
-  //   } else if (tipocontrato == 3) {
-  //     // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-  //     return Response.json(
-  //       { error: "Tipo de contrato no soportado." },
-  //       { status: 400 }
-  //     );
-  //   } else {
-  //     return Response.json(
-  //       { error: "Tipo de contrato no soportado." },
-  //       { status: 400 }
-  //     );
-  //   }
-  // }
 
+  console.log(tipocontrato,tipoOperacion)
+
+  if  (tipoOperacion == 3) {
+     if (tipocontrato == 1) {
+       TipoContratoLabel = <AnticrisisPDF {...datos} />;
+     } else if (tipocontrato == 2) {
+       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+       TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
+     } else if (tipocontrato == 3) {
+       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+       return Response.json(
+         { error: "Tipo de contrato no soportado." },
+         { status: 400 }
+       );
+     } else {
+       return Response.json(
+         { error: "Tipo de contrato no soportado." },
+         { status: 400 }
+       );
+     }
+  }
 
   // Asegúrate de que TipoContratoLabel no sea undefined
-  // if (!TipoContratoLabel) {
-  //   return Response.json(
-  //     { error: "No se pudo generar el contrato PDF." },
-  //     { status: 500 }
-  //   );
-  // }
+   if (!TipoContratoLabel) {
+     return Response.json(
+       { error: "No se pudo generar el contrato PDF." },
+       { status: 500 }
+     );
+   }
 
-  const pdfBuffer = await renderToBuffer(<AnticrisisPDF {...datos} />);
+  const pdfBuffer = await renderToBuffer(TipoContratoLabel);
   const fileName = `contrato-${sanitizeFileName(nroContrato)}.pdf`;
 
   return new Response(new Uint8Array(pdfBuffer), {
