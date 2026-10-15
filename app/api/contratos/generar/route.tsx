@@ -13,6 +13,7 @@ import { VentaPDF } from "@/components/generar-contrato/Contratos/Venta";
 import { VentaPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Venta No Exclusiva";
 import { ArrendamientoPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Arrendamiento No Exclusiva";
 import { ArrendamientoPDF } from "@/components/generar-contrato/Contratos/Arrendamiento";
+import { TraspasoPDF } from "@/components/generar-contrato/Contratos/Traspaso";
 
 export const runtime = "nodejs";
 
@@ -77,6 +78,7 @@ export async function POST(request: Request) {
     }
   }
 
+
   const datos: ContratoPDFProps = {
     nroContrato,
     nroPropietarios: body.nroPropietarios,
@@ -89,6 +91,10 @@ export async function POST(request: Request) {
 
   const tipocontrato = body.tipoContrato;
   const tipoOperacion = body.tipoOperacion;
+
+
+  
+  console.log(tipocontrato,tipoOperacion)
 
   let TipoContratoLabel;
 
@@ -134,6 +140,24 @@ export async function POST(request: Request) {
     } else if (tipocontrato == 2) {
       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
       TipoContratoLabel = <ArrendamientoPDFNoExclusiva {...datos} />;
+    } else if (tipocontrato == 3) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    } else {
+      return Response.json(
+        { error: "Tipo de contrato no soportado." },
+        { status: 400 }
+      );
+    }
+  } else if(tipoOperacion == 4) {
+    if (tipocontrato == 1) {
+      TipoContratoLabel = <TraspasoPDF {...datos} />;
+    } else if (tipocontrato == 2) {
+      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
+      TipoContratoLabel = <TraspasoPDF {...datos} />;
     } else if (tipocontrato == 3) {
       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
       return Response.json(

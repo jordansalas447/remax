@@ -5,7 +5,7 @@ Font.registerHyphenationCallback((word) => [word]);
 export const contratoStyles = StyleSheet.create({
   page: {
     paddingTop: 50,
-    paddingBottom: 90,
+    paddingBottom: 83,
     paddingLeft: 50,
     paddingRight: 50,
     fontSize: 11,

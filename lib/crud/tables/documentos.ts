@@ -35,6 +35,7 @@ export const documentosConfig: TableConfig = {
         name: "id_operacion",
         label: "Operacion",
         type: "select",
+        required:true,
         foreignKey: {
           table: "operacion",
           valueField: "id",

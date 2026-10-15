@@ -1,3 +1,4 @@
+import TablaLlamadasGestion from '@/components/llamadas-gestion/tabla-llamadas-gestion';
 import { getLlamadasPropietarios } from '@/lib/supabase/queries/llamadas';
 
 export default async function LlamadasPage() {
@@ -10,9 +11,12 @@ export default async function LlamadasPage() {
     errorMsg = error.message || 'Error al obtener las llamadas.';
   }
 
+  
+
   return (
     <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Llamadas a propietarios</h1>
+      <TablaLlamadasGestion Llamadas={llamadas} />
+      {/* <h1 className="text-2xl font-bold mb-4">Llamadas a propietarios</h1>
       {errorMsg ? (
         <div className="bg-red-100 text-red-800 p-2 rounded">{errorMsg}</div>
       ) : llamadas.length === 0 ? (
@@ -37,7 +41,7 @@ export default async function LlamadasPage() {
             ))}
           </tbody>
         </table>
-      )}
+      )} */}
     </main>
   );
 }

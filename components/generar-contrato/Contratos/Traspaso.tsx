@@ -13,7 +13,7 @@ import {
 
 export type { ContratoPDFProps, Propietario } from "./shared";
 
-export function AnticrisisPDF({
+export function TraspasoPDF({
   nroContrato,
   nroPropietarios,
   logoIzquierdo,
@@ -22,17 +22,17 @@ export function AnticrisisPDF({
   logosEnTodasLasPaginas = false,
   propietarios,
   qr,
-  nombreAsesor = "____________________________________________",
+  nombreAsesor = "_____________________________________________",
   inmuebleDireccion = "__________________________________________________",
   inmuebleDistrito = "_______________",
-  inmueblePartida = "______________",
-  nombreNegocio="______________",
-  giroNegocio="______________",
-  comision = "________________________",
-  duracionMeses = "____",
-  diaFirma = "____",
-  mesFirma = "________________",
-  anoFirma = "_____",
+  inmueblePartida = "______________________",
+  nombreNegocio = "___________",
+  giroNegocio = "_____________",
+  comision = "____",
+  duracionMeses = "_____",
+  diaFirma = "_____",
+  mesFirma = "_____________________",
+  anoFirma = "2026",
 }: ContratoPDFProps) {
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
@@ -60,8 +60,7 @@ export function AnticrisisPDF({
                 </Text>
                 , debidamente identificado(a) con DNI N°{" "}
                 <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>, estado civil{" "}
-                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>, ocupación{" "}
-                <Text style={styles.dataInput}>{val(p.ocupacion, "__________________")}</Text>, número de celular{" "}
+                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>, número de celular{" "}
                 <Text style={styles.dataInput}>{val(p.celular, "_______________")}</Text>, con domicilio para estos efectos en{" "}
                 <Text style={styles.dataInput}>
                   {val(p.domicilio, "__________________________________________________")}
@@ -73,13 +72,12 @@ export function AnticrisisPDF({
             , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como (REMAX ADELANTE) con RUC Nro. 20612674192 con domicilio en Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani), distrito de José Luis Bustamante y Rivero, Provincia y Departamento de Arequipa; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
           </Text>
         </View>
-   
 
         {/* Primera cláusula */}
         <View style={styles.section}>
           <Text style={styles.clauseTitle}>PRIMERA:</Text>
           <Text style={styles.justified}>
-            EL CLIENTE es el encargado del inmueble ubicado en:
+            EL CLIENTE es el encargado del inmueble ubicado en:{" "}
             <Text style={styles.dataInput}>{inmuebleDireccion}</Text>
             , distrito de
             <Text style={styles.dataInput}>{inmuebleDistrito}</Text>
@@ -87,7 +85,7 @@ export function AnticrisisPDF({
             <Text style={styles.dataInput}>{inmueblePartida}</Text>
             del Registro de Predios de la Zona Registral XII - Sede Arequipa, en el que funciona el negocio de
             <Text style={styles.dataInput}>{giroNegocio}</Text>
-            denominado “
+            {" "}denominado “
             <Text style={styles.dataInput}>{nombreNegocio}</Text>
             ”, y al que en lo sucesivo se le denominará EL INMUEBLE.
           </Text>
@@ -107,7 +105,7 @@ export function AnticrisisPDF({
           <Text style={styles.justified}>
             Por medio del presente acuerdo, EL CLIENTE otorga a EL COMISIONISTA a partir de la firma del presente documento, la representación comercial para el TRASPASO de EL INMUEBLE descrito en la cláusula primera del presente contrato, en la modalidad de EXCLUSIVIDAD, gestión que será realizada por El Asesor Sr./Sra./Srta.:
             <Text style={styles.dataInput}>{nombreAsesor}</Text>
-            . EL COMISIONISTA iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato, siendo EL COMISIONISTA y su grupo de trabajo, las únicas personas autorizadas para promover EL INMUEBLE dentro de los medios que se enunciarán en la cláusula siguiente, no pudiendo EL CLIENTE contratar con otra empresa o persona que se dedique al corretaje inmobiliario, dentro del plazo de duración del presente documento.
+            , EL COMISIONISTA iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato, siendo EL COMISIONISTA y su grupo de trabajo, las únicas personas autorizadas para promover EL INMUEBLE dentro de los medios que se enunciarán en la cláusula siguiente, no pudiendo EL CLIENTE contratar con otra empresa o persona que se dedique al corretaje inmobiliario, dentro del plazo de duración del presente documento.
           </Text>
         </View>
 
@@ -128,9 +126,9 @@ export function AnticrisisPDF({
             % (no incluye IGV), sobre la base del precio final de traspaso negociado por EL COMISIONISTA con el futuro cliente interesado y previamente aceptado por EL CLIENTE. Las comisiones pactadas en la presente cláusula serán canceladas a EL COMISIONISTA al momento de la firma del Contrato de Traspaso que se genere entre EL CLIENTE y el cliente interesado que haya sido presentado por EL COMISIONISTA. Asimismo, EL CLIENTE se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de venta de EL INMUEBLE:
           </Text>
           <View style={{ marginLeft: 14, marginTop: 4 }}>
-            <Text style={styles.justified}>- Copia del documento de identidad de EL CLIENTE</Text>
-            <Text style={styles.justified}>- Contrato de arrendamiento de EL INMUEBLE.</Text>
-            <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
+            <Text style={styles.justified}>{"\u2714"} Copia del documento de identidad de EL CLIENTE</Text>
+            <Text style={styles.justified}>{"\u2714"} Contrato de arrendamiento de EL INMUEBLE.</Text>
+            <Text style={styles.justified}>{"\u2714"} Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
           </View>
         </View>
 
@@ -197,7 +195,7 @@ export function AnticrisisPDF({
         <View style={styles.section}>
           <Text style={styles.clauseTitle}>DÉCIMO SEGUNDA:</Text>
           <Text style={styles.justified}>
-            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año 2026.
+            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año {anoFirma}.
           </Text>
         </View>
 
