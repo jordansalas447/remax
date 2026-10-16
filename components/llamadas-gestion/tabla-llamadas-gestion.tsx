@@ -5,18 +5,21 @@ import { MessageSquarePlusIcon } from "lucide-react"
 
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
-import { LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas"
+import { LlamadasRowDetalle, LlamadaType } from "@/lib/supabase/queries/llamadas"
 
 import { columns } from "./columns"
 import { DialogNuevaObservacion } from "./dialog-nueva-observacion"
 import { SubcampoLlamada } from "./subcampo-llamada"
+import { EstadoLlamadas } from "@/lib/supabase/queries/estado_llamada"
 
 interface TablaLlamadasGestionProps {
   Llamadas: LlamadasRowDetalle[]
+  EstadoLlamadas: EstadoLlamadas[]
 }
 
 export default function TablaLlamadasGestion({
   Llamadas,
+  EstadoLlamadas
 }: TablaLlamadasGestionProps) {
   const [data, setData] = React.useState<LlamadasRowDetalle[]>(Llamadas)
   const [llamadaSeleccionada, setLlamadaSeleccionada] =
@@ -29,13 +32,25 @@ export default function TablaLlamadasGestion({
   }, [Llamadas])
 
   const handleObservacionGuardada = (
-    idLlamada: number,
-    nuevaObservacion: string
+    id: number,
+    record: LlamadaType
   ) => {
+
+    console.log(id,record)
+
+    console.log(data)
+
     setData((prev) =>
       prev.map((item) =>
-        item.id === idLlamada
-          ? { ...item, observacion: nuevaObservacion }
+        item.id === id
+          ? { ...item, 
+            observacion: record.observacion || "",
+            observacion_seguimiento:record.observacion_seguimiento || "",
+            curso_llamada:record.curso_llamada || "",
+            id_estado_llamada:record.id_estado_llamada || 0,
+            estado_llamada:EstadoLlamadas.find(id => id.id === record.id_estado_llamada)?.estado_llamada,
+            color:EstadoLlamadas.find(id => id.id === record.id_estado_llamada)?.color || "default"
+          }
           : item
       )
     )
@@ -86,6 +101,7 @@ export default function TablaLlamadasGestion({
       {/* Modal para agregar observación */}
       <DialogNuevaObservacion
         llamada={llamadaSeleccionada}
+        estadollamadas={EstadoLlamadas}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onObservacionGuardada={handleObservacionGuardada}

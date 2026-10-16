@@ -2,9 +2,11 @@
 
 import * as React from "react"
 import {
+  Calendar,
   FileTextIcon,
   Loader2Icon,
   MapPinIcon,
+  Phone,
   PhoneIcon,
   PlusIcon,
   SendIcon,
@@ -14,13 +16,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
+  LlamadaType,
   LlamadasRowDetalle,
   agregarObservacionLlamada,
 } from "@/lib/supabase/queries/llamadas"
+import { Badge, BadgeVariant } from "../ui/badge"
 
 interface SubcampoLlamadaProps {
   llamada: LlamadasRowDetalle
-  onObservacionGuardada: (idLlamada: number, observacionActualizada: string) => void
+  onObservacionGuardada: (idLlamada: number, observacionActualizada: LlamadaType) => void
 }
 
 export function SubcampoLlamada({
@@ -32,33 +36,33 @@ export function SubcampoLlamada({
   const [error, setError] = React.useState<string | null>(null)
   const [mostrarForm, setMostrarForm] = React.useState(false)
 
-  const handleGuardar = async () => {
-    if (!nuevaNota.trim()) return
+  // const handleGuardar = async () => {
+  //   if (!nuevaNota.trim()) return
 
-    try {
-      setGuardando(true)
-      setError(null)
-      const observacionFinal = await agregarObservacionLlamada(
-        llamada.id,
-        nuevaNota.trim(),
-        llamada.observacion
-      )
-      onObservacionGuardada(llamada.id, observacionFinal)
-      setNuevaNota("")
-      setMostrarForm(false)
-    } catch (err: any) {
-      setError(err?.message || "Error al guardar.")
-    } finally {
-      setGuardando(false)
-    }
-  }
+  //   try {
+  //     setGuardando(true)
+  //     setError(null)
+  //     const observacionFinal = await agregarObservacionLlamada(
+  //       llamada.id_remax,
+  //       nuevaNota.trim(),
+  //       llamada.observacion
+  //     )
+  //     onObservacionGuardada(llamada.id_remax, observacionFinal)
+  //     setNuevaNota("")
+  //     setMostrarForm(false)
+  //   } catch (err: any) {
+  //     setError(err?.message || "Error al guardar.")
+  //   } finally {
+  //     setGuardando(false)
+  //   }
+  // }
 
   return (
     <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-xs">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
         <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
           <span className="font-semibold text-foreground">
-            Detalle del Registro #{llamada.id_remax}
+            ID REMAX #{llamada.id_remax}
           </span>
           {llamada.propietario && (
             <span className="inline-flex items-center gap-1">
@@ -78,9 +82,15 @@ export function SubcampoLlamada({
               {llamada.direccion}
             </span>
           )}
+          {llamada.fecha_contrato_recibido && (
+            <span className="inline-flex items-center gap-1">
+              <Calendar className="size-3.5" />
+              {llamada.fecha_contrato_recibido}
+            </span>
+          )}
         </div>
 
-        {!mostrarForm && (
+        {/* {!mostrarForm && (
           <Button
             type="button"
             size="xs"
@@ -91,10 +101,21 @@ export function SubcampoLlamada({
             <PlusIcon className="size-3" />
             Añadir nota rápida
           </Button>
-        )}
+        )} */}
       </div>
 
       <div className="mt-3 grid gap-3 md:grid-cols-2">
+        {/* Curso Llmamada */}
+                <div className="rounded-md border bg-muted/30 p-3">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <FileTextIcon className="size-3.5 text-primary" />
+            <span>Curso Llamada</span>
+          </div>
+          <p className="mt-1.5 text-xs whitespace-pre-wrap text-muted-foreground">
+            {llamada.curso_llamada?.trim() || "Sin observaciones registradas."}
+          </p>
+        </div>
+
         {/* Observación principal */}
         <div className="rounded-md border bg-muted/30 p-3">
           <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
@@ -117,6 +138,16 @@ export function SubcampoLlamada({
               "Sin observaciones de seguimiento."}
           </p>
         </div>
+        <div className="rounded-md border bg-muted/30 p-3">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <Phone className="size-3.5 text-muted-foreground" />
+            <span>Estado Llamada</span>
+          </div>
+          <Badge variant={llamada.color as BadgeVariant ?? "default"} className="mt-1.5">
+            {llamada.estado_llamada?.trim() ||
+              "Pendiente"}
+          </Badge>
+        </div>
       </div>
 
       {/* Formulario desplegable para agregar observación inmediata */}
@@ -133,7 +164,7 @@ export function SubcampoLlamada({
             autoFocus
           />
           {error && <p className="text-xs text-destructive">{error}</p>}
-          <div className="flex justify-end gap-2">
+          {/* <div className="flex justify-end gap-2">
             <Button
               type="button"
               size="xs"
@@ -166,7 +197,7 @@ export function SubcampoLlamada({
                 </>
               )}
             </Button>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

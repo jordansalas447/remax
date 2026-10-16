@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -15,26 +14,28 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import {
   LlamadaType,
-  type LlamadasRow,
-  type LlamadasRowDetalle,
   insertarLlamada,
 } from "@/lib/supabase/queries/llamadas"
+import { NativeSelect } from "../ui/native-select"
+import { EstadoLlamadas } from "@/lib/supabase/queries/estado_llamada"
 
 type DialogNuevaObservacionProps = {
   llamada: LlamadaType | null
+  estadollamadas: EstadoLlamadas[] | []
   open: boolean
   onOpenChange: (open: boolean) => void
-  onObservacionGuardada?: (idLlamada: number, observacionActualizada: string) => void
+  onObservacionGuardada?: (idLlamada: number, observacionActualizada: LlamadaType) => void
 }
 
 // Helper para formatear fechas a ISO 8601 UTC explícito (con "Z")
 function toUtcIsoString(date: Date | null): string | null {
   if (!date) return null
-  return date.toISOString() // El toISOString() ya produce un string UTC 0 con 'Z'
+  return date.toISOString()
 }
 
 export function DialogNuevaObservacion({
   llamada,
+  estadollamadas,
   open,
   onOpenChange,
   onObservacionGuardada,
@@ -45,6 +46,7 @@ export function DialogNuevaObservacion({
   const [observacionSeguimiento, setObservacionSeguimiento] = React.useState("")
   const [idSeguimiento, setIdSeguimiento] = React.useState("")
   const [eliminado, setEliminado] = React.useState(false)
+  const [estadoLlamada, setEstadoLlamada] = React.useState<string>("")
 
   const [guardando, setGuardando] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
@@ -61,9 +63,9 @@ export function DialogNuevaObservacion({
       setObservacionSeguimiento("")
       setIdSeguimiento("")
       setEliminado(false)
+      setEstadoLlamada("")
       setError(null)
       setGuardando(false)
-      // Fecha bienvenida: momento de abrir el formulario
       setFechaBienvenida(new Date())
       setFechaSeguimientoLlamada(null)
     }
@@ -74,7 +76,6 @@ export function DialogNuevaObservacion({
     if (observacionSeguimiento.trim() && !fechaSeguimientoLlamada) {
       setFechaSeguimientoLlamada(new Date())
     }
-    // Si el usuario borra el campo, borra la fecha asociada también
     if (!observacionSeguimiento.trim() && fechaSeguimientoLlamada) {
       setFechaSeguimientoLlamada(null)
     }
@@ -83,7 +84,7 @@ export function DialogNuevaObservacion({
   if (!llamada) return null
 
   const handleGuardar = async () => {
-    // Validación mínima: al menos observación debe tener algo
+    // Validación mínima: al menos observación debe tener algo y estadoLlamada debe estar seleccionado
     if (
       !cursoLlamada.trim() &&
       !observacion.trim() &&
@@ -92,39 +93,35 @@ export function DialogNuevaObservacion({
       setError("Debes completar al menos un campo para guardar.")
       return
     }
+    if (!estadoLlamada) {
+      setError("Debes seleccionar un estado de llamada.")
+      return
+    }
 
     try {
       setGuardando(true)
       setError(null)
 
       // Armar el registro según los campos dados
-      // Debe coincidir con esquema de 'llamadas'
       const record: LlamadaType = {
-        // id: se autogenera
-        // created_at: lo pone backend
         fecha_bienvenida: toUtcIsoString(fechaBienvenida),
         curso_llamada: cursoLlamada || null,
         observacion: observacion || null,
         fecha_seguimiento_llamada: toUtcIsoString(fechaSeguimientoLlamada),
         observacion_seguimiento: observacionSeguimiento || null,
         id_seguimiento: idSeguimiento ? Number(idSeguimiento) : null,
-        eliminado: eliminado ? true : false
+        eliminado: eliminado ? true : false,
+        id_estado_llamada: Number(estadoLlamada)
       }
 
-      // id_propiedad_propietario => este dato DEBE estar asociado a la propiedad; cambiar aquí según tu modelo
-      // Usar 0 si este dato no existe como ejemplo, pero deberías obtenerlo realmente de la llamada asociada
+      console.log(record)
+
       const idPropiedadPropietario = (llamada as any)?.id ?? 0
+      const { nuevaLlamada, id_propiedad_propietario } = await insertarLlamada(record, idPropiedadPropietario)
+      if (onObservacionGuardada) {
+        onObservacionGuardada(id_propiedad_propietario || 0, record)
+      }
 
-      console.log(record, idPropiedadPropietario)
-
-      const nuevaLlamada = await insertarLlamada(record, idPropiedadPropietario)
-
-      console.log(nuevaLlamada)
-      // Avísale al padre (si aplica), pasando el id de la nueva llamada y la observacion capturada
-      // if (onObservacionGuardada) {
-      //   onObservacionGuardada(nuevaLlamada.id, observacion)
-      // }
-      
       onOpenChange(false)
     } catch (err: any) {
       setError(err?.message || "No se pudo guardar la llamada.")
@@ -141,9 +138,6 @@ export function DialogNuevaObservacion({
             <MessageSquarePlusIcon className="size-5 text-primary" />
             <span>Nueva gestión / llamada</span>
           </DialogTitle>
-          {/* <DialogDescription>
-            Propiedad #{llamada.id_remax} • {llamada.propietario || "Sin propietario"}
-          </DialogDescription> */}
         </DialogHeader>
 
         <form
@@ -187,9 +181,8 @@ export function DialogNuevaObservacion({
               {fechaSeguimientoLlamada && (
                 <p className="text-xs text-muted-foreground">
                   Fecha seguimiento:{" "}
-                  {/* Mostramos la fecha también en UTC 0 explícito */}
-                  {fechaSeguimientoLlamada.toLocaleString("en-GB", { 
-                    timeZone: "UTC", 
+                  {fechaSeguimientoLlamada.toLocaleString("en-GB", {
+                    timeZone: "UTC",
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
@@ -200,8 +193,25 @@ export function DialogNuevaObservacion({
                 </p>
               )}
             </div>
-
-            {/* <div className="flex flex-col gap-1.5">
+            <div>
+              <label className="text-xs font-medium text-foreground">Estado Llamada</label>
+              <NativeSelect
+                value={estadoLlamada}
+                onChange={(e) => setEstadoLlamada(e.target.value)}
+                required={true}
+                name="estado_llamada"
+                id="estado_llamada"
+              >
+                <option value="">Seleccionar…</option>
+                {estadollamadas.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.estado_llamada}
+                  </option>
+                ))}
+              </NativeSelect>
+            </div>
+            {/* Si necesitas campos adicionales, descomenta los siguientes: 
+            <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-foreground">
                 ID Seguimiento (opcional)
               </label>
@@ -230,18 +240,17 @@ export function DialogNuevaObservacion({
               <div>
                 <strong>Fecha de bienvenida:</strong>{" "}
                 {fechaBienvenida
-                  ? fechaBienvenida.toLocaleString("en-GB", { 
-                      timeZone: "UTC", 
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit"
-                    }) + " UTC"
+                  ? fechaBienvenida.toLocaleString("en-GB", {
+                    timeZone: "UTC",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                  }) + " UTC"
                   : "Se generará automáticamente"}
               </div>
-              {/* created_at: solo backend */}
             </div>
 
             {error && <p className="text-xs text-destructive mt-1">{error}</p>}

@@ -32,6 +32,7 @@ type SupportedTableName =
   | "alcance"
   | "mes"
   | "llamadas"
+  | "estado_llamada"
   | "estado_documento"
   | "asistencias"
   | "concepto_multa"
@@ -71,6 +72,7 @@ export type EstadoDocumentos = TableRow<"estado_documento">
 export type Profiles = TableRow<"profiles">
 export type Justificaciones = TableRow<"justificaciones">
 export type Tipo_Multa = TableRow<"tipo_multa">
+export type Estado_Llmada = TableRow<"estado_llamada">
 export type Configuracion_Revisiones = TableRow<"configuracion_revisiones">
 export type historial_observaciones = TableRow<"historial_observaciones">
 //export type ItemChecklist = TableRow<"items_checklist">;

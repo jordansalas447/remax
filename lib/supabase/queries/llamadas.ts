@@ -11,11 +11,14 @@ export type LlamadasRow = Database['public']['Tables']['llamadas']['Row'];
 export type LlamadasRowDetalle = {
   id?:number;
   id_remax?:string;
+  color?:string;
   asociado?: string; // a.nombre_completo
   tipo_propiedad?: string; // tp.tipo_propiedad
   direccion: string; // i.direccion
   tipo_negocio: string; // op.operacion
   modalidad: string; // tc.tipo_contrato
+  id_estado_llamada?:number;
+  estado_llamada?:any;
   propietario: string; // p.nombre_completo
   numero_telefono: string; // pe.numero_telefono
   fecha_contrato_recibido: string | null; // c.fecha_contrato_recibido
@@ -28,6 +31,7 @@ export type LlamadasRowDetalle = {
 
 export type LlamadaType = {
   fecha_bienvenida?: string | null;
+  id_estado_llamada?:number | null;
   curso_llamada?: string | null;
   observacion?: string | null;
   fecha_seguimiento_llamada?: string | null;
@@ -89,8 +93,10 @@ export async function agregarObservacionLlamada(
  */
 export async function insertarLlamada(
   record: Omit<LlamadaType, 'id'>,id_propiedad_propietario:number
-): Promise<LlamadaType> {
+): Promise<any>{
   const supabase = createClient();
+
+  console.log(record)
 
   // 1. Insertar la llamada y obtener el registro insertado con su nuevo id
   const { data, error } = await supabase
@@ -108,6 +114,7 @@ export async function insertarLlamada(
   // Ajusta estos nombres según tu modelo real.
 
   if (id_propiedad_propietario) {
+    
     const { error: updateError } = await supabase
       .from('propiedad_propietario')
       .update({ id_llamada: data.id }) // <-- ajusta 'llamada_id' según tu schema
@@ -117,6 +124,6 @@ export async function insertarLlamada(
     if (updateError) throw new Error(updateError.message);
   }
 
-  return data;
+  return {data,id_propiedad_propietario} ;
 }
 

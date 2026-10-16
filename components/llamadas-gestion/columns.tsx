@@ -3,6 +3,8 @@
 import type { LegacyColumnDef } from "@tanstack/react-table/legacy"
 import { DataTableColumnHeader } from "@/components/data-table"
 import { LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas"
+import { Badge, BadgeVariant } from "../ui/badge"
+
 
 function formatCell(value: unknown) {
   if (value === null || value === undefined || value === "") return "--"
@@ -10,15 +12,15 @@ function formatCell(value: unknown) {
 }
 
 export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="id" />
-    ),
-    cell: ({ row }) => (
-      <span className="font-mono">{formatCell(row.getValue("id"))}</span>
-    ),
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="id" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <span className="font-mono">{formatCell(row.getValue("id"))}</span>
+  //   ),
+  // },
   {
     accessorKey: "id_remax",
     // id_remax es numérico: el filtro automático usaría "inNumberRange".
@@ -38,13 +40,59 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     ),
   },
   {
-    accessorKey: "asociado",
+    accessorKey: "propietario",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Asociado" />
+      <DataTableColumnHeader column={column} title="Propietario" />
     ),
-    cell: ({ row }) => (
-      <span className="font-mono">{formatCell(row.getValue("asociado"))}</span>
+    cell: ({ row }) => formatCell(row.getValue("propietario")),
+  },
+   {
+     accessorKey: "fecha_contrato_recibido",
+     header: ({ column }) => (
+       <DataTableColumnHeader column={column} title="Fecha Contrato Recibido" />
+     ),
+     cell: ({ row }) => {
+       const value = row.getValue("fecha_contrato_recibido");
+       if (!value) return "";
+       const date: any =
+         typeof value === "string" || typeof value === "number"
+           ? new Date(value)
+           : value;
+       // Cálculo de días pasados
+       const now = new Date();
+       // Limpiar HH:MM:SS para ambos para obtener solo días completos
+       const msPerDay = 1000 * 60 * 60 * 24;
+       const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+       const diff = Math.floor((end.getTime() - start.getTime()) / msPerDay);
+       return (
+         <span className="flex items-center gap-2">
+           {date.toLocaleDateString()}
+           <Badge variant="outline" className="ml-1">
+             {diff} días
+           </Badge>
+         </span>
+       );
+     },
+   },
+  {
+    accessorKey: "estado_llamada",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Estado Llamada" />
     ),
+    cell: ({ row }) => {
+      const value = row.getValue("estado_llamada");
+    //  const color:BadgeVariant = row.getValue("color") || "default";
+      const color:BadgeVariant = row?.original?.color as BadgeVariant || "default"
+      if (!value) return null;
+      return (
+        <>
+        <Badge variant={color}>
+            {formatCell(value)}
+        </Badge>
+        </>
+      );
+    },
   },
   {
     accessorKey: "tipo_propiedad",
@@ -77,32 +125,11 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     cell: ({ row }) => formatCell(row.getValue("modalidad")),
   },
   {
-    accessorKey: "propietario",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Propietario" />
-    ),
-    cell: ({ row }) => formatCell(row.getValue("propietario")),
-  },
-  {
     accessorKey: "numero_telefono",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Numero de Telefono" />
     ),
     cell: ({ row }) => formatCell(row.getValue("numero_telefono")),
-  },
-  {
-    accessorKey: "fecha_contrato_recibido",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Fecha Contrato Recibido" />
-    ),
-    cell: ({ row }) => {
-        const value = row.getValue("fecha_contrato_recibido");
-        if (!value) return "";
-        const date: any = typeof value === "string" || typeof value === "number"
-          ? new Date(value)
-          : value;
-        return date.toLocaleDateString();
-    },
   },
   {
     accessorKey: "fecha_bienvenida",
@@ -117,40 +144,5 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
           : value; // fallback if already Date
         return date.toLocaleDateString();
     },
-  },
-  {
-    accessorKey: "curso_llamada",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Curso de Llamada" />
-    ),
-    cell: ({ row }) => formatCell(row.getValue("curso_llamada")),
-  },
-  {
-    accessorKey: "observacion",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Observacion" />
-    ),
-    cell: ({ row }) => formatCell(row.getValue("observacion")),
-  },
-  {
-    accessorKey: "fecha_seguimiento_llamada",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Fecha de Seguimiento de Llamada" />
-    ),
-    cell: ({ row }) => {
-        const value = row.getValue("fecha_seguimiento_llamada");
-        if (!value) return "";
-        const date: any = typeof value === "string" || typeof value === "number"
-          ? new Date(value)
-          : value; // fallback if already Date
-        return date.toLocaleDateString();
-    },
-  },
-  {
-    accessorKey: "observacion_seguimiento",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Observacion de Seguimiento" />
-    ),
-    cell: ({ row }) => formatCell(row.getValue("observacion_seguimiento")),
-  },
+  }
 ]

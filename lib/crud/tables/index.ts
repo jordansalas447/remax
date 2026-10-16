@@ -39,6 +39,7 @@ import { documentosConfig } from "./documentos";
 import { estado_documentoConfig } from "./estado_documento";
 import { profilesConfig } from "./profiles";
 import { llamadasConfig } from "./llamadas";
+import { estado_llamadaConfig } from "./estado_llamada";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -70,6 +71,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   eventos: eventosConfig,
   multas:multasConfig,
   tipo_multa:tipo_multaConfig,
+  estado_llamada:estado_llamadaConfig,
   tardanzas:tardanzasConfig,
   propiedad_propietario: propiedadPropietarioConfig,
   propietarios: propietariosConfig,

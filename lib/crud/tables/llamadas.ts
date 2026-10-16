@@ -12,5 +12,15 @@ export const llamadasConfig: TableConfig = {
     { name: "observacion", label: "Observacion", type: "textarea" },
     { name: "fecha_seguimiento_llamada", label: "Fecha Seguimiento llamada", type: "datenative" },
     { name: "observacion_seguimiento", label: "Observacion de Seguimiento", type: "textarea" },
+    {
+      name: "id_estado_llamada",
+      label: "Estado Llamada",
+      type: "select",
+      foreignKey: {
+        table: "estado_llamada",
+        valueField: "id",
+        labelField: "estado_llamada",
+      },
+    },
   ],
 };
