@@ -9,16 +9,17 @@ import { PropiedadPropietario } from '@/lib/types/database';
 export type LlamadasRow = Database['public']['Tables']['llamadas']['Row'];
 
 export type LlamadasRowDetalle = {
-  id?:number;
-  id_remax?:string;
-  color?:string;
+  id?: number; // id_propiedad_propietario
+  id_llamada?: number | null;
+  id_remax?: string | number | null;
+  color?: string;
   asociado?: string; // a.nombre_completo
   tipo_propiedad?: string; // tp.tipo_propiedad
   direccion: string; // i.direccion
   tipo_negocio: string; // op.operacion
   modalidad: string; // tc.tipo_contrato
-  id_estado_llamada?:number;
-  estado_llamada?:any;
+  id_estado_llamada?: number;
+  estado_llamada?: any;
   propietario: string; // p.nombre_completo
   numero_telefono: string; // pe.numero_telefono
   fecha_contrato_recibido: string | null; // c.fecha_contrato_recibido
@@ -27,11 +28,13 @@ export type LlamadasRowDetalle = {
   observacion: string | null; // l.observacion
   fecha_seguimiento_llamada: string | null; // l.fecha_seguimiento_llamada
   observacion_seguimiento: string | null; // l.observacion_seguimiento
+  id_seguimiento?: number | null;
+  eliminado?: boolean;
 };
 
 export type LlamadaType = {
   fecha_bienvenida?: string | null;
-  id_estado_llamada?:number | null;
+  id_estado_llamada?: number | null;
   curso_llamada?: string | null;
   observacion?: string | null;
   fecha_seguimiento_llamada?: string | null;
@@ -41,18 +44,29 @@ export type LlamadaType = {
   id?: number;
 }
 
-
-
-export async function getLlamadasPropietarios(id_asociado?: {}): Promise<any[]> {
+export async function getLlamadasPropietarios(id_asociado?: {}): Promise<LlamadasRowDetalle[]> {
   const supabase = createClient();
-  let query = supabase
+  const query = supabase
     .from('vista_llamadas_propietarios')
     .select('*')
     .order('asociado', { ascending: true });
 
-  const { data, error } = await query;
-  if (error) throw new Error(error.message);
-  return data ?? [];
+  const [viewRes, propRes] = await Promise.all([
+    query,
+    supabase
+      .from('propiedad_propietario')
+      .select('id, id_llamada')
+      .not('id_llamada', 'is', null)
+  ]);
+
+  if (viewRes.error) throw new Error(viewRes.error.message);
+
+  const llamadaMap = new Map((propRes.data ?? []).map((p) => [p.id, p.id_llamada]));
+
+  return (viewRes.data ?? []).map((item) => ({
+    ...item,
+    id_llamada: item.id ? (llamadaMap.get(item.id) ?? null) : null,
+  })) as LlamadasRowDetalle[];
 }
 
 /**
@@ -82,48 +96,95 @@ export async function agregarObservacionLlamada(
   return observacion;
 }
 
-
 /**
- * Inserta un nuevo registro en la tabla 'llamadas'.
- * Luego, obtiene el id del registro insertado y actualiza la tabla 'propiedad_propietario'
- * para referenciar la nueva llamada creada, asociándola probablemente mediante la llave foránea indicada por negocio.
- * 
- * @param record Los datos para insertar una nueva llamada (sin el id)
- * @returns El registro completo insertado en 'llamadas'
+ * Actualiza directamente un registro existente en la tabla 'llamadas'.
  */
-export async function insertarLlamada(
-  record: Omit<LlamadaType, 'id'>,id_propiedad_propietario:number
-): Promise<any>{
+export async function actualizarLlamada(
+  idLlamada: number,
+  record: Omit<LlamadaType, 'id'>
+): Promise<any> {
   const supabase = createClient();
-
-  console.log(record)
-
-  // 1. Insertar la llamada y obtener el registro insertado con su nuevo id
   const { data, error } = await supabase
     .from('llamadas')
-    .insert([record])
+    .update(record)
+    .eq('id', idLlamada)
     .select()
     .maybeSingle();
 
   if (error) throw new Error(error.message);
-  if (!data) throw new Error('Failed to create Llamadas');
+  return data;
+}
 
-  // 2. Actualizar la tabla propiedad_propietario con el nuevo id de llamada
-  // NOTA: Debes cambiar 'id_propiedad_propietario' por el campo correcto para hacer la relación
-  // y 'llamada_id' por el campo de la tabla 'propiedad_propietario' que debe actualizarse.
-  // Ajusta estos nombres según tu modelo real.
+/**
+ * Inserta o actualiza un registro en la tabla 'llamadas'.
+ * Si ya existe id_llamada (o propiedad_propietario ya tiene uno asociado), lo edita.
+ * Si no existe, crea una nueva llamada y la enlaza a 'propiedad_propietario'.
+ */
+export async function guardarLlamada(
+  record: Omit<LlamadaType, 'id'>,
+  idPropiedadPropietario: number,
+  idLlamadaExistente?: number | null
+): Promise<{ data: any; id_propiedad_propietario: number }> {
+  const supabase = createClient();
+  let targetIdLlamada = idLlamadaExistente;
 
-  if (id_propiedad_propietario) {
-    
-    const { error: updateError } = await supabase
+  // Si no tenemos id_llamada explícito, verificamos en propiedad_propietario
+  if (!targetIdLlamada && idPropiedadPropietario) {
+    const { data: propData } = await supabase
       .from('propiedad_propietario')
-      .update({ id_llamada: data.id }) // <-- ajusta 'llamada_id' según tu schema
-      .eq('id', id_propiedad_propietario) // <-- ajusta 'id_propiedad_propietario' y 'id' según tu schema
-      .limit(1);
+      .select('id_llamada')
+      .eq('id', idPropiedadPropietario)
+      .maybeSingle();
 
-    if (updateError) throw new Error(updateError.message);
+    if (propData?.id_llamada) {
+      targetIdLlamada = propData.id_llamada;
+    }
   }
 
-  return {data,id_propiedad_propietario} ;
+  if (targetIdLlamada) {
+    // Modo EDITAR: Actualizar la llamada existente
+    const { data, error } = await supabase
+      .from('llamadas')
+      .update(record)
+      .eq('id', targetIdLlamada)
+      .select()
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    return { data, id_propiedad_propietario: idPropiedadPropietario };
+  } else {
+    // Modo INSERTAR: Crear registro nuevo en 'llamadas'
+    const { data, error } = await supabase
+      .from('llamadas')
+      .insert([record])
+      .select()
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    if (!data) throw new Error('No se pudo crear la llamada.');
+
+    if (idPropiedadPropietario) {
+      const { error: updateError } = await supabase
+        .from('propiedad_propietario')
+        .update({ id_llamada: data.id })
+        .eq('id', idPropiedadPropietario)
+        .limit(1);
+
+      if (updateError) throw new Error(updateError.message);
+    }
+
+    return { data, id_propiedad_propietario: idPropiedadPropietario };
+  }
 }
+
+/**
+ * Inserta un nuevo registro en la tabla 'llamadas' (mantenido por retrocompatibilidad).
+ */
+export async function insertarLlamada(
+  record: Omit<LlamadaType, 'id'>,
+  id_propiedad_propietario: number
+): Promise<any> {
+  return guardarLlamada(record, id_propiedad_propietario);
+}
+
 

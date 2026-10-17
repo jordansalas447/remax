@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Loader2Icon, MessageSquarePlusIcon } from "lucide-react"
+import { Loader2Icon, MessageSquarePlusIcon, PencilIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,13 +14,14 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import {
   LlamadaType,
-  insertarLlamada,
+  LlamadasRowDetalle,
+  guardarLlamada,
 } from "@/lib/supabase/queries/llamadas"
 import { NativeSelect } from "../ui/native-select"
 import { EstadoLlamadas } from "@/lib/supabase/queries/estado_llamada"
 
 type DialogNuevaObservacionProps = {
-  llamada: LlamadaType | null
+  llamada: (LlamadasRowDetalle & LlamadaType) | null
   estadollamadas: EstadoLlamadas[] | []
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -29,7 +30,7 @@ type DialogNuevaObservacionProps = {
 
 // Helper para formatear fechas a ISO 8601 UTC explícito (con "Z")
 function toUtcIsoString(date: Date | null): string | null {
-  if (!date) return null
+  if (!date || isNaN(date.getTime())) return null
   return date.toISOString()
 }
 
@@ -56,23 +57,75 @@ export function DialogNuevaObservacion({
   // Fecha de seguimiento solo se pone cuando hay texto en observacion de seguimiento
   const [fechaSeguimientoLlamada, setFechaSeguimientoLlamada] = React.useState<Date | null>(null)
 
-  React.useEffect(() => {
-    if (open) {
-      setCursoLlamada("")
-      setObservacion("")
-      setObservacionSeguimiento("")
-      setIdSeguimiento("")
-      setEliminado(false)
-      setEstadoLlamada("")
-      setError(null)
-      setGuardando(false)
-      setFechaBienvenida(new Date())
-      setFechaSeguimientoLlamada(null)
-    }
-  }, [open])
+  // Determinar si ya existe un registro de llamada asociado a este inmueble/propietario
+  const esEdicion = Boolean(
+    llamada?.id_llamada ||
+    llamada?.curso_llamada?.trim() ||
+    llamada?.observacion?.trim() ||
+    llamada?.observacion_seguimiento?.trim() ||
+    llamada?.fecha_bienvenida ||
+    llamada?.estado_llamada
+  )
 
   React.useEffect(() => {
-    // Cuando hay texto en observacionSeguimiento y aún no hay fechaSeguimiento, la setea
+    if (open && llamada) {
+      if (esEdicion) {
+        // Cargar datos existentes para editar
+        setCursoLlamada(llamada.curso_llamada || "")
+        setObservacion(llamada.observacion || "")
+        setObservacionSeguimiento(llamada.observacion_seguimiento || "")
+        setIdSeguimiento(llamada.id_seguimiento ? String(llamada.id_seguimiento) : "")
+        setEliminado(Boolean((llamada as any).eliminado))
+
+        // Determinar ID del estado de la llamada
+        let matchedEstadoId = ""
+        if (llamada.id_estado_llamada) {
+          matchedEstadoId = String(llamada.id_estado_llamada)
+        } else if (llamada.estado_llamada) {
+          const found = estadollamadas.find(
+            (opt) =>
+              opt.estado_llamada?.trim().toLowerCase() ===
+              String(llamada.estado_llamada).trim().toLowerCase()
+          )
+          if (found) {
+            matchedEstadoId = String(found.id)
+          }
+        }
+        setEstadoLlamada(matchedEstadoId)
+
+        // Fechas existentes
+        if (llamada.fecha_bienvenida) {
+          const d = new Date(llamada.fecha_bienvenida)
+          setFechaBienvenida(isNaN(d.getTime()) ? new Date() : d)
+        } else {
+          setFechaBienvenida(new Date())
+        }
+
+        if (llamada.fecha_seguimiento_llamada) {
+          const d = new Date(llamada.fecha_seguimiento_llamada)
+          setFechaSeguimientoLlamada(isNaN(d.getTime()) ? null : d)
+        } else {
+          setFechaSeguimientoLlamada(null)
+        }
+      } else {
+        // Modo nuevo: campos vacíos
+        setCursoLlamada("")
+        setObservacion("")
+        setObservacionSeguimiento("")
+        setIdSeguimiento("")
+        setEliminado(false)
+        setEstadoLlamada("")
+        setFechaBienvenida(new Date())
+        setFechaSeguimientoLlamada(null)
+      }
+
+      setError(null)
+      setGuardando(false)
+    }
+  }, [open, llamada, esEdicion, estadollamadas])
+
+  React.useEffect(() => {
+    // Si hay texto en seguimiento y no hay fecha registrada aún, asignar fecha actual
     if (observacionSeguimiento.trim() && !fechaSeguimientoLlamada) {
       setFechaSeguimientoLlamada(new Date())
     }
@@ -84,13 +137,13 @@ export function DialogNuevaObservacion({
   if (!llamada) return null
 
   const handleGuardar = async () => {
-    // Validación mínima: al menos observación debe tener algo y estadoLlamada debe estar seleccionado
+    // Validación mínima: al menos observación o curso de llamada y estado seleccionado
     if (
       !cursoLlamada.trim() &&
       !observacion.trim() &&
       !observacionSeguimiento.trim()
     ) {
-      setError("Debes completar al menos un campo para guardar.")
+      setError("Debes completar al menos un campo de observación o curso de llamada.")
       return
     }
     if (!estadoLlamada) {
@@ -103,7 +156,7 @@ export function DialogNuevaObservacion({
       setError(null)
 
       // Armar el registro según los campos dados
-      const record: LlamadaType = {
+      const record: Omit<LlamadaType, 'id'> = {
         fecha_bienvenida: toUtcIsoString(fechaBienvenida),
         curso_llamada: cursoLlamada || null,
         observacion: observacion || null,
@@ -111,15 +164,23 @@ export function DialogNuevaObservacion({
         observacion_seguimiento: observacionSeguimiento || null,
         id_seguimiento: idSeguimiento ? Number(idSeguimiento) : null,
         eliminado: eliminado ? true : false,
-        id_estado_llamada: Number(estadoLlamada)
+        id_estado_llamada: Number(estadoLlamada),
       }
 
-      console.log(record)
-
       const idPropiedadPropietario = (llamada as any)?.id ?? 0
-      const { nuevaLlamada, id_propiedad_propietario } = await insertarLlamada(record, idPropiedadPropietario)
+      const idLlamadaExistente = (llamada as any)?.id_llamada ?? null
+
+      const { data: llamadaGuardada, id_propiedad_propietario } = await guardarLlamada(
+        record,
+        idPropiedadPropietario,
+        idLlamadaExistente
+      )
+
       if (onObservacionGuardada) {
-        onObservacionGuardada(id_propiedad_propietario || 0, record)
+        onObservacionGuardada(id_propiedad_propietario || idPropiedadPropietario, {
+          ...record,
+          id: llamadaGuardada?.id ?? idLlamadaExistente ?? undefined,
+        })
       }
 
       onOpenChange(false)
@@ -135,24 +196,38 @@ export function DialogNuevaObservacion({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base">
-            <MessageSquarePlusIcon className="size-5 text-primary" />
-            <span>Nueva gestión / llamada</span>
+            {esEdicion ? (
+              <PencilIcon className="size-5 text-primary" />
+            ) : (
+              <MessageSquarePlusIcon className="size-5 text-primary" />
+            )}
+            <span>
+              {esEdicion ? "Editar gestión / llamada" : "Nueva gestión / llamada"}
+            </span>
           </DialogTitle>
+          <div className="text-xs text-muted-foreground mt-0.5">
+            {llamada.id_remax && (
+              <span className="font-semibold text-foreground">
+                ID REMAX #{llamada.id_remax}
+              </span>
+            )}
+            {llamada.propietario && ` • ${llamada.propietario}`}
+            {llamada.numero_telefono && ` • Tel: ${llamada.numero_telefono}`}
+          </div>
         </DialogHeader>
 
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault()
             handleGuardar()
           }}
         >
           <div className="space-y-3 py-2">
-
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-foreground">Curso de llamada</label>
               <Textarea
                 value={cursoLlamada}
-                onChange={e => setCursoLlamada(e.target.value)}
+                onChange={(e) => setCursoLlamada(e.target.value)}
                 placeholder="Describe brevemente el curso de la llamada"
                 className="min-h-16 text-sm"
               />
@@ -162,7 +237,7 @@ export function DialogNuevaObservacion({
               <label className="text-xs font-medium text-foreground">Observación</label>
               <Textarea
                 value={observacion}
-                onChange={e => setObservacion(e.target.value)}
+                onChange={(e) => setObservacion(e.target.value)}
                 placeholder="Ingresa la observación principal..."
                 className="min-h-20 text-sm"
               />
@@ -174,25 +249,27 @@ export function DialogNuevaObservacion({
               </label>
               <Textarea
                 value={observacionSeguimiento}
-                onChange={e => setObservacionSeguimiento(e.target.value)}
+                onChange={(e) => setObservacionSeguimiento(e.target.value)}
                 placeholder="Observación para seguimiento (opcional)..."
                 className="min-h-20 text-sm"
               />
               {fechaSeguimientoLlamada && (
                 <p className="text-xs text-muted-foreground">
                   Fecha seguimiento:{" "}
-                  {fechaSeguimientoLlamada.toLocaleString("en-GB", {
+                  {new Date(fechaSeguimientoLlamada.getTime() - 5 * 60 * 60 * 1000).toLocaleString("es-PE", {
                     timeZone: "UTC",
                     year: "numeric",
                     month: "2-digit",
                     day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                  })} UTC
+                    // hour: "2-digit",
+                    // minute: "2-digit",
+                    // second: "2-digit",
+                  })}
                 </p>
               )}
+
             </div>
+
             <div>
               <label className="text-xs font-medium text-foreground">Estado Llamada</label>
               <NativeSelect
@@ -210,46 +287,22 @@ export function DialogNuevaObservacion({
                 ))}
               </NativeSelect>
             </div>
-            {/* Si necesitas campos adicionales, descomenta los siguientes: 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-foreground">
-                ID Seguimiento (opcional)
-              </label>
-              <input
-                type="number"
-                min={1}
-                className="w-full border rounded text-sm px-2 py-1"
-                value={idSeguimiento}
-                onChange={e => setIdSeguimiento(e.target.value)}
-              />
-            </div>
-
-            <div className="flex items-center gap-2 pt-2">
-              <input
-                type="checkbox"
-                checked={eliminado}
-                onChange={e => setEliminado(e.target.checked)}
-                id="eliminado"
-              />
-              <label htmlFor="eliminado" className="text-xs text-foreground">
-                Eliminado
-              </label>
-            </div> */}
 
             <div className="flex flex-col space-y-1 text-xs text-muted-foreground">
               <div>
                 <strong>Fecha de bienvenida:</strong>{" "}
                 {fechaBienvenida
-                  ? fechaBienvenida.toLocaleString("en-GB", {
-                    timeZone: "UTC",
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                  }) + " UTC"
+                  ? new Date(fechaBienvenida.getTime() - 5 * 60 * 60 * 1000).toLocaleString("es-PE", {
+                      timeZone: "UTC",
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      // hour: "2-digit",
+                      // minute: "2-digit",
+                      // second: "2-digit",
+                    })
                   : "Se generará automáticamente"}
+             
               </div>
             </div>
 
@@ -266,16 +319,14 @@ export function DialogNuevaObservacion({
             >
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              size="sm"
-              disabled={guardando}
-            >
+            <Button type="submit" size="sm" disabled={guardando}>
               {guardando ? (
                 <>
                   <Loader2Icon className="mr-1.5 size-3.5 animate-spin" />
-                  Guardando...
+                  {esEdicion ? "Actualizando..." : "Guardando..."}
                 </>
+              ) : esEdicion ? (
+                "Guardar cambios"
               ) : (
                 "Guardar"
               )}
@@ -286,3 +337,4 @@ export function DialogNuevaObservacion({
     </Dialog>
   )
 }
+

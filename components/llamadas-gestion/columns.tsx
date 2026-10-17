@@ -75,6 +75,13 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
        );
      },
    },
+   {
+    accessorKey: "numero_telefono",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Numero de Telefono" />
+    ),
+    cell: ({ row }) => formatCell(row.getValue("numero_telefono")),
+  },
   {
     accessorKey: "estado_llamada",
     header: ({ column }) => (
@@ -123,13 +130,6 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
       <DataTableColumnHeader column={column} title="Tipo de Contrato / Modalidad" />
     ),
     cell: ({ row }) => formatCell(row.getValue("modalidad")),
-  },
-  {
-    accessorKey: "numero_telefono",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Numero de Telefono" />
-    ),
-    cell: ({ row }) => formatCell(row.getValue("numero_telefono")),
   },
   {
     accessorKey: "fecha_bienvenida",

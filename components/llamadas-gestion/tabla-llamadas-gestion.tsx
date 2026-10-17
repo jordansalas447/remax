@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MessageSquarePlusIcon } from "lucide-react"
+import { MessageSquarePlusIcon, PencilIcon } from "lucide-react"
 
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,7 @@ interface TablaLlamadasGestionProps {
 
 export default function TablaLlamadasGestion({
   Llamadas,
-  EstadoLlamadas
+  EstadoLlamadas,
 }: TablaLlamadasGestionProps) {
   const [data, setData] = React.useState<LlamadasRowDetalle[]>(Llamadas)
   const [llamadaSeleccionada, setLlamadaSeleccionada] =
@@ -31,28 +31,45 @@ export default function TablaLlamadasGestion({
     setData(Llamadas)
   }, [Llamadas])
 
-  const handleObservacionGuardada = (
-    id: number,
-    record: LlamadaType
-  ) => {
-
-    console.log(id,record)
-
-    console.log(data)
+  const handleObservacionGuardada = (id: number, record: LlamadaType) => {
+    const estadoObj = EstadoLlamadas.find((e) => e.id === record.id_estado_llamada)
 
     setData((prev) =>
       prev.map((item) =>
         item.id === id
-          ? { ...item, 
-            observacion: record.observacion || "",
-            observacion_seguimiento:record.observacion_seguimiento || "",
-            curso_llamada:record.curso_llamada || "",
-            id_estado_llamada:record.id_estado_llamada || 0,
-            estado_llamada:EstadoLlamadas.find(id => id.id === record.id_estado_llamada)?.estado_llamada,
-            color:EstadoLlamadas.find(id => id.id === record.id_estado_llamada)?.color || "default"
-          }
+          ? {
+              ...item,
+              id_llamada: record.id ?? item.id_llamada,
+              observacion: record.observacion || "",
+              observacion_seguimiento: record.observacion_seguimiento || "",
+              curso_llamada: record.curso_llamada || "",
+              id_estado_llamada: record.id_estado_llamada || 0,
+              estado_llamada: estadoObj?.estado_llamada || item.estado_llamada,
+              color: estadoObj?.color || "default",
+              fecha_bienvenida: record.fecha_bienvenida ?? item.fecha_bienvenida,
+              fecha_seguimiento_llamada:
+                record.fecha_seguimiento_llamada ?? item.fecha_seguimiento_llamada,
+            }
           : item
       )
+    )
+
+    setLlamadaSeleccionada((prev) =>
+      prev && prev.id === id
+        ? {
+            ...prev,
+            id_llamada: record.id ?? prev.id_llamada,
+            observacion: record.observacion || "",
+            observacion_seguimiento: record.observacion_seguimiento || "",
+            curso_llamada: record.curso_llamada || "",
+            id_estado_llamada: record.id_estado_llamada || 0,
+            estado_llamada: estadoObj?.estado_llamada || prev.estado_llamada,
+            color: estadoObj?.color || "default",
+            fecha_bienvenida: record.fecha_bienvenida ?? prev.fecha_bienvenida,
+            fecha_seguimiento_llamada:
+              record.fecha_seguimiento_llamada ?? prev.fecha_seguimiento_llamada,
+          }
+        : prev
     )
   }
 
@@ -73,32 +90,56 @@ export default function TablaLlamadasGestion({
         initialColumnPinning={{
           start: ["id_remax"],
         }}
-        // 2. Botón "+ Observación" en la columna de acciones de la tabla
+        // 2. Botón "+ Observación" / "Editar gestión" en la columna de acciones de la tabla
         rowActionsHeader="Acciones"
         rowActionsSize={140}
         pinRowActions={true}
-        rowActions={(row) => (
-          <Button
-            type="button"
-            variant="outline"
-            size="xs"
-            onClick={() => handleAbrirDialogObservacion(row.original)}
-            className="gap-1 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary"
-          >
-            <MessageSquarePlusIcon className="size-3.5" />
-            <span>Observación</span>
-          </Button>
-        )}
+        rowActions={(row) => {
+          const tieneObservacion = Boolean(
+            row.original.id_llamada ||
+            row.original.curso_llamada?.trim() ||
+            row.original.observacion?.trim() ||
+            row.original.observacion_seguimiento?.trim() ||
+            row.original.estado_llamada
+          )
+
+          return (
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              onClick={() => handleAbrirDialogObservacion(row.original)}
+              className={
+                tieneObservacion
+                  ? "gap-1 border-primary/40 text-primary hover:bg-primary/10"
+                  : "gap-1 border-emerald-500/40 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+              }
+            >
+              {tieneObservacion ? (
+                <>
+                  <PencilIcon className="size-3.5" />
+                  <span>Editar gestión</span>
+                </>
+              ) : (
+                <>
+                  <MessageSquarePlusIcon className="size-3.5" />
+                  <span>Observación</span>
+                </>
+              )}
+            </Button>
+          )
+        }}
         // 3. Sub campo inmediatamente después del registro
         renderSubRow={(row) => (
           <SubcampoLlamada
             llamada={row.original}
             onObservacionGuardada={handleObservacionGuardada}
+            onEditar={handleAbrirDialogObservacion}
           />
         )}
       />
 
-      {/* Modal para agregar observación */}
+      {/* Modal para agregar o editar observación */}
       <DialogNuevaObservacion
         llamada={llamadaSeleccionada}
         estadollamadas={EstadoLlamadas}
@@ -109,3 +150,4 @@ export default function TablaLlamadasGestion({
     </div>
   )
 }
+
