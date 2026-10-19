@@ -83,6 +83,13 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     cell: ({ row }) => formatCell(row.getValue("numero_telefono")),
   },
   {
+    accessorKey: "conformidad",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Conformidad" />
+    ),
+    cell: ({ row }) => formatCell(row.getValue("conformidad")),
+  },
+  {
     accessorKey: "estado_llamada",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Estado Llamada" />
