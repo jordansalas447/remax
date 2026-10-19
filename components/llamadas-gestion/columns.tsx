@@ -102,6 +102,15 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     },
   },
   {
+    accessorKey: "asociado",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Asociado" />
+    ),
+    cell: ({ row }) => (
+      <span className="font-mono">{formatCell(row.getValue("asociado"))}</span>
+    ),
+  },
+  {
     accessorKey: "tipo_propiedad",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Tipo de Propiedad" />

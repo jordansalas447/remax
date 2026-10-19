@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MessageSquarePlusIcon, PencilIcon } from "lucide-react"
+import { Download, MessageSquarePlusIcon, PencilIcon } from "lucide-react"
 
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,8 @@ import { columns } from "./columns"
 import { DialogNuevaObservacion } from "./dialog-nueva-observacion"
 import { SubcampoLlamada } from "./subcampo-llamada"
 import { EstadoLlamadas } from "@/lib/supabase/queries/estado_llamada"
+
+import * as XLSX from "xlsx";
 
 interface TablaLlamadasGestionProps {
   Llamadas: LlamadasRowDetalle[]
@@ -73,6 +75,47 @@ export default function TablaLlamadasGestion({
     )
   }
 
+    // Función para exportar los datos a Excel usando la librería XLSX
+  function ExportarExcel(llamadas:LlamadasRowDetalle[]) {
+
+  }
+
+  const handleExport = () => {
+      // Preparar los datos que aparecerán en Excel
+      const datos = Llamadas.map((p:LlamadasRowDetalle) => ({
+        "ID": p.id_remax,
+        "AGENTE":p.asociado,
+        "TIPO DE PROPIEDAD": p.tipo_propiedad,
+        "DIRECCIÓN":p.direccion,
+        "TIPO DE NEGOCIO":p.tipo_negocio,
+        "MODALIDAD":p.modalidad,
+        "PROPIETARIOS":p.propietario,
+        "NUMERO TELEFONO":p.numero_telefono,
+        "FECHA LLAMADA BIENVENIDA": p.fecha_bienvenida
+          ? new Date(new Date(p.fecha_bienvenida).getTime() - 5 * 60 * 60 * 1000).toISOString().slice(0, 10)
+          : "",
+   
+        "FECHA CONTRATO RECIBIDO": p.fecha_contrato_recibido,
+        "ESTADO LLAMADA":p.estado_llamada,
+        "CURSO DE LLAMADA":p.curso_llamada,
+        "OBSERVACIONES":p.observacion,
+        "FECHA LLAMADA DE SEGUIMIENTO":p.fecha_seguimiento_llamada,
+        "OBSERVACION DE SEGUIMIENTO":p.observacion_seguimiento
+      }));
+  
+      // Crear una hoja de Excel
+      const hoja = XLSX.utils.json_to_sheet(datos);
+  
+      // Crear el libro
+      const libro = XLSX.utils.book_new();
+  
+      // Agregar la hoja al libro
+      XLSX.utils.book_append_sheet(libro, hoja, "llamadas");
+  
+      // Descargar el archivo
+      XLSX.writeFile(libro, "llamadas.xlsx");
+  };
+
   const handleAbrirDialogObservacion = (llamada: LlamadasRowDetalle) => {
     setLlamadaSeleccionada(llamada)
     setDialogOpen(true)
@@ -80,6 +123,17 @@ export default function TablaLlamadasGestion({
 
   return (
     <div className="rounded-lg border bg-white p-6 shadow-xs">
+      <div className="mb-4 flex justify-end">
+        <button
+          className="flex items-center gap-2 rounded bg-emerald-500 px-4 py-2 text-white font-semibold shadow hover:bg-emerald-600 transition-colors"
+          // Aquí puedes definir el handler de exportación, por ahora solo un alert como placeholder
+          onClick={() => handleExport()}
+        >
+          {/* Icono download, puedes cambiar por cualquiera de lucide-react o FontAwesome */}
+          <Download/>
+          <span>Exportar</span>
+        </button>
+      </div>
       <DataTable
         columns={columns}
         data={data}
