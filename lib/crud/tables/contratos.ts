@@ -118,7 +118,6 @@ export const contratosConfig: TableConfig = {
       name: "id_tipo_moneda",
       label: "Medición / Moneda Precio Acordado",
       type: "select",
-      required:true,
       selectplus: false,
       foreignKey: {
         table: "tipo_moneda",
@@ -126,7 +125,7 @@ export const contratosConfig: TableConfig = {
         labelField: "tipo_moneda",
       },
     },
-    { name: "precio_inicio", label: "Precio Acordado", type: "number", required:true },
+    { name: "precio_inicio", label: "Precio Acordado", type: "number" },
     { name: "fecha_inicio", label: "Fecha inicio", type: "datenative", required:true },
     {
       name: "id_tipo_moneda_precio_venta",
@@ -144,7 +143,6 @@ export const contratosConfig: TableConfig = {
     {
       name: "id_tipo_moneda_comision",
       label: "Medición / Moneda Comisión",
-      required:true,
       type: "select",
       selectplus: false,
       foreignKey: {
