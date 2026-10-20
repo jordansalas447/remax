@@ -57,7 +57,6 @@ export const propiedadPropietarioConfig: TableConfig = {
       label: "Llamada",
       type: "textplus",
       selectplus:true,
-      required: true,
       foreignKey: {
         table: "llamadas",
         valueField: "id",
