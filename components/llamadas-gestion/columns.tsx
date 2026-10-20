@@ -81,7 +81,13 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
        const diff = Math.floor((end.getTime() - start.getTime()) / msPerDay);
        return (
          <span className="flex items-center gap-2">
-           {date.toLocaleDateString()}
+           {date.toLocaleDateString("es-PE", {
+             timeZone: "UTC",
+             year: "numeric",
+             month: "2-digit",
+             day: "2-digit"
+           })}
+      
            <Badge variant="outline" className="ml-1">
              {diff} días
            </Badge>
@@ -172,7 +178,12 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
         const date: any = typeof value === "string" || typeof value === "number"
           ? new Date(value)
           : value; // fallback if already Date
-        return date.toLocaleDateString();
+        return    date.toLocaleDateString("es-PE", {
+          timeZone: "UTC",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        });
     },
   }
 ]

@@ -63,9 +63,15 @@ export function SubcampoLlamada({
           )}
           {llamada.fecha_contrato_recibido && (
             <span className="inline-flex items-center gap-1">
-              <Calendar className="size-3.5" />
-              {llamada.fecha_contrato_recibido}
+              F.R.<Calendar className="size-3.5" />
+              {new Date(llamada.fecha_contrato_recibido).toLocaleDateString("es-PE", {
+                timeZone: "UTC",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+              })}
             </span>
+       
           )}
         </div>
 
@@ -93,7 +99,12 @@ export function SubcampoLlamada({
             </div>
             {llamada.fecha_bienvenida && (
               <span className="text-[11px] font-normal text-muted-foreground">
-                {new Date(llamada.fecha_bienvenida).toLocaleDateString("es-PE")}
+                F.B: {new Date(llamada.fecha_bienvenida).toLocaleDateString("es-PE",{
+                timeZone: "UTC",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+              })}
               </span>
             )}
           </div>

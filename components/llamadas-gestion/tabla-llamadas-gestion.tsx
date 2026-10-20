@@ -172,12 +172,12 @@ export default function TablaLlamadasGestion({
               {tieneObservacion ? (
                 <>
                   <PencilIcon className="size-3.5" />
-                  <span>Editar gestión</span>
+                  <span>Editar Llamda</span>
                 </>
               ) : (
                 <>
                   <MessageSquarePlusIcon className="size-3.5" />
-                  <span>Observación</span>
+                  <span>Agregar Llamada</span>
                 </>
               )}
             </Button>
