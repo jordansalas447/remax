@@ -32,7 +32,7 @@ export const inmueblesConfig: TableConfig = {
     //   },
     // },
     // { name: "captacion", label: "Captación", type: "date" },
-    { name: "id_remax", label: "ID Sigi", type: "number", required: true },
+    { name: "id_remax", label: "ID Sigi", type: "number"},
     { name: "n_partida", label: "N° Partida", type: "text", required: true },
     { name: "constancia", label: "Constancia", type: "text" , collapsedInForm: true},
     {

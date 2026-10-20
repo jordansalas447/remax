@@ -30,13 +30,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { DataTableToolbar } from "./data-table-toolbar"
+import { DataTableToolbar, type SearchableColumn } from "./data-table-toolbar"
 import { DataTablePagination } from "./data-table-pagination"
 
 /** Ids reservados para las columnas que agrega el propio DataTable. */
 export const EXPAND_COLUMN_ID = "__expandir"
 export const ACTIONS_COLUMN_ID = "__acciones"
-const SYSTEM_COLUMN_IDS = [EXPAND_COLUMN_ID, ACTIONS_COLUMN_ID]
+export const SYSTEM_COLUMN_IDS = [EXPAND_COLUMN_ID, ACTIONS_COLUMN_ID]
 
 type ColumnPinningInput = { start?: string[]; end?: string[] }
 
@@ -45,6 +45,10 @@ interface DataTableProps<TData extends RowData> {
     data: TData[]
     searchKey?: string
     searchPlaceholder?: string
+    /** Columnas disponibles para búsqueda. Si no se pasan, se autodetectan de las columnas filtrables. */
+    searchableColumns?: SearchableColumn[]
+    /** Habilita el selector de columna para buscar. Por defecto `true`. */
+    enableColumnSearchSelect?: boolean
     onRowClick?: (row: TData) => void
 
     /* ---------------- Anclado de columnas ---------------- */
@@ -101,6 +105,8 @@ export function DataTable<TData extends RowData>({
     data,
     searchKey,
     searchPlaceholder = "Buscar...",
+    searchableColumns,
+    enableColumnSearchSelect = true,
     onRowClick,
     enableColumnPinning = false,
     initialColumnPinning,
@@ -246,6 +252,8 @@ export function DataTable<TData extends RowData>({
                 table={table}
                 searchKey={searchKey}
                 searchPlaceholder={searchPlaceholder}
+                searchableColumns={searchableColumns}
+                enableColumnSearchSelect={enableColumnSearchSelect}
             />
 
             <div className="rounded-md border">

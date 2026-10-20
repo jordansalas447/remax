@@ -46,6 +46,20 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => formatCell(row.getValue("propietario")),
   },
+  {
+    accessorKey: "documento_identidad",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Documento Identidad" />
+    ),
+    cell: ({ row }) => formatCell(row.getValue("documento_identidad")),
+  },
+  {
+    accessorKey: "renovacion",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Renovacion" />
+    ),
+    cell: ({ row }) => formatCell(row.getValue("renovacion")),
+  },
    {
      accessorKey: "fecha_contrato_recibido",
      header: ({ column }) => (

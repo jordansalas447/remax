@@ -222,7 +222,25 @@ export function DialogNuevaObservacion({
             handleGuardar()
           }}
         >
+          
           <div className="space-y-3 py-2">
+          <div>
+              <label className="text-xs font-medium text-foreground">Estado Llamada</label>
+              <NativeSelect
+                value={estadoLlamada}
+                onChange={(e) => setEstadoLlamada(e.target.value)}
+                required={true}
+                name="estado_llamada"
+                id="estado_llamada"
+              >
+                <option value="">Seleccionar…</option>
+                {estadollamadas.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.estado_llamada}
+                  </option>
+                ))}
+              </NativeSelect>
+            </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-foreground">Curso de llamada</label>
               <Textarea
@@ -268,24 +286,6 @@ export function DialogNuevaObservacion({
                 </p>
               )}
 
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-foreground">Estado Llamada</label>
-              <NativeSelect
-                value={estadoLlamada}
-                onChange={(e) => setEstadoLlamada(e.target.value)}
-                required={true}
-                name="estado_llamada"
-                id="estado_llamada"
-              >
-                <option value="">Seleccionar…</option>
-                {estadollamadas.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.estado_llamada}
-                  </option>
-                ))}
-              </NativeSelect>
             </div>
 
             <div className="flex flex-col space-y-1 text-xs text-muted-foreground">

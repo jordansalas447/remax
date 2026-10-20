@@ -137,7 +137,7 @@ export default function TablaLlamadasGestion({
       <DataTable
         columns={columns}
         data={data}
-        searchKey="id_remax"
+        searchKey="documento_identidad"
         searchPlaceholder="Filtrar n° id_remax..."
         // 1. Anclado de columnas determinadas (permite anclar/desanclar desde el encabezado)
         enableColumnPinning={true}
