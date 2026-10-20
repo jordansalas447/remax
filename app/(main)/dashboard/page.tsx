@@ -1,62 +1,114 @@
 "use client";
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
+import { getResumenLlamadas, LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas";
+import React, { useEffect, useState } from "react";
 
-const data = [
-  { mes: "Enero", ventas: 120 },
-  { mes: "Febrero", ventas: 180 },
-  { mes: "Marzo", ventas: 150 },
-  { mes: "Abril", ventas: 220 },
-];
+
+
+type ResumenLlamadas = {
+  asociado: string;
+  tipo_propiedad: string | null;
+  direccion: string | null;
+  tipo_negocio: string | null;
+  modalidad: string | null;
+  propietario: string | null;
+  Estado_Llamada: string | null;
+  color: string | null;
+  conformidad: string | null;
+  numero_telefono: string | null;
+  documento_identidad: string | null;
+  fecha_contrato_recibido: string | null;
+  renovacion: string | null;
+  fecha_bienvenida: string | null;
+  curso_llamada: string | null;
+  observacion: string | null;
+  fecha_seguimiento_llamada: string | null;
+  observacion_seguimiento: string | null;
+  fecha_registro: string | null;
+};
 
 export default function DashboardPage() {
+  const [resumen, setResumen] = useState<LlamadasRowDetalle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      try {
+        // This function should perform the query from supabase
+        const data = await getResumenLlamadas();
+        setResumen(data || []);
+      } catch (error: any) {
+        setErrorMsg(error?.message || "Error cargando la información del Dashboard.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
-    <div className="w-full max-w-lxl mx-auto bg-white dark:bg-zinc-900 rounded-2xl shadow-md p-6 my-8">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-blue-300 text-center">
-        Ventas Mensuales
+    <main className="w-full mx-auto bg-white dark:bg-zinc-900 rounded-2xl shadow-md p-6 my-8">
+      <h2 className="text-2xl font-bold mb-6 text-blue-700 dark:text-blue-300 text-center">
+        Dashboard de Llamadas de Propietarios
       </h2>
-      <ResponsiveContainer width="100%" height={320}>
-        <BarChart
-          data={data}
-          margin={{ top: 15, right: 30, left: 0, bottom: 5 }}
-          barCategoryGap={24}
-        >
-          <CartesianGrid strokeDasharray="4 2" stroke="#d6e4ff" />
-          <XAxis
-            dataKey="mes"
-            tick={{ fill: "#64748b", fontWeight: 500 }}
-            axisLine={{ stroke: "#bcccdc" }}
-            tickLine={false}
-          />
-          <YAxis
-            tick={{ fill: "#64748b", fontWeight: 500 }}
-            axisLine={{ stroke: "#bcccdc" }}
-            tickLine={false}
-          />
-          <Tooltip
-            cursor={{ fill: "#e0e7ff66" }}
-            contentStyle={{ borderRadius: 12, background: "#fff", border: "1px solid #d1d5db" }}
-            labelStyle={{ color: "#3b82f6", fontWeight: 600 }}
-            itemStyle={{ color: "#a21caf" }}
-          />
-          <Bar dataKey="ventas" radius={[6, 6, 0, 0]}>
-            {/* Colorful bars per month for visual variety */}
-            <Cell fill="#3b82f6" />  {/* Enero - blue */}
-            <Cell fill="#a21caf" />  {/* Febrero - purple */}
-            <Cell fill="#10b981" />  {/* Marzo - green */}
-            <Cell fill="#f59e42" />  {/* Abril - orange */}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+      {isLoading ? (
+        <div className="text-center text-base py-8">Cargando datos...</div>
+      ) : errorMsg ? (
+        <div className="bg-red-100 text-red-800 p-2 rounded">{errorMsg}</div>
+      ) : resumen.length === 0 ? (
+        <div className="text-gray-600 text-center">No hay datos del dashboard.</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border border-gray-200 text-xs md:text-sm rounded-lg bg-white dark:bg-zinc-800">
+            <thead>
+              <tr className="bg-blue-100 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100">
+                <th className="border px-2 py-1">Asociado</th>
+                <th className="border px-2 py-1">Tipo Propiedad</th>
+                <th className="border px-2 py-1">Dirección</th>
+                <th className="border px-2 py-1">Negocio</th>
+                <th className="border px-2 py-1">Modalidad</th>
+                <th className="border px-2 py-1">Propietario</th>
+                <th className="border px-2 py-1">Estado Llamada</th>
+                <th className="border px-2 py-1">F. Bienvenida</th>
+                <th className="border px-2 py-1">Observación</th>
+                <th className="border px-2 py-1">F. Seguimiento</th>
+                <th className="border px-2 py-1">Obs. Seguimiento</th>
+                <th className="border px-2 py-1">F. Registro</th>
+              </tr>
+            </thead>
+            <tbody>
+              {resumen.map((row, idx) => (
+                <tr key={idx} className="hover:bg-blue-50 dark:hover:bg-zinc-700">
+                  <td className="border px-2 py-1">{row.asociado ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.tipo_propiedad ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.direccion ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.tipo_negocio ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.modalidad ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.propietario ?? "--"}</td>
+                  <td className="border px-2 py-1">
+                    <span
+                      className="font-semibold px-2 py-0.5 rounded"
+                      style={{
+                        backgroundColor: row.color || "#cbd5e1",
+                        color: row.color === "yellow" ? "#78350f" : "#1e293b"
+                      }}
+                    >
+                      {row.Estado_Llamada ?? "Pendiente"}
+                    </span>
+                  </td>           
+                  <td className="border px-2 py-1">{row.fecha_bienvenida ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.observacion ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.fecha_seguimiento_llamada ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.observacion_seguimiento ?? "--"}</td>
+                  <td className="border px-2 py-1">{row.fecha_registro ?? "--"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </main>
   );
 }

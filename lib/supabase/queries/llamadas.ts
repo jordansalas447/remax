@@ -69,6 +69,18 @@ export async function getLlamadasPropietarios(id_asociado?: {}): Promise<Llamada
   })) as LlamadasRowDetalle[];
 }
 
+
+export async function getResumenLlamadas(): Promise<LlamadasRowDetalle[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('vista_resumen_llamadas')
+    .select('*');
+
+  if (error) throw new Error(error.message);
+
+  return data ?? [];
+}
+
 /**
  * Agrega una observación a la llamada (tabla `llamadas`).
  * No reemplaza la observación existente: la nueva se añade en una línea nueva.

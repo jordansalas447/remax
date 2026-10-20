@@ -98,7 +98,7 @@ export function SubcampoLlamada({
               <span>Curso Llamada</span>
             </div>
             {llamada.fecha_bienvenida && (
-              <span className="text-[11px] font-normal text-muted-foreground">
+              <span className="text-[11px] font-bold text-dark">
                 F.B: {new Date(llamada.fecha_bienvenida).toLocaleDateString("es-PE",{
                 timeZone: "UTC",
                 year: "numeric",

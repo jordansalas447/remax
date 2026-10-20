@@ -33,7 +33,7 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
         .includes(String(filterValue ?? "").trim().toLowerCase())
     },
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID REMAX" />
+      <DataTableColumnHeader column={column} title="ID REMAX / REF" />
     ),
     cell: ({ row }) => (
       <span className="font-mono">{formatCell(row.getValue("id_remax"))}</span>
