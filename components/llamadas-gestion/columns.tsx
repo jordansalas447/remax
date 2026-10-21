@@ -66,7 +66,7 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
        <DataTableColumnHeader column={column} title="Fecha Contrato Recibido" />
      ),
      cell: ({ row }) => {
-       const value = row.getValue("fecha_contrato_recibido");
+       const value:Date = row.getValue("fecha_contrato_recibido");
        if (!value) return "";
        const date: any =
          typeof value === "string" || typeof value === "number"
@@ -78,7 +78,7 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
        const msPerDay = 1000 * 60 * 60 * 24;
        const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
        const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-       const diff = Math.floor((end.getTime() - start.getTime()) / msPerDay);
+       const diff = Math.floor((end.getTime() - start.getTime() - 1) / msPerDay);
        return (
          <span className="flex items-center gap-2">
            {date.toLocaleDateString("es-PE", {
@@ -88,7 +88,7 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
              day: "2-digit"
            })}
       
-           <Badge variant="outline" className="ml-1">
+           <Badge variant={diff < 1 ? 'green' : 'red' } className="ml-1">
              {diff} días
            </Badge>
          </span>

@@ -75,11 +75,6 @@ export default function TablaLlamadasGestion({
     )
   }
 
-    // Función para exportar los datos a Excel usando la librería XLSX
-  function ExportarExcel(llamadas:LlamadasRowDetalle[]) {
-
-  }
-
   const handleExport = () => {
       // Preparar los datos que aparecerán en Excel
       const datos = Llamadas.map((p:LlamadasRowDetalle) => ({

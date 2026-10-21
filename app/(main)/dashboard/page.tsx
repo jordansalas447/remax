@@ -29,7 +29,7 @@ export default function DashboardPage() {
   const [resumen, setResumen] = useState<LlamadasRowDetalle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [open, setOpen] = useState(false);
   const [estadoActivo, setEstadoActivo] = useState<string | null>(null);
   const [busqueda, setBusqueda] = useState("");
