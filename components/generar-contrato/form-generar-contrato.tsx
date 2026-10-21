@@ -22,7 +22,7 @@ export default function FormGenerarContrato({
   TipoContratos,
   TipoOperaciones,
   Asociado,
-  onResultado 
+  onResultado
 }: FormularioProps) {
 
   // Estado base inicial del formulario: función para garantizar siempre desde cero
@@ -88,7 +88,7 @@ export default function FormGenerarContrato({
       setEnviando(false);
       setNroContrato(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Asociado]); // dependemos de Asociado para el form inicial de cada vez
 
   // Maneja cambios en el formulario
@@ -129,54 +129,60 @@ export default function FormGenerarContrato({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     setEnviando(true);
 
     try {
+
+    //  value={(() => {
+    //    // Restar 5 horas a la fecha/hora local actual y formatear para input datetime-local
+    //      const date = new Date();
+    //      date.setHours(date.getHours() - 5);
+    //      return date.toISOString().slice(0, 16);
+    //    })()}
+
       const documento = await createDocumentos(form);
 
-     // console.log(documento)
+       const nro = documento.nro_contrato;
 
-      const nro = documento.nro_contrato;
+       const payload: ContratoPDFProps = {
+         nroContrato: nro,
+         nroPropietarios: form.nro_propietarios || 1,
+         tipoContrato: form.id_tipo_contrato || 0,
+         tipoOperacion: form.id_operacion || 0,
+         fecha_generacion: new Date(),
+         id_publico: documento.id_publico || ""
+       };
 
-      const payload: ContratoPDFProps = {
-        nroContrato: nro,
-        nroPropietarios: form.nro_propietarios || 1,
-        tipoContrato:form.id_tipo_contrato || 0,
-        tipoOperacion:form.id_operacion || 0,
-        id_publico: documento.id_publico || ""
-      };
+       const response = await fetch("/api/contratos/generar", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify(payload),
+       });
 
-      const response = await fetch("/api/contratos/generar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+       if (!response.ok) {
+         const errorBody = await response.json().catch(() => null);
+         throw new Error(
+           errorBody?.error ?? "No se pudo generar el PDF del contrato"
+         );
+       }
 
-      if (!response.ok) {
-        const errorBody = await response.json().catch(() => null);
-        throw new Error(
-          errorBody?.error ?? "No se pudo generar el PDF del contrato"
-        );
-      }
+       const blob = await response.blob();
+       const downloadUrl = URL.createObjectURL(blob);
+       const link = document.createElement("a");
+       link.href = downloadUrl;
+       link.download = `contrato-${nro}.pdf`;
+       document.body.appendChild(link);
+       link.click();
+       document.body.removeChild(link);
+       URL.revokeObjectURL(downloadUrl);
 
-      const blob = await response.blob();
-      const downloadUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = `contrato-${nro}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(downloadUrl);
+       onResultado(nro);
+       setNroContrato(nro);
 
-      onResultado(nro);
-      setNroContrato(nro);
-
-      setTimeout(() => {
-        closeDialog();
-        showToast(nro);
-      }, 600);
+       setTimeout(() => {
+         closeDialog();
+         showToast(nro);
+       }, 600);
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
     } finally {
@@ -185,13 +191,13 @@ export default function FormGenerarContrato({
   };
 
 
-  function showToast(NroContrato:string) {
+  function showToast(NroContrato: string) {
     const id = toast.add({
-      title: "Contrato "+ NroContrato +" generado exitosamente ",
+      title: "Contrato " + NroContrato + " generado exitosamente ",
       description: "Tu descarga debería comenzar automáticamente.",
     })
   }
-  
+
   return (
     <div className="max-w-lg">
       <Dialog open={open} onOpenChange={handleDialogOpenChange}>
@@ -248,7 +254,7 @@ export default function FormGenerarContrato({
                     </div>
                   )}
                   <div className="flex justify-end mt-6">
-                    <Button type="button" variant="outline" onClick={closeDialog}>Cancelar      
+                    <Button type="button" variant="outline" onClick={closeDialog}>Cancelar
                     </Button>
                     <Button
                       type="button"
@@ -317,12 +323,13 @@ export default function FormGenerarContrato({
                     id="nro_propietarios"
                     name="nro_propietarios"
                     className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
-                    value={form.nro_propietarios || 0}
+                    value={form.nro_propietarios || 1}
                     min={1}
                     onChange={handleChange}
                     disabled={enviando}
                   />
                 </div>
+
 
                 {/* empresa: checkbox */}
                 <div className="flex items-center gap-3">
@@ -365,7 +372,7 @@ export default function FormGenerarContrato({
                 {/* SUBMIT */}
                 <Button
                   type="submit"
-                  
+
                   disabled={enviando}
                 >
                   {enviando ? (
@@ -381,7 +388,7 @@ export default function FormGenerarContrato({
                     <span>Generar y Descargar</span>
                   )}
                 </Button>
-                <Button type="button" variant="outline" onClick={closeDialog}>Cancelar      
+                <Button type="button" variant="outline" onClick={closeDialog}>Cancelar
                 </Button>
               </form>
             )}

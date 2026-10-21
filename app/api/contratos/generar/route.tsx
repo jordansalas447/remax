@@ -85,6 +85,7 @@ export async function POST(request: Request) {
     logoIzquierdo: LOGO_ADELANTE,
     logoDerecho: LOGO_GLOBO,
     logoMarcadeAgua: LOGO_REMAX_ADELANTE,
+    fecha_generacion:body.fecha_generacion,
     id_publico: body.id_publico,
     qr: qrValue
   };
@@ -92,8 +93,6 @@ export async function POST(request: Request) {
   const tipocontrato = body.tipoContrato;
   const tipoOperacion = body.tipoOperacion;
 
-
-  
  // console.log(tipocontrato,tipoOperacion)
 
   let TipoContratoLabel;
