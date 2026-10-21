@@ -135,7 +135,7 @@ export default function FormGenerarContrato({
     try {
       const documento = await createDocumentos(form);
 
-      console.log(documento)
+     // console.log(documento)
 
       const nro = documento.nro_contrato;
 

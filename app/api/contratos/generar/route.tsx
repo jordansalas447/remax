@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
 
   
-  console.log(tipocontrato,tipoOperacion)
+ // console.log(tipocontrato,tipoOperacion)
 
   let TipoContratoLabel;
 

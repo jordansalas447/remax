@@ -258,7 +258,7 @@ export function FieldInput(props: FieldInputProps) {
       if (found) displayLabel = found.label;
     }
 
-    console.log(showQuickCreateInput)
+    //console.log(showQuickCreateInput)
 
     // El input visible para mostrar/editar el label (NO envía el id internamente)
     const textInput = (

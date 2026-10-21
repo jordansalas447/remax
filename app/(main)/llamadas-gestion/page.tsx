@@ -14,8 +14,6 @@ export default async function LlamadasPage() {
     errorMsg = error.message || 'Error al obtener las llamadas.';
   }
 
-  console.log(llamadas)
-
   return (
     <main className="p-4">
       <TablaLlamadasGestion Llamadas={llamadas} EstadoLlamadas={estado_llamadas} />

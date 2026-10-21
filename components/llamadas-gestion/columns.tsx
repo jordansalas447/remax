@@ -185,5 +185,24 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
           day: "2-digit"
         });
     },
-  }
+  },
+  {
+    accessorKey: "fecha_registro",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Fecha Registro" />
+    ),
+    cell: ({ row }) => {
+      const value = row.getValue("fecha_registro");
+      if (!value) return "";
+      const date: any = typeof value === "string" || typeof value === "number"
+        ? new Date(value)
+        : value; // fallback if already Date
+      return date.toLocaleDateString("es-PE", {
+        timeZone: "UTC",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      });
+    },
+  },
 ]

@@ -29,6 +29,7 @@ export type LlamadasRowDetalle = {
   fecha_seguimiento_llamada: string | null; // l.fecha_seguimiento_llamada
   observacion_seguimiento: string | null; // l.observacion_seguimiento
   id_seguimiento?: number | null;
+  fecha_registro:string | null;
   eliminado?: boolean;
 };
 
@@ -44,29 +45,29 @@ export type LlamadaType = {
   id?: number;
 }
 
-export async function getLlamadasPropietarios(id_asociado?: {}): Promise<LlamadasRowDetalle[]> {
+/**
+ * Obtiene llamadas propietarios con filtros opcionales de id_asociado y/o fecha_registro.
+ * Si no se proporciona fecha_registro, retorna todos los registros.
+ * 
+ * @param filtros Puede tener id_asociado y/o fecha_registro (en formato 'YYYY-MM-DD')
+ */
+export async function getLlamadasPropietarios(filtros?: { fecha_registro?: string }): Promise<LlamadasRowDetalle[]> {
   const supabase = createClient();
-  const query = supabase
+  let query = supabase
     .from('vista_llamadas_propietarios')
     .select('*')
-    .order('asociado', { ascending: true });
+    .order('fecha_registro', { ascending: false });
 
-  const [viewRes, propRes] = await Promise.all([
-    query,
-    supabase
-      .from('propiedad_propietario')
-      .select('id, id_llamada')
-      .not('id_llamada', 'is', null)
-  ]);
+  if (filtros?.fecha_registro) {
+    // asume que fecha_registro es string 'YYYY-MM-DD'
+    query = query.eq('fecha_registro', filtros.fecha_registro);
+  }
 
-  if (viewRes.error) throw new Error(viewRes.error.message);
+  const { data, error } = await query;
 
-  const llamadaMap = new Map((propRes.data ?? []).map((p) => [p.id, p.id_llamada]));
+  if (error) throw new Error(error.message);
 
-  return (viewRes.data ?? []).map((item) => ({
-    ...item,
-    id_llamada: item.id ? (llamadaMap.get(item.id) ?? null) : null,
-  })) as LlamadasRowDetalle[];
+  return data ?? [];
 }
 
 
@@ -74,7 +75,9 @@ export async function getResumenLlamadas(): Promise<LlamadasRowDetalle[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('vista_resumen_llamadas')
-    .select('*');
+    .select('*')
+    //.eq('(fecha_registro - '05:00:00'::interval)::date = CURRENT_DATE')
+    .order('fecha_registro', { ascending: false });
 
   if (error) throw new Error(error.message);
 
