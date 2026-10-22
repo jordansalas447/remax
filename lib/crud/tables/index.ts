@@ -40,6 +40,7 @@ import { estado_documentoConfig } from "./estado_documento";
 import { profilesConfig } from "./profiles";
 import { llamadasConfig } from "./llamadas";
 import { estado_llamadaConfig } from "./estado_llamada";
+import { areasConfig } from "./areas";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -59,6 +60,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   justificaciones:justificacionesConfig,
   mes: mesConfig,
   nivel_asociado: nivelAsociadoConfig,
+  areas:areasConfig,
   empresas:empresasConfig,
   operacion: operacionConfig,
   personas: personasConfig,

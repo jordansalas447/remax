@@ -22,6 +22,8 @@ export function VentaPDFNoExclusiva({
   logosEnTodasLasPaginas = false,
   propietarios,
   qr,
+  fecha_generacion,
+  id_publico,
   nombreAsesor = "____________________________________________",
   inmuebleDireccion = "__________________________________________________",
   inmuebleDistrito = "_______________",
@@ -195,7 +197,7 @@ export function VentaPDFNoExclusiva({
         </View>
 
         <ContratoFirmas lista={lista} varios={varios} />
-        <ContratoFooter qr={qr} />
+        <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>
   );

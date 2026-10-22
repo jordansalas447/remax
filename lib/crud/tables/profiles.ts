@@ -20,5 +20,15 @@ export const profilesConfig: TableConfig = {
           labelField: "nombre_completo",
         },
     },
+    {
+      name: "id_area",
+      label: "Area",
+      type: "inputsearch",
+      foreignKey: {
+        table: "areas",
+        valueField: "id",
+        labelField: "area",
+      },
+  },
   ],
 };

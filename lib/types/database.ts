@@ -24,6 +24,7 @@ type SupportedTableName =
   | "empresas"
   | "eventos"
   | "multas"
+  | "areas"
   | "alcances"
   | "documentos"
   | "estado"
@@ -63,6 +64,7 @@ export type Resource = TableRow<"resource">;
 export type Situacion = TableRow<"situaciones">
 export type Empresas = TableRow<"empresas">
 export type Alcances = TableRow<"alcances">
+export type Areas = TableRow<"areas">
 export type Eventos = TableRow<"eventos">
 export type Multas = TableRow<"multas">
 export type Llamadas = TableRow<"llamadas">

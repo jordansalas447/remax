@@ -133,14 +133,20 @@ export type Database = {
       areas: {
         Row: {
           area: string
+          create_at: string | null
+          eliminado: boolean | null
           id: number
         }
         Insert: {
           area: string
+          create_at?: string | null
+          eliminado?: boolean | null
           id?: number
         }
         Update: {
           area?: string
+          create_at?: string | null
+          eliminado?: boolean | null
           id?: number
         }
         Relationships: []
@@ -725,7 +731,7 @@ export type Database = {
           created_at: string | null
           eliminado: boolean | null
           empresa: boolean | null
-          fecha_aisgnacion: string | null
+          fecha_asignacion: string | null
           fecha_cierre: string | null
           fecha_generacion: string | null
           fecha_uso: string | null
@@ -745,7 +751,7 @@ export type Database = {
           created_at?: string | null
           eliminado?: boolean | null
           empresa?: boolean | null
-          fecha_aisgnacion?: string | null
+          fecha_asignacion?: string | null
           fecha_cierre?: string | null
           fecha_generacion?: string | null
           fecha_uso?: string | null
@@ -765,7 +771,7 @@ export type Database = {
           created_at?: string | null
           eliminado?: boolean | null
           empresa?: boolean | null
-          fecha_aisgnacion?: string | null
+          fecha_asignacion?: string | null
           fecha_cierre?: string | null
           fecha_generacion?: string | null
           fecha_uso?: string | null
@@ -1057,6 +1063,13 @@ export type Database = {
             columns: ["id_inmueble_propietario_contrato"]
             isOneToOne: false
             referencedRelation: "propiedad_propietario"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "historial_observaciones_id_inmueble_propietario_contrato_fkey"
+            columns: ["id_inmueble_propietario_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
             referencedColumns: ["id"]
           },
           {
@@ -1688,41 +1701,41 @@ export type Database = {
       profiles: {
         Row: {
           activo: boolean | null
-          area_id: number | null
           created_at: string | null
           eliminado: boolean | null
           email: string | null
           full_name: string | null
           id: string
+          id_area: number | null
           id_persona: number | null
           role: string | null
         }
         Insert: {
           activo?: boolean | null
-          area_id?: number | null
           created_at?: string | null
           eliminado?: boolean | null
           email?: string | null
           full_name?: string | null
           id: string
+          id_area?: number | null
           id_persona?: number | null
           role?: string | null
         }
         Update: {
           activo?: boolean | null
-          area_id?: number | null
           created_at?: string | null
           eliminado?: boolean | null
           email?: string | null
           full_name?: string | null
           id?: string
+          id_area?: number | null
           id_persona?: number | null
           role?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "profiles_area_id_fkey"
-            columns: ["area_id"]
+            columns: ["id_area"]
             isOneToOne: false
             referencedRelation: "areas"
             referencedColumns: ["id"]
@@ -2022,6 +2035,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "revisiones_id_propietario_inmueble_contrato_fkey"
+            columns: ["id_propietario_inmueble_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "revisiones_id_revisiones_configuracion_fkey"
             columns: ["id_revisiones_configuracion"]
             isOneToOne: false
@@ -2093,21 +2113,32 @@ export type Database = {
           created_at: string
           fecha_seguimiento: string | null
           id: number
+          id_llamadas: number | null
           observacion: string | null
         }
         Insert: {
           created_at?: string
           fecha_seguimiento?: string | null
           id?: number
+          id_llamadas?: number | null
           observacion?: string | null
         }
         Update: {
           created_at?: string
           fecha_seguimiento?: string | null
           id?: number
+          id_llamadas?: number | null
           observacion?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "seguimientos_id_llamadas_fkey"
+            columns: ["id_llamadas"]
+            isOneToOne: false
+            referencedRelation: "llamadas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       situaciones: {
         Row: {
@@ -2384,18 +2415,57 @@ export type Database = {
       vista_llamadas_propietarios: {
         Row: {
           asociado: string | null
+          color: string | null
+          conformidad: string | null
           curso_llamada: string | null
           direccion: string | null
+          documento_identidad: string | null
           estado_llamada: string | null
           fecha_bienvenida: string | null
           fecha_contrato_recibido: string | null
+          fecha_registro: string | null
           fecha_seguimiento_llamada: string | null
+          id: number | null
+          id_llamada: number | null
           id_remax: number | null
           modalidad: string | null
           numero_telefono: string | null
           observacion: string | null
           observacion_seguimiento: string | null
           propietario: string | null
+          renovacion: number | null
+          tipo_negocio: string | null
+          tipo_propiedad: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "propiedad_propietario_id_llamada_fkey"
+            columns: ["id_llamada"]
+            isOneToOne: false
+            referencedRelation: "llamadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vista_resumen_llamadas: {
+        Row: {
+          asociado: string | null
+          color: string | null
+          conformidad: string | null
+          curso_llamada: string | null
+          direccion: string | null
+          documento_identidad: string | null
+          estado_llamada: string | null
+          fecha_bienvenida: string | null
+          fecha_contrato_recibido: string | null
+          fecha_registro: string | null
+          fecha_seguimiento_llamada: string | null
+          modalidad: string | null
+          numero_telefono: string | null
+          observacion: string | null
+          observacion_seguimiento: string | null
+          propietario: string | null
+          renovacion: number | null
           tipo_negocio: string | null
           tipo_propiedad: string | null
         }

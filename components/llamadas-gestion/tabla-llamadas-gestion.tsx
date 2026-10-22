@@ -137,7 +137,7 @@ export default function TablaLlamadasGestion({
         // 1. Anclado de columnas determinadas (permite anclar/desanclar desde el encabezado)
         enableColumnPinning={true}
         initialColumnPinning={{
-          start: ["id_remax","fecha_contrato_recibido"],
+          start: ["id_remax","fecha_registro"],
         }}
         // 2. Botón "+ Observación" / "Editar gestión" en la columna de acciones de la tabla
         rowActionsHeader="Acciones"

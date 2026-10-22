@@ -22,6 +22,8 @@ export function TraspasoPDF({
   logosEnTodasLasPaginas = false,
   propietarios,
   qr,
+  fecha_generacion,
+  id_publico,
   nombreAsesor = "_____________________________________________",
   inmuebleDireccion = "__________________________________________________",
   inmuebleDistrito = "_______________",
@@ -200,7 +202,7 @@ export function TraspasoPDF({
         </View>
 
         <ContratoFirmas lista={lista} varios={varios} />
-        <ContratoFooter qr={qr} />
+        <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>
   );

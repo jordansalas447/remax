@@ -140,6 +140,8 @@ export default function FormGenerarContrato({
     //      return date.toISOString().slice(0, 16);
     //    })()}
 
+      form.fecha_generacion = new Date().toISOString()
+
       const documento = await createDocumentos(form);
 
        const nro = documento.nro_contrato;
@@ -149,7 +151,7 @@ export default function FormGenerarContrato({
          nroPropietarios: form.nro_propietarios || 1,
          tipoContrato: form.id_tipo_contrato || 0,
          tipoOperacion: form.id_operacion || 0,
-         fecha_generacion: new Date(),
+         fecha_generacion: form.fecha_generacion || undefined,
          id_publico: documento.id_publico || ""
        };
 
@@ -370,26 +372,32 @@ export default function FormGenerarContrato({
                   </div>
                 )}
                 {/* SUBMIT */}
-                <Button
-                  type="submit"
+                
+                <div className="flex flex-row gap-2 justify-end border-t-1 py-2">
+                <Button type="button" variant="outline" onClick={closeDialog}>
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={enviando}
+                  >
+                    {enviando ? (
+                      <span className="flex items-center gap-2 justify-center">
+                        <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                          <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-70" fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                        </svg>
+                        Generando...
+                      </span>
+                    ) : (
+                      <span>Generar y Descargar</span>
+                    )}
+                  </Button>
 
-                  disabled={enviando}
-                >
-                  {enviando ? (
-                    <span className="flex items-center gap-2 justify-center">
-                      <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                        <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-70" fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                      </svg>
-                      Generando...
-                    </span>
-                  ) : (
-                    <span>Generar y Descargar</span>
-                  )}
-                </Button>
-                <Button type="button" variant="outline" onClick={closeDialog}>Cancelar
-                </Button>
+                </div>
+           
+           
               </form>
             )}
           </DialogContent>

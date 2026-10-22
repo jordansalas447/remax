@@ -94,6 +94,13 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     cell: ({ row }) => row.getValue("motivo_anulacion") ?? "",
   },
   {
+    accessorKey: "id_publico",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="ID" />
+    ),
+    cell: ({ row }) => row.getValue("id_publico") ?? "",
+  },
+  {
     accessorKey: "created_at",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fecha Registro" />
