@@ -123,7 +123,7 @@ export const contratoStyles = StyleSheet.create({
   },
   dataInput: {
     fontSize: 11,
-    textDecoration: "underline",
+    //textDecoration: "underline",
     minWidth: 60,
     lineHeight: 1.4,
   },

@@ -26,7 +26,7 @@ export function ContratoHeader({
       <View style={styles.titleContainer}>
         <Text style={styles.title}>
           {titulo ??
-            `AUTORIZACIÓN DE CORRETAJE INMOBILIARIO N.º ${nroContrato || "RAD-ANT-26-0001"}`}
+            `AUTORIZACIÓN DE CORRETAJE INMOBILIARIO N.º ${nroContrato || ""}`}
         </Text>
       </View>
       <View style={styles.logoSlot}>

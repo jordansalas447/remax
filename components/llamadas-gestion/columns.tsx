@@ -4,6 +4,8 @@ import type { LegacyColumnDef } from "@tanstack/react-table/legacy"
 import { DataTableColumnHeader } from "@/components/data-table"
 import { LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas"
 import { Badge, BadgeVariant } from "../ui/badge"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPhone } from "@fortawesome/free-solid-svg-icons"
 
 
 function formatCell(value: unknown) {
@@ -87,7 +89,27 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Numero de Telefono" />
     ),
-    cell: ({ row }) => formatCell(row.getValue("numero_telefono")),
+    cell: ({ row }) => {
+      const numero = row.getValue("numero_telefono");
+      const numeroSanitizado = typeof numero === "string"
+        ? numero.replace(/[^\d]/g, "")
+        : "";
+      return (
+        <div className="flex items-center space-x-2">
+          <span>{formatCell(numero)}</span>
+          {numeroSanitizado && (
+            <a
+              href={`https://wa.me/${numeroSanitizado}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors"
+            >
+              <FontAwesomeIcon icon={faPhone} />
+            </a>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "is_expired",

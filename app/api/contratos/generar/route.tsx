@@ -14,6 +14,7 @@ import { VentaPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Ven
 import { ArrendamientoPDFNoExclusiva } from "@/components/generar-contrato/Contratos/Arrendamiento No Exclusiva";
 import { ArrendamientoPDF } from "@/components/generar-contrato/Contratos/Arrendamiento";
 import { TraspasoPDF } from "@/components/generar-contrato/Contratos/Traspaso";
+import { TraspasoExlusivaPDF } from "@/components/generar-contrato/Contratos/Traspaso No Exclusiva";
 
 export const runtime = "nodejs";
 
@@ -156,7 +157,7 @@ export async function POST(request: Request) {
       TipoContratoLabel = <TraspasoPDF {...datos} />;
     } else if (tipocontrato == 2) {
       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      TipoContratoLabel = <TraspasoPDF {...datos} />;
+      TipoContratoLabel = <TraspasoExlusivaPDF {...datos} />;
     } else if (tipocontrato == 3) {
       // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
       return Response.json(

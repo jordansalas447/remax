@@ -5,15 +5,16 @@ import type { Propietario } from "./types";
 type ContratoFirmasProps = {
   lista: Propietario[];
   varios: number;
+  tipodenominacion?:string;
 };
 
-export function ContratoFirmas({ lista, varios }: ContratoFirmasProps) {
+export function ContratoFirmas({ lista, varios,tipodenominacion = "EL PROPIETARIO" }: ContratoFirmasProps) {
   return (
     <View style={styles.signatureSection} wrap={false}>
       {lista.map((p, i) => (
         <View key={i} style={styles.signatureBox}>
           <Text style={styles.signatureText}>
-            {varios > 1 ? `EL PROPIETARIO ${i + 1}` : "EL PROPIETARIO"}
+            {varios > 1 ? `${tipodenominacion} ${i + 1}` : tipodenominacion}
           </Text>
           {p.nombre ? (
             <Text style={styles.signatureSubText}>{p.nombre}</Text>
