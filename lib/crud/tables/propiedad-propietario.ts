@@ -24,8 +24,8 @@ export const propiedadPropietarioConfig: TableConfig = {
       foreignKey: {
         table: "inmuebles",
         valueField: "id_propiedad",
-        labelField: "id_remax",
-        sublabelField: "n_partida"
+        labelField: "n_partida",
+        sublabelField: "id_remax"
       },
     },
     {
