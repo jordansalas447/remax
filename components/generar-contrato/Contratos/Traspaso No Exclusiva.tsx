@@ -10,6 +10,7 @@ import {
   val,
   type ContratoPDFProps,
 } from "./shared";
+import { ContratoCabezera } from "./shared/ContratoCabezera";
 
 export type { ContratoPDFProps, Propietario } from "./shared";
 
@@ -49,147 +50,127 @@ export function TraspasoExlusivaPDF({
           logosEnTodasLasPaginas={logosEnTodasLasPaginas}
         />
 
-        {/* Introducción */}
-        <View style={styles.section}>
-          <Text style={styles.justified}>
-            Conste por el presente documento, el contrato de corretaje inmobiliario, que celebran de una parte {varios ? "los" : "el"} Sr./Sra.:{" "}
-            {lista.map((p, i) => (
-              <React.Fragment key={i}>
-                {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
-                {i > 0 ? "el Sr./Sra.: " : ""}
-                <Text style={styles.dataInput}>
-                  {val(p.nombre, "____________________________")}
-                </Text>
-                , debidamente identificado(a) con DNI N°{" "}
-                <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>, estado civil{" "}
-                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>, número de celular{" "}
-                <Text style={styles.dataInput}>{val(p.celular, "_______________")}</Text>, con domicilio para estos efectos en{" "}
-                <Text style={styles.dataInput}>
-                  {val(p.domicilio, "__________________________________________________")}
-                </Text>
-                , Distrito de{" "}
-                <Text style={styles.dataInput}>{val(p.distrito, "_______________")}</Text>, provincia y departamento de Arequipa
-              </React.Fragment>
-            ))}
-            , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como (REMAX ADELANTE) con RUC Nro. 20612674192 con domicilio en Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani), distrito de José Luis Bustamante y Rivero, Provincia y Departamento de Arequipa; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
-          </Text>
-        </View>
+        {/* Introducción personalizada */}
+        <ContratoCabezera varios={varios} lista={lista} tipodenominacion={"EL CLIENTE"} mostrarOcupacion={true}></ContratoCabezera>
 
         {/* Primera cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>PRIMERA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}><Text>PRIMERA:</Text></Text>
+          </Text>
           <Text style={styles.justified}>
-            EL CLIENTE es el encargado del inmueble ubicado en: <Text style={styles.dataInput}>{inmuebleDireccion}</Text>, distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos en la Partida Electrónica N° <Text style={styles.dataInput}>{inmueblePartida}</Text>del Registro de Predios de la Zona Registral XII - Sede Arequipa, en el que funciona el negocio de <Text style={styles.dataInput}>{giroNegocio}</Text> denominado “<Text style={styles.dataInput}>{nombreNegocio}</Text>”, y al que en lo sucesivo se le denominará EL INMUEBLE.
+            <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> es el dueño de un local comercial de <Text style={styles.dataInput}>__________________________________</Text> llamado “ <Text style={styles.dataInput}>________________________</Text> ” ubicado en: <Text style={styles.dataInput}>____________________________________________________________________</Text> , distrito de <Text style={styles.dataInput}>______________</Text>, provincia y departamento de Arequipa, y al que en lo sucesivo se le denominará <Text style={styles.bold}><Text>EL LOCAL COMERCIAL</Text></Text>.
           </Text>
         </View>
 
         {/* Segunda cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>SEGUNDA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>SEGUNDA:</Text></Text></Text>
           <Text style={styles.justified}>
-            EL COMISIONISTA es una persona jurídica de derecho privado, cuya función principal es la actividad de corretaje de toda clase de bienes inmuebles, y las demás actividades derivadas de la misma función, según consta en el objeto social de la empresa mencionada en la introducción del presente documento.
+            <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> es una persona jurídica de derecho privado, cuya función principal es la actividad de corretaje de toda clase de bienes inmuebles, y las demás actividades derivadas de la misma función, según consta en el objeto social de la empresa mencionada en la introducción del presente documento.
           </Text>
         </View>
 
         {/* Tercera cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>TERCERA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>TERCERA:</Text></Text></Text>
           <Text style={styles.justified}>
-            Por medio del presente acuerdo, EL CLIENTE otorga a EL COMISIONISTA a partir de la firma del presente documento, la representación comercial para el TRASPASO de EL INMUEBLE descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>NO EXCLUSIVIDAD</Text>, gestión que será realizada por El Asesor Sr./Sra./Srta.:<Text style={styles.dataInput}>_________________________________________________</Text>, EL COMISIONISTA iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato.
+            Por medio del presente acuerdo, <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> otorga a <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}><Text>TRASPASO</Text></Text> de <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}><Text>NO  EXCLUSIVIDAD</Text></Text>, gestión que será realizada por El Asesor Sr./Sra./Srta.:<Text style={styles.dataInput}>_________________________________________________</Text> , <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato.
           </Text>
         </View>
 
         {/* Cuarta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>CUARTA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>CUARTA:</Text></Text></Text>
           <Text style={styles.justified}>
-            EL COMISIONISTA se compromete a listar EL INMUEBLE dentro de la web de RE/MAX Perú (www.remax.pe), y a promocionarla según lo convenido con EL CLIENTE, utilizando las diferentes herramientas con las que cuenta EL COMISIONISTA para este fin, así como informar a EL CLIENTE de los posibles interesados y los oferentes que tenga para la propiedad en traspaso. Asimismo, y por tratarse de un contrato en no exclusividad, EL COMISIONISTA se compromete al cumplimiento de las actividades de Marketing para propiedades en no exclusividad, las cuales son previamente comunicadas a EL PROPIETARIO.
+            <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> se compromete a listar <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> dentro de la web de <Text style={styles.bold}><Text>RE/MAX Perú</Text></Text> (www.remax.pe), y a promocionarla según lo convenido con <Text style={styles.bold}><Text>EL CLIENTE</Text></Text>, utilizando las diferentes herramientas con las que cuenta <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> para este fin, así como informar a <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> de los posibles interesados y los oferentes que tenga para <Text style={styles.bold}><Text>EL LOCAL COMERCIAL</Text></Text> en traspaso. Asimismo, y por tratarse de un contrato en no exclusividad, <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> se compromete al cumplimiento de las actividades de Marketing para propiedades en no exclusividad, las cuales son previamente comunicadas a <Text style={styles.bold}><Text>EL CLIENTE</Text></Text>.
           </Text>
         </View>
 
         {/* Quinta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>QUINTA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>QUINTA:</Text></Text></Text>
           <Text style={styles.justified}>
-            Que, a consecuencia del presente acuerdo, EL PROPIETARIO se compromete a brindar todas las{"\n\n"}
-            facilidades para mostrar EL INMUEBLE y a entregar a EL COMISIONISTA una comisión equivalente a <Text style={styles.dataInput}>____</Text>% (no incluye IGV), sobre la base del precio final de traspaso negociado por EL COMISIONISTA con el futuro cliente interesado y previamente aceptado por EL CLIENTE. Las comisiones pactadas en la presente cláusula serán canceladas a EL COMISIONISTA al momento de la firma del Contrato de Traspaso que se genere entre EL CLIENTE y el cliente interesado que haya sido presentado por EL COMISIONISTA. Asimismo, EL CLIENTE se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de venta de EL INMUEBLE:
+            Que, a consecuencia del presente acuerdo, <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> se compromete a brindar todas las
+            facilidades para mostrar <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> y a entregar a <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> una comisión equivalente a <Text style={styles.dataInput}>____</Text> % (no incluye IGV), sobre la base del precio final de traspaso negociado por <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> con el futuro cliente interesado y previamente aceptado por <Text style={styles.bold}><Text>EL CLIENTE</Text></Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> al momento de la firma del Contrato de Traspaso que se genere entre <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> y <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> interesado que haya sido presentado por <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text>. Asimismo, <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de venta de <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text>:
           </Text>
           <View style={{ marginLeft: 14, marginTop: 4 }}>
-            <Text style={styles.justified}>{"\u2714"} Copia del documento de identidad de EL CLIENTE</Text>
-            <Text style={styles.justified}>{"\u2714"} Contrato de arrendamiento de EL INMUEBLE</Text>
-            <Text style={styles.justified}>{"\u2714"} Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
+            <Text style={styles.justified}>- Copia del documento de identidad de <Text style={styles.bold}><Text>EL CLIENTE</Text></Text></Text>
+            <Text style={styles.justified}>- Contrato de arrendamiento del inmueble donde funciona <Text style={styles.bold}><Text>EL LOCAL COMERCIAL</Text></Text>.</Text>
+            <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
           </View>
         </View>
 
         {/* Sexta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>SEXTA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>SEXTA:</Text></Text></Text>
           <Text style={styles.justified}>
-            El plazo de duración del presente acuerdo será de <Text style={styles.dataInput}>{duracionMeses}</Text> meses contados a partir de la fecha consignada al final del presente documento. Las partes podrán renovar este contrato por mutuo acuerdo, debiendo realizarlo de manera escrita.
+            El plazo de duración del presente acuerdo será de <Text style={styles.dataInput}>____</Text> meses contados a partir de la fecha consignada al final del presente documento. Las partes podrán renovar este contrato por mutuo acuerdo, debiendo realizarlo de manera escrita.
           </Text>
         </View>
 
         {/* Séptima cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>SETIMA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>SETIMA:</Text></Text></Text>
           <Text style={styles.justified}>
-            El presente contrato quedará resuelto automáticamente y sin necesidad de documento alguno, al vencimiento del mismo, salvo acuerdo de renovación de las partes. De igual manera en el caso que EL COMISIONISTA consiga el objetivo de{"\n\n"}
-            vender EL INMUEBLE en un plazo menor a los <Text style={styles.dataInput}>____</Text> meses, el contrato quedará resuelto en el momento que ambas partes hayan cumplido con las obligaciones adquiridas por el presente documento.
+            El presente contrato quedará resuelto automáticamente y sin necesidad de documento alguno, al vencimiento del mismo, salvo acuerdo de renovación de las partes.
+            De igual manera en el caso que <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> consiga el objetivo de vender <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> en un plazo menor a los <Text style={styles.dataInput}>____</Text> meses, el contrato quedará resuelto en el momento que ambas partes hayan cumplido con las obligaciones adquiridas por el presente documento.
           </Text>
         </View>
 
         {/* Octava cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>OCTAVA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>OCTAVA:</Text></Text></Text>
           <Text style={styles.justified}>
-            Toda negociación para llegar a el Traspaso de EL INMUEBLE deberá ser manejada por EL COMISIONISTA o algún miembro de su equipo de Agentes Inmobiliarios debidamente{"\n\n"}
-            capacitado y autorizado. Cualquier propuesta a la que se llegue en la negociación deberá ser previamente aceptada por EL CLIENTE antes de su comunicación al futuro cliente interesado.
+            Toda negociación para llegar a el Traspaso de <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> deberá ser manejada por <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> o algún miembro de su equipo de Agentes Inmobiliarios debidamente capacitado y autorizado. Cualquier propuesta a la que se llegue en la negociación deberá ser previamente aceptada por <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> antes de su comunicación al futuro cliente interesado.
           </Text>
         </View>
 
         {/* Novena cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>NOVENA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>NOVENA:</Text></Text></Text>
           <Text style={styles.justified}>
-            En el caso que algún cliente que haya conocido EL INMUEBLE por gestión de EL COMISIONISTA y esté debidamente registrado por éste, lo Traspase después del vencimiento del presente acuerdo y haya sido negociado en forma directa con EL CLIENTE, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a EL COMISIONISTA. Esta obligación será respetada por el plazo de 6 meses una vez vencido el presente documento.
+            En el caso que algún cliente que haya conocido <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> por gestión de <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> y esté debidamente registrado por éste, lo Traspase después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}><Text>EL CLIENTE</Text></Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>____</Text> meses una vez vencido el presente documento.
           </Text>
         </View>
 
         {/* Décima cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DECIMA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>DECIMA:</Text></Text></Text>
           <View>
             <Text style={[styles.justified, styles.marginBottomSmall]}>
-              10.1 Por el presente contrato EL CLIENTE manifiesta su voluntad expresa de traspasar EL INMUEBLE, declarando, asimismo, que el inmueble se encuentra en óptimas condiciones físicas y legales para ser traspasado.
+              10.1 Por el presente contrato <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> manifiesta su voluntad expresa de traspasar <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text>, declarando, asimismo, que el inmueble se encuentra en óptimas condiciones físicas y legales para ser traspasado.
             </Text>
             <Text style={[styles.justified, styles.marginBottomSmall]}>
-              10.2 En el supuesto caso que EL CLIENTE luego de haber aceptado de manera escrita al cliente interesado presentado por EL COMISIONISTA y desista continuar con la celebración del Contrato de Traspaso, se le aplicará una penalidad correspondiente al 50% del monto del traspaso fijado para EL INMUEBLE.
+              10.2 En el supuesto caso que <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> luego de haber aceptado de manera escrita al cliente interesado presentado por <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> y desista continuar con la celebración del Contrato de Traspaso, se le aplicará una penalidad correspondiente al 50% del monto de la comisión pactada del traspaso fijado para <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text>.
             </Text>
             <Text style={[styles.justified, styles.marginBottomSmall]}>
-              10.3 En el supuesto caso que EL CLIENTE decida no continuar con el presente contrato estando el mismo vigente, se les aplicará una penalidad correspondiente al 25% del monto del traspaso fijado para EL INMUEBLE, como consecuencia del incumplimiento de su obligación.
+              10.3 En el supuesto caso que <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> decida no continuar con el presente contrato estando el mismo vigente, se les aplicará una penalidad correspondiente al 25% del monto de la comisión pactada del traspaso fijado para <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text>, como consecuencia del incumplimiento de su obligación.
             </Text>
           </View>
         </View>
 
         {/* Décima primera cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DECIMO PRIMERA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>DECIMO PRIMERA:</Text></Text></Text>
           <Text style={styles.justified}>
-            Resolución de controversias: En caso de presentarse alguna controversia relacionada con el presente contrato, las partes acuerdan someterse a los procesos de arbitraje, o resolver la controversia a través de los jueces y tribunales del Distrito Judicial de Arequipa, para lo cual señalan como sus domicilios los indicados en la introducción del presente documento. Los costos correrán por cuenta de la parte que resulte vencida.
+            Resolución de controversias: En caso de presentarse alguna controversia relacionada con el presente contrato, las partes acuerdan someterse a los procesos de arbitraje, o resolver la controversia a través de los jueces y tribunales del Distrito Judicial de Arequipa, para lo cual señalan como sus domicilios los indicados en la introducción del presente documento. Los costos correrán por cuenta de la parte que resulte vencida. 
           </Text>
         </View>
 
         {/* Décima segunda cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DECIMO SEGUNDA:</Text>
+          <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>DECIMO SEGUNDA:</Text></Text></Text>
           <Text style={styles.justified}>
-            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>_____</Text> del mes de <Text style={styles.dataInput}>_____________________</Text> del año 2026.
+            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>_____</Text> del mes de <Text style={styles.dataInput}>________________</Text> del año ____.
           </Text>
         </View>
+   
 
-        <ContratoFirmas lista={lista} varios={varios} />
+        <ContratoFirmas lista={lista} varios={varios} tipodenominacion="EL CLIENTE" />
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
+ 
     </Document>
   );
 }

@@ -130,10 +130,10 @@ export function VentaPDF({
             {" (no incluye IGV), sobre la base del precio final de venta negociado por EL COMISIONISTA con el futuro comprador y previamente aceptado por EL PROPIETARIO. Las comisiones pactadas en la presente cláusula serán canceladas a EL COMISIONISTA al momento de la firma del Contrato de Compra-Venta que se genere entre EL PROPIETARIO y el comprador que haya sido presentado por EL COMISIONISTA. Asimismo, LA PROPIETARIA se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de venta de EL INMUEBLE:"}
           </Text>
           <View style={{ marginLeft: 14, marginTop: 4 }}>
-            <Text style={styles.justified}>{"\u2022"} Copia Simple de la partida registral de EL INMUEBLE actualizada con menos de 30 días.</Text>
-            <Text style={styles.justified}>{"\u2022"} Copia del documento de identidad de EL PROPIETARIO</Text>
-            <Text style={styles.justified}>{"\u2022"} Copia del Testimonio de Compraventa de EL INMUEBLE</Text>
-            <Text style={styles.justified}>{"\u2022"} Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
+            <Text style={styles.justified}>- Copia Simple de la partida registral de EL INMUEBLE actualizada con menos de 30 días.</Text>
+            <Text style={styles.justified}>- Copia del documento de identidad de EL PROPIETARIO</Text>
+            <Text style={styles.justified}>- Copia del Testimonio de Compraventa de EL INMUEBLE</Text>
+            <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
           </View>
         </View>
 

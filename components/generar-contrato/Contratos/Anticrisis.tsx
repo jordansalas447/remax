@@ -75,58 +75,86 @@ export function AnticrisisPDF({
 
         {/* Primera cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>PRIMERO:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>PRIMERO:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            EL PROPIETARIO es dueña(o){varios ? "(s)" : ""} del inmueble, ubicado en{" "}
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>EL PROPIETARIO</Text>
+            </Text> es dueña(o){varios ? "(s)" : ""} del inmueble, ubicado en{" "}
             <Text style={styles.dataInput}>{inmuebleDireccion}</Text>, Distrito de{" "}
-            <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos de la partida electrónica N°{" "}
-            <Text style={styles.dataInput}>{inmueblePartida}</Text> en Registro de Predios de la Zona Registral XII - Sede Arequipa y al que en lo sucesivo se le denominará EL INMUEBLE.
+            <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de <Text style={styles.bold}>AREQUIPA</Text>, cuyos linderos y medidas perimétricas constan inscritos de la partida electrónica N°{" "}
+            <Text style={styles.dataInput}>{inmueblePartida}</Text> en Registro de Predios de la Zona Registral XII - Sede <Text style={styles.bold}>AREQUIPA</Text> y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL INMUEBLE</Text>.
           </Text>
         </View>
 
         {/* Segunda cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>SEGUNDO:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>SEGUNDO:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            EL COMISIONISTA, es una persona jurídica, de derecho privado, cuya función principal es la actividad de corretaje de toda clase de bienes inmuebles, y las demás actividades derivadas de la misma función, según consta en el objeto social de la empresa mencionada en la introducción del presente documento.
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>EL COMISIONISTA</Text>
+            </Text>, es una persona jurídica, de derecho privado, cuya función principal es la actividad de corretaje de toda clase de bienes inmuebles, y las demás actividades derivadas de la misma función, según consta en el objeto social de la empresa mencionada en la introducción del presente documento.
           </Text>
         </View>
 
         {/* Tercera cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>TERCERO:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>TERCERO:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            Por medio del presente acuerdo, EL PROPIETARIO otorga a EL COMISIONISTA a partir de la firma del presente documento, la representación comercial para ofrecer en ANTICRESIS EL INMUEBLE descrito en la cláusula primera del presente contrato, en la modalidad de EXCLUSIVIDAD; gestión que será Realizada por el asesor comercial Sr./Srta./Sra.{" "}
-            <Text style={styles.dataInput}>{nombreAsesor}</Text>. EL COMISIONISTA iniciará el proceso de búsqueda de posibles acreedores anticréticos, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato; siendo EL COMISIONISTA y su grupo de trabajo, las únicas personas autorizadas para promover EL INMUEBLE dentro de los medios que se anunciarán en la cláusula siguiente, no pudiendo EL PROPIETARIO contratar con otra empresa o persona que se dediquen al corretaje inmobiliario, dentro del plazo de duración del presente documento.
+            Por medio del presente acuerdo, <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> otorga a <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> a partir de la firma del presente documento, la representación comercial para ofrecer en <Text style={styles.bold}><Text style={styles.bold}>ANTICRESIS EL INMUEBLE</Text></Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}><Text style={styles.bold}>EXCLUSIVIDAD</Text></Text>; gestión que será Realizada por el asesor comercial Sr./Srta./Sra.{" "}
+            <Text style={styles.dataInput}>{nombreAsesor}</Text>. <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> iniciará el proceso de búsqueda de posibles acreedores anticréticos, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato; siendo <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> y su grupo de trabajo, las únicas personas autorizadas para promover <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> dentro de los medios que se anunciarán en la cláusula siguiente, no pudiendo <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> contratar con otra empresa o persona que se dediquen al corretaje inmobiliario, dentro del plazo de duración del presente documento.
           </Text>
         </View>
 
         {/* Cuarta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>CUARTO:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>CUARTO:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            EL COMISIONISTA se compromete a listar EL INMUEBLE dentro de la web de RE/MAX Perú (www.remax.pe), y a promocionarla según lo convenido con EL PROPIETARIO, utilizando las diferentes herramientas con las que cuenta EL COMISIONISTA para este fin, así como informar a EL PROPIETARIO de los posibles interesados y los oferentes que tenga para su propiedad. Asimismo, y por tratarse de un contrato en exclusividad, EL COMISIONISTA se compromete al cumplimiento de las actividades de Marketing para propiedades en exclusividad, las cuales son previamente comunicadas a EL PROPIETARIO.
+            <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> se compromete a listar <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> dentro de la web de <Text style={styles.bold}>RE/MAX PERÚ</Text> (www.remax.pe), y a promocionarla según lo convenido con <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>, utilizando las diferentes herramientas con las que cuenta <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> para este fin, así como informar a <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> de los posibles interesados y los oferentes que tenga para su propiedad. Asimismo, y por tratarse de un contrato en exclusividad, <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> se compromete al cumplimiento de las actividades de Marketing para propiedades en exclusividad, las cuales son previamente comunicadas a <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>.
           </Text>
         </View>
 
         {/* Quinta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>QUINTO:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>QUINTO:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            Que a consecuencia del presente acuerdo EL PROPIETARIO se compromete a brindar todas las facilidades para mostrar EL INMUEBLE y a entregar a EL COMISIONISTA una comisión equivalente a{" "}
-            <Text style={styles.dataInput}>{comision}</Text> (no incluye IGV), sobre la base del monto negociado por EL COMISIONISTA con el futuro acreedor anticrético y previamente aceptado por EL PROPIETARIO. Las comisiones pactadas en la presente cláusula serán canceladas a EL COMISIONISTA al momento de la firma del Contrato de Mutuo Anticrético que se genere entre EL PROPIETARIO con el acreedor anticrético que haya sido presentado por EL COMISIONISTA. Asimismo, EL PROPIETARIO se compromete en entregar los documentos señalados a continuación para poder iniciar el proceso de anticresis de EL INMUEBLE:
+            Que a consecuencia del presente acuerdo <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> se compromete a brindar todas las facilidades para mostrar <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> y a entregar a <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> una comisión equivalente a{" "}
+            <Text style={styles.dataInput}>{comision}</Text> (no incluye IGV), sobre la base del monto negociado por <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> con el futuro acreedor anticrético y previamente aceptado por <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> al momento de la firma del Contrato de Mutuo Anticrético que se genere entre <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> con el acreedor anticrético que haya sido presentado por <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text>. Asimismo, <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> se compromete en entregar los documentos señalados a continuación para poder iniciar el proceso de anticresis de <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text>:
           </Text>
           <View style={{ marginLeft: 14, marginTop: 4 }}>
-            <Text style={styles.justified}>- Copia Simple de la partida registral de EL INMUEBLE actualizada con menos de 30 días.</Text>
-            <Text style={styles.justified}>- Copia del documento de identidad de EL PROPIETARIO</Text>
-            <Text style={styles.justified}>- Copia del Testimonio de Compraventa de EL INMUEBLE</Text>
+            <Text style={styles.justified}>- Copia Simple de la partida registral de <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> actualizada con menos de 30 días.</Text>
+            <Text style={styles.justified}>- Copia del documento de identidad de <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text></Text>
+            <Text style={styles.justified}>- Copia del Testimonio de Compraventa de <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text></Text>
             <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
           </View>
         </View>
 
         {/* Sexta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>SEXTO:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>SEXTO:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
             El plazo de duración del presente acuerdo será de <Text style={styles.dataInput}>{duracionMeses}</Text> meses contados a partir de la fecha consignada al final del presente documento.
           </Text>
@@ -134,62 +162,88 @@ export function AnticrisisPDF({
 
         {/* Séptima cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>SÉTIMA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>SÉTIMA:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            En el caso que EL COMISIONISTA consiga el objetivo de anticretar EL INMUEBLE en un plazo menor a los <Text style={styles.dataInput}>{duracionMeses}</Text> meses, el contrato quedará resuelto en el momento que ambas partes hayan cumplido con las obligaciones adquiridas por el presente documento.
+            En el caso que <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> consiga el objetivo de anticretar <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> en un plazo menor a los <Text style={styles.dataInput}>{duracionMeses}</Text> meses, el contrato quedará resuelto en el momento que ambas partes hayan cumplido con las obligaciones adquiridas por el presente documento.
           </Text>
         </View>
 
         {/* Octava cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>OCTAVA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>OCTAVA:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            Toda negociación para llegar a la anticresis de EL INMUEBLE deberá ser manejada exclusivamente por EL COMISIONISTA o algún miembro de su equipo de Agentes Inmobiliarios debidamente capacitado y autorizado. Cualquier propuesta a la que se llegue en la negociación deberá ser previamente aceptada por EL PROPIETARIO antes de su comunicación al futuro acreedor anticrético.
+            Toda negociación para llegar a la anticresis de <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> deberá ser manejada exclusivamente por <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> o algún miembro de su equipo de Agentes Inmobiliarios debidamente capacitado y autorizado. Cualquier propuesta a la que se llegue en la negociación deberá ser previamente aceptada por <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> antes de su comunicación al futuro acreedor anticrético.
           </Text>
         </View>
 
         {/* Novena cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>NOVENA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>NOVENA:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            En el caso que algún cliente que haya conocido EL INMUEBLE por gestión de EL COMISIONISTA y esté debidamente registrado por este, lo anticrete después del vencimiento del presente acuerdo, negociando de forma directa con EL PROPIETARIO, las partes acuerdan que EL PROPIETARIO quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a EL COMISIONISTA. Esta obligación será respetada por el plazo de 6 meses una vez vencido el presente documento.
+            En el caso que algún cliente que haya conocido <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> por gestión de <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> y esté debidamente registrado por este, lo anticrete después del vencimiento del presente acuerdo, negociando de forma directa con <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>, las partes acuerdan que <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text>. Esta obligación será respetada por el plazo de 6 meses una vez vencido el presente documento.
           </Text>
         </View>
 
         {/* Décima cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DÉCIMA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>DÉCIMA:</Text>
+            </Text>
+          </Text>
           <View>
             <Text style={[styles.justified, styles.marginBottomSmall]}>
-              10.1 Por el presente contrato EL PROPIETARIO manifiesta su voluntad expresa de anticretar EL INMUEBLE, asimismo declara que el inmueble se encuentra en óptimas condiciones físicas y legales para ser otorgado en garantía anticrética.
+              <Text style={styles.bold}>10.1</Text> Por el presente contrato <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> manifiesta su voluntad expresa de anticretar <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text>, asimismo declara que el inmueble se encuentra en óptimas condiciones físicas y legales para ser otorgado en garantía anticrética.
             </Text>
             <Text style={[styles.justified, styles.marginBottomSmall]}>
-              10.2 En el supuesto que EL PROPIETARIO luego de haber aceptado de manera escrita al acreedor anticrético presentado por EL COMISIONISTA y desista continuar con la celebración del Contrato de Anticresis, EL PROPIETARIO se obligan a pagar el 2% (no incluye IGV), sobre la base del monto negociado del mutuo anticrético, a favor de EL COMISIONISTA.
+              <Text style={styles.bold}>10.2</Text> En el supuesto que <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> luego de haber aceptado de manera escrita al acreedor anticrético presentado por <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> y desista continuar con la celebración del Contrato de Anticresis, <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> se obligan a pagar el <Text style={styles.bold}>2%</Text> (no incluye IGV), sobre la base del monto negociado del mutuo anticrético, a favor de <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text>.
             </Text>
             <Text style={[styles.justified, styles.marginBottomSmall]}>
-              10.3 En el supuesto caso que EL PROPIETARIO decida no continuar con el presente contrato estando el mismo vigente, se le aplicará una penalidad correspondiente al 25% del monto acordado de la comisión por el anticresis de EL INMUEBLE, como consecuencia del incumplimiento de su obligación.
+              <Text style={styles.bold}>10.3</Text> En el supuesto caso que <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> decida no continuar con el presente contrato estando el mismo vigente, se le aplicará una penalidad correspondiente al <Text style={styles.bold}>25%</Text> del monto acordado de la comisión por el anticresis de <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text>, como consecuencia del incumplimiento de su obligación.
             </Text>
             <Text style={styles.justified}>
-              10.4 En el supuesto caso que EL PROPIETARIO anticrete EL INMUEBLE por su cuenta incumpliendo la cláusula tercera del presente contrato, éstos deberán pagar el total de la comisión señalada en la cláusula quinta de acuerdo al monto del anticresis señalado en el contrato celebrado por EL PROPIETARIO.
+              <Text style={styles.bold}>10.4</Text> En el supuesto caso que <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> anticrete <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> por su cuenta incumpliendo la cláusula tercera del presente contrato, éstos deberán pagar el total de la comisión señalada en la cláusula quinta de acuerdo al monto del anticresis señalado en el contrato celebrado por <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>.
             </Text>
           </View>
         </View>
 
         {/* Décima primera cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DÉCIMA PRIMERA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>DÉCIMA PRIMERA:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
-            Resolución de controversias: En caso de presentarse alguna controversia relacionada con el presente acuerdo, las partes acuerdan someterse los procesos de arbitraje, o resolver la controversia a través de los jueces y tribunales del Distrito Judicial de Arequipa, para lo que señalan como sus domicilios los indicados en la introducción del presente documento. Los costos correrán por cuenta de la parte que resultare vencida.
+            <Text style={styles.bold}>Resolución de controversias:</Text> En caso de presentarse alguna controversia relacionada con el presente acuerdo, las partes acuerdan someterse los procesos de arbitraje, o resolver la controversia a través de los jueces y tribunales del Distrito Judicial de <Text style={styles.bold}>AREQUIPA</Text>, para lo que señalan como sus domicilios los indicados en la introducción del presente documento. Los costos correrán por cuenta de la parte que resultare vencida.
           </Text>
         </View>
 
         {/* Décima segunda cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>DÉCIMA SEGUNDA:</Text>
+          <Text style={styles.clauseTitle}>
+            <Text style={styles.bold}>
+              <Text style={styles.bold}>DÉCIMA SEGUNDA:</Text>
+            </Text>
+          </Text>
           <Text style={styles.justified}>
             Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas; y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año <Text style={styles.dataInput}>{anoFirma}</Text>.
           </Text>
         </View>
+   
+   
 
         <ContratoFirmas lista={lista} varios={varios} />
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
