@@ -17,6 +17,8 @@ export default async function Page() {
 
   const DataOperaciones = await getOperaciones();
   const DateTiposContrato = await getTiposContrato();
+
+  console.log(DataOperaciones,DateTiposContrato)
   
   return (
     <main className="mx-auto">

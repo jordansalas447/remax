@@ -5,7 +5,7 @@ export type OperacionesRow = Database['public']['Tables']['operacion']['Row'];
 
 export async function getOperaciones(): Promise<OperacionesRow[]> {
   const supabase = createClient();
-  const { data, error } = await supabase.from('operacion').select('*');
+  const { data, error } = await supabase.from('operacion').select('*').eq('habilitado',true);
   if (error) throw new Error(error.message);
   return data ?? [];
 }
@@ -16,6 +16,7 @@ export async function getOperacionesById(id: number): Promise<OperacionesRow | n
     .from('operacion')
     .select('*')
     .eq('id', id)
+    .eq('habilitado',true)
     .maybeSingle();
   if (error) throw new Error(error.message);
   return data ?? null;

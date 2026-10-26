@@ -87,6 +87,7 @@ export async function AppSidebar() {
                     href="/generar-contrato"
                     className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                   >
+                    <FontAwesomeIcon icon={faFileContract} />
                     Generar Contrato
                   </Link>
                 </SidebarMenuItem>

@@ -25,8 +25,8 @@ export function ArrendamientoPDF({
   fecha_generacion,
   id_publico,
   nombreAsesor = "____________________________________________",
-  inmuebleDireccion = "__________________________________________________",
-  inmuebleDistrito = "_______________",
+  inmuebleDireccion = "__________________________________________________ , ",
+  inmuebleDistrito = "_______________ , ",
   inmueblePartida = "______________",
   comision = "________________________",
   duracionMeses = "____",
@@ -50,26 +50,26 @@ export function ArrendamientoPDF({
         {/* Introducción */}
         <View style={styles.section}>
           <Text style={styles.justified}>
-            Conste por el presente documento, el contrato de corretaje inmobiliario, que celebran de una parte {varios ? "los" : "el"} Sr./Sra.:{" "}
+            Conste por el presente documento, el contrato de corretaje inmobiliario, que celebran de una parte {varios ? "los" : "el"} Sr./Sra:{" "}
             {lista.map((p, i) => (
               <React.Fragment key={i}>
                 {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
-                {i > 0 ? "el Sr./Sra.: " : ""}
+                {i > 0 ? "el Sr./Sra: " : ""}
                 <Text style={styles.dataInput}>
                   {val(p.nombre, "____________________________")}
                 </Text>
                 , debidamente identificado(a) con DNI N°{" "}
-                <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>, estado civil{" "}
-                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>, número de celular{" "}
-                <Text style={styles.dataInput}>{val(p.celular, "_______________")}</Text>, con domicilio para estos efectos en{" "}
+                <Text style={styles.dataInput}>{val(p.dni, "_____________ , ")}</Text>estado civil{" "}
+                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________ , ")}</Text>número de celular{" "}
+                <Text style={styles.dataInput}>{val(p.celular, "_______________ , ")}</Text>con domicilio para estos efectos en{" "}
                 <Text style={styles.dataInput}>
-                  {val(p.domicilio, "__________________________________________________")}
+                  {val(p.domicilio, "__________________________________________________ , ")}
                 </Text>
-                , Distrito de{" "}
-                <Text style={styles.dataInput}>{val(p.distrito, "_______________")}</Text>, provincia y departamento de Arequipa
+                Distrito de{" "}
+                <Text style={styles.dataInput}>{val(p.distrito, "_______________ , ")}</Text>provincia y departamento de Arequipa
               </React.Fragment>
             ))}
-            , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como (REMAX ADELANTE) con RUC Nro. 20612674192 con domicilio en Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani), distrito de José Luis Bustamante y Rivero, Provincia y Departamento de Arequipa; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
+            , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como <Text style={styles.bold}>(REMAX ADELANTE)</Text> con <Text style={styles.bold}>RUC Nro. 20612674192</Text> con domicilio en <Text style={styles.bold}>Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani)</Text> , distrito de <Text style={styles.bold}>José Luis Bustamante y Rivero</Text> , Provincia y Departamento de <Text style={styles.bold}>Arequipa</Text> ; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
           </Text>
         </View>
 
@@ -83,11 +83,11 @@ export function ArrendamientoPDF({
             <Text style={styles.dataInput}>
               {" "}{inmuebleDireccion}
             </Text>
-            , distrito de
+            distrito de
             <Text style={styles.dataInput}>
               {" "}{inmuebleDistrito}
             </Text>
-            , provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos de la Partida Electrónica N°
+            provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos de la Partida Electrónica N°
             <Text style={styles.dataInput}>
               {" "}{inmueblePartida}
             </Text>
@@ -139,7 +139,9 @@ export function ArrendamientoPDF({
           <View style={{ marginLeft: 14, marginTop: 4 }}>
             <Text style={styles.justified}>- 1 mes de arrendamiento (no incluye IGV), si el arrendamiento fuera por el plazo de uno a dos años</Text>
             <Text style={styles.justified}>- 2 meses de arrendamiento (no incluye IGV), si el arrendamiento fuera por el plazo de tres años a más</Text>
-            <Text style={styles.justified}>Sobre la base del monto negociado por <Text style={styles.bold}>EL COMISIONISTA</Text> con el futuro arrendatario y previamente aceptado por <Text style={styles.bold}>EL PROPIETARIO</Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}>EL COMISIONISTA</Text> al momento de la firma del Contrato de arrendamiento que se genere entre <Text style={styles.bold}>EL PROPIETARIO</Text> con el arrendatario que haya sido presentado por <Text style={styles.bold}>EL COMISIONISTA</Text>. Asimismo, <Text style={styles.bold}>EL PROPIETARIO</Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de arrendamiento de <Text style={styles.bold}>EL INMUEBLE</Text>:</Text>
+          </View>
+          <Text style={styles.justified}>Sobre la base del monto negociado por <Text style={styles.bold}>EL COMISIONISTA</Text> con el futuro arrendatario y previamente aceptado por <Text style={styles.bold}>EL PROPIETARIO</Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}>EL COMISIONISTA</Text> al momento de la firma del Contrato de arrendamiento que se genere entre <Text style={styles.bold}>EL PROPIETARIO</Text> con el arrendatario que haya sido presentado por <Text style={styles.bold}>EL COMISIONISTA</Text>. Asimismo, <Text style={styles.bold}>EL PROPIETARIO</Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de arrendamiento de <Text style={styles.bold}>EL INMUEBLE</Text>:</Text>
+          <View style={{ marginLeft: 14, marginTop: 4 }}>
             <Text style={styles.justified}>- Copia Simple de la partida registral de <Text style={styles.bold}>EL INMUEBLE</Text> actualizada con menos de 30 días.</Text>
             <Text style={styles.justified}>- Copia del documento de identidad de <Text style={styles.bold}>EL PROPIETARIO</Text>.</Text>
             <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
@@ -230,7 +232,7 @@ export function ArrendamientoPDF({
         <ContratoFirmas lista={lista} varios={varios} />
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
- 
+
     </Document>
   );
 }

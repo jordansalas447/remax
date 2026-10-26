@@ -279,7 +279,7 @@ export default function FormGenerarContrato({
                   <NativeSelect
                     id="id_tipo_contrato"
                     name="id_tipo_contrato"
-                    value={form.id_tipo_contrato || 0}
+                    value={form.id_tipo_contrato= 1 || 1}
                     onChange={handleChange}
                     required
                     disabled={enviando}
@@ -293,6 +293,7 @@ export default function FormGenerarContrato({
                     ))}
                   </NativeSelect>
                 </div>
+           
                 <div>
                   <label htmlFor="id_operacion" className="block mb-2 font-medium ">
                     Operación
@@ -334,7 +335,7 @@ export default function FormGenerarContrato({
 
 
                 {/* empresa: checkbox */}
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="empresa"
@@ -347,10 +348,10 @@ export default function FormGenerarContrato({
                   <label htmlFor="empresa" className="font-medium  select-none">
                     ¿Empresa?
                   </label>
-                </div>
+                </div> */}
 
                 {/* apoderado: checkbox */}
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="apoderado"
@@ -363,7 +364,7 @@ export default function FormGenerarContrato({
                   <label htmlFor="apoderado" className="font-medium  select-none">
                     ¿Apoderado?
                   </label>
-                </div>
+                </div> */}
 
                 {/* ERROR */}
                 {error && (

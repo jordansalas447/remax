@@ -98,6 +98,8 @@ export async function POST(request: Request) {
 
   let TipoContratoLabel;
 
+  
+
   if  (tipoOperacion == 3) {
     if (tipocontrato == 1) {
       TipoContratoLabel = <AnticrisisPDF {...datos} />;
@@ -134,7 +136,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-  } else if(tipoOperacion == 6) {
+  } else if(tipoOperacion == 2) {
     if (tipocontrato == 1) {
       TipoContratoLabel = <ArrendamientoPDF {...datos} />;
     } else if (tipocontrato == 2) {
