@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     try {
       // Aquí asumimos que quieres que el QR apunte a una URL pública con el id
       // Modifica la URL base si es necesario
-      const publicUrl = `https://remax-adelante.netlify.app/varlidar-contrato?${body.id_publico}`;
+      const publicUrl = `https://remax-adelante.netlify.app/varlidar-contrato?codigo=${body.id_publico}`;
       qrValue = await generarQR(publicUrl);
     } catch (e) {
       // Continúa sin QR si falla
