@@ -46,7 +46,7 @@ async function generarQR(url: string) {
 }
 
 export async function POST(request: Request) {
-  let body: Partial<ContratoPDFProps>;
+  let body: Partial<ContratoPDFProps> & { preview?: boolean };
 
   try {
     body = await request.json();
@@ -57,7 +57,13 @@ export async function POST(request: Request) {
     );
   }
 
-  const nroContrato = asText(body.nroContrato);
+  // Modo vista previa: no requiere nro de contrato ni genera QR,
+  // y el PDF se devuelve "inline" para mostrarse dentro del modal.
+  const esPreview = body.preview === true;
+
+  const nroContrato = esPreview
+    ? "VISTA PREVIA"
+    : asText(body.nroContrato);
   if (!nroContrato) {
     return Response.json(
       { error: "Falta el número de contrato." },
@@ -67,7 +73,7 @@ export async function POST(request: Request) {
 
   // Generar el QR si se incluye un id_publico, si no se quiere agregar ningún qr puede ajustarse
   let qrValue: string | undefined = undefined;
-  if (body.id_publico) {
+  if (body.id_publico && !esPreview) {
     try {
       // Aquí asumimos que quieres que el QR apunte a una URL pública con el id
       // Modifica la URL base si es necesario
@@ -188,7 +194,9 @@ export async function POST(request: Request) {
   return new Response(new Uint8Array(pdfBuffer), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${fileName}"`,
+      "Content-Disposition": esPreview
+        ? `inline; filename="vista-previa.pdf"`
+        : `attachment; filename="${fileName}"`,
       "Cache-Control": "private, no-store",
     },
   });

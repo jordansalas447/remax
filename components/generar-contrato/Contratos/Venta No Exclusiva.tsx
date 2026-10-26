@@ -52,26 +52,26 @@ export function VentaPDFNoExclusiva({
         {/* Introducción */}
         <View style={styles.section}>
           <Text style={styles.justified}>
-            Conste por el presente documento, el contrato de corretaje inmobiliario, que celebran de una parte {varios ? "los" : "el"} Sr./Sra.:{" "}
+            Conste por el presente documento, el contrato de corretaje inmobiliario, que celebran de una parte {varios ? "los" : "el"} Sr./Sra:{" "}
             {lista.map((p, i) => (
               <React.Fragment key={i}>
                 {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
-                {i > 0 ? "el Sr./Sra.: " : ""}
+                {i > 0 ? "el Sr./Sra: " : ""}
                 <Text style={styles.dataInput}>
                   {val(p.nombre, "____________________________")}
                 </Text>
                 , debidamente identificado(a) con DNI N°{" "}
-                <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>, estado civil{" "}
-                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>, número de celular{" "}
-                <Text style={styles.dataInput}>{val(p.celular, "_______________")}</Text>, con domicilio para estos efectos en{" "}
+                <Text style={styles.dataInput}>{val(p.dni, "_____________ , ")}</Text>estado civil{" "}
+                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________ , ")}</Text>número de celular{" "}
+                <Text style={styles.dataInput}>{val(p.celular, "_______________ , ")}</Text>con domicilio para estos efectos en{" "}
                 <Text style={styles.dataInput}>
-                  {val(p.domicilio, "__________________________________________________")}
+                  {val(p.domicilio, "__________________________________________________ , ")}
                 </Text>
-                , Distrito de{" "}
-                <Text style={styles.dataInput}>{val(p.distrito, "_______________")}</Text>, provincia y departamento de Arequipa
+                Distrito de{" "}
+                <Text style={styles.dataInput}>{val(p.distrito, "_______________ , ")}</Text>provincia y departamento de Arequipa
               </React.Fragment>
             ))}
-            , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como (REMAX ADELANTE) con RUC Nro. 20612674192 con domicilio en Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani), distrito de José Luis Bustamante y Rivero, Provincia y Departamento de Arequipa; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
+            , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como <Text style={styles.bold}>(REMAX ADELANTE)</Text> con <Text style={styles.bold}>RUC Nro. 20612674192</Text> con domicilio en <Text style={styles.bold}>Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani)</Text> , distrito de <Text style={styles.bold}>José Luis Bustamante y Rivero</Text> , Provincia y Departamento de <Text style={styles.bold}>Arequipa</Text> ; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
           </Text>
         </View>
 
@@ -108,9 +108,9 @@ export function VentaPDFNoExclusiva({
             <Text style={styles.bold}>TERCERA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Por medio del presente acuerdo, <Text style={styles.bold}>EL PROPIETARIO</Text> otorgan a <Text style={styles.bold}>EL COMISIONISTA</Text> a partir de la firma del presente documento, la representación comercial para la <Text style={styles.bold}>VENTA</Text> de <Text style={styles.bold}>EL INMUEBLE</Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>NO EXCLUSIVIDAD</Text>, gestión que será realizada por El Agente Sr./Sra./Srta.:{" "}
+            Por medio del presente acuerdo, <Text style={styles.bold}>EL PROPIETARIO</Text> otorgan a <Text style={styles.bold}>EL COMISIONISTA</Text> a partir de la firma del presente documento, la representación comercial para la <Text style={styles.bold}>VENTA</Text> de <Text style={styles.bold}>EL INMUEBLE</Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>NO EXCLUSIVIDAD</Text>, gestión que será realizada por El Agente Sr./Sra./Srta:{" "}
             <Text style={styles.dataInput}>{nombreAsesor}</Text>
-            {", "}
+            {" , "}
             <Text style={styles.bold}>EL COMISIONISTA</Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato; siendo <Text style={styles.bold}>EL COMISIONISTA</Text> y su grupo de trabajo, las personas autorizadas para promover <Text style={styles.bold}>EL INMUEBLE</Text> dentro de los medios que se enunciarán en la cláusula siguiente.
           </Text>
         </View>
@@ -151,10 +151,10 @@ export function VentaPDFNoExclusiva({
             {":"}
           </Text>
           <View style={{ marginLeft: 14, marginTop: 4 }}>
-            <Text style={styles.justified}>{"\u2714"} Copia Simple de la partida registral de <Text style={styles.bold}>EL INMUEBLE</Text> actualizada con menos de 30 días.</Text>
-            <Text style={styles.justified}>{"\u2714"} Copia del documento de identidad de <Text style={styles.bold}>EL PROPIETARIO</Text></Text>
-            <Text style={styles.justified}>{"\u2714"} Copia del Testimonio de Compraventa de <Text style={styles.bold}>EL INMUEBLE</Text></Text>
-            <Text style={styles.justified}>{"\u2714"} Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
+            <Text style={styles.justified}> Copia Simple de la partida registral de <Text style={styles.bold}>EL INMUEBLE</Text> actualizada con menos de 30 días.</Text>
+            <Text style={styles.justified}> Copia del documento de identidad de <Text style={styles.bold}>EL PROPIETARIO</Text></Text>
+            <Text style={styles.justified}> Copia del Testimonio de Compraventa de <Text style={styles.bold}>EL INMUEBLE</Text></Text>
+            <Text style={styles.justified}> Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
           </View>
         </View>
 
@@ -232,7 +232,7 @@ export function VentaPDFNoExclusiva({
             <Text style={styles.bold}>DECIMO SEGUNDA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año <Text style={styles.bold}>2026</Text>.
+            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día {diaFirma} del mes de {mesFirma} del año _____.
           </Text>
         </View>
    

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { TipoContratoRow } from "@/lib/supabase/queries/tipos_contratos";
 import { OperacionesRow } from "@/lib/supabase/queries/operaciones";
 import { NativeSelect } from "../ui/native-select";
@@ -53,6 +53,22 @@ export default function FormGenerarContrato({
   const [aceptado, setAceptado] = useState(false); // Estado para la declaración
   const [paso, setPaso] = useState<1 | 2>(1); // 1: declaración, 2: formulario
 
+  // Vista previa del contrato (PDF sin registrar en BD)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [cargandoPreview, setCargandoPreview] = useState(false);
+  const [errorPreview, setErrorPreview] = useState<string | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
+
+  const limpiarPreview = useCallback(() => {
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+      previewUrlRef.current = null;
+    }
+    setPreviewUrl(null);
+    setErrorPreview(null);
+    setCargandoPreview(false);
+  }, []);
+
   // Al cargar, se traen los catálogos
   useEffect(() => {
     async function fetchAll() {
@@ -77,6 +93,7 @@ export default function FormGenerarContrato({
       setError(null);
       setEnviando(false);
       setNroContrato(null);
+      limpiarPreview();
     }
     setOpen(value);
     if (!value) {
@@ -87,9 +104,73 @@ export default function FormGenerarContrato({
       setError(null);
       setEnviando(false);
       setNroContrato(null);
+      limpiarPreview();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Asociado]); // dependemos de Asociado para el form inicial de cada vez
+
+  // Genera la vista previa cada vez que cambian las opciones (con debounce)
+  useEffect(() => {
+    if (!open || paso !== 2) return;
+
+    const tipoContrato = Number(form.id_tipo_contrato) || 0;
+    const tipoOperacion = Number(form.id_operacion) || 0;
+
+    if (!tipoContrato || !tipoOperacion) {
+      limpiarPreview();
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      setCargandoPreview(true);
+      setErrorPreview(null);
+      try {
+        const response = await fetch("/api/contratos/generar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            preview: true,
+            nroPropietarios: Number(form.nro_propietarios) || 1,
+            tipoContrato,
+            tipoOperacion,
+            fecha_generacion: new Date().toISOString(),
+          }),
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => null);
+          throw new Error(errorBody?.error ?? "No se pudo generar la vista previa");
+        }
+
+        const blob = await response.blob();
+        if (controller.signal.aborted) return;
+
+        const url = URL.createObjectURL(blob);
+        if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+        previewUrlRef.current = url;
+        setPreviewUrl(url);
+      } catch (err: any) {
+        if (err?.name === "AbortError") return;
+        setErrorPreview(err?.message ?? "No se pudo generar la vista previa");
+      } finally {
+        if (!controller.signal.aborted) setCargandoPreview(false);
+      }
+    }, 400);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [open, paso, form.id_tipo_contrato, form.id_operacion, form.nro_propietarios, limpiarPreview]);
+
+  // Libera el blob al desmontar
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    };
+  }, []);
 
   // Maneja cambios en el formulario
   const handleChange = (
@@ -208,7 +289,7 @@ export default function FormGenerarContrato({
           <DialogContent
             className={cn(
               "max-h-[90vh] overflow-y-auto",
-              "lg:max-w-[90vh]"
+              paso === 2 ? "lg:max-w-6xl" : "lg:max-w-[90vh]"
             )}
           >
             {paso === 1 ? (
@@ -270,7 +351,8 @@ export default function FormGenerarContrato({
                 </div>
               </>
             ) : (
-              <form className="grid gap-6" onSubmit={handleSubmit} autoComplete="off">
+              <div className="grid gap-6 lg:grid-cols-[minmax(260px,320px)_1fr]">
+              <form className="grid gap-6 content-start" onSubmit={handleSubmit} autoComplete="off">
                 {/* id_tipo_contrato: SELECT */}
                 <div>
                   <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium ">
@@ -279,7 +361,7 @@ export default function FormGenerarContrato({
                   <NativeSelect
                     id="id_tipo_contrato"
                     name="id_tipo_contrato"
-                    value={form.id_tipo_contrato= 1 || 1}
+                    value={form.id_tipo_contrato || 1}
                     onChange={handleChange}
                     required
                     disabled={enviando}
@@ -400,6 +482,47 @@ export default function FormGenerarContrato({
            
            
               </form>
+
+              {/* VISTA PREVIA */}
+              <section aria-label="Vista previa del contrato" className="flex flex-col gap-2 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">Vista previa</span>
+                  {cargandoPreview && (
+                    <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-70" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                      </svg>
+                      Actualizando...
+                    </span>
+                  )}
+                </div>
+                <div className="relative h-[60vh] lg:h-[70vh] rounded-lg border dark:border-zinc-700 bg-gray-100 dark:bg-zinc-900 overflow-hidden">
+                  {previewUrl ? (
+                    <iframe
+                      id="preview-contrato"
+                      title="Vista previa del contrato"
+                      src={`${previewUrl}#toolbar=0&navpanes=0&view=FitH`}
+                      className={cn(
+                        "w-full h-full transition-opacity",
+                        cargandoPreview && "opacity-50"
+                      )}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">
+                      {errorPreview
+                        ? errorPreview
+                        : cargandoPreview
+                          ? "Generando vista previa..."
+                          : "Selecciona el tipo de contrato y la operación para ver la vista previa."}
+                    </div>
+                  )}
+                </div>
+                {previewUrl && errorPreview && (
+                  <span className="text-xs text-red-600">{errorPreview}</span>
+                )}
+              </section>
+              </div>
             )}
           </DialogContent>
         </div>

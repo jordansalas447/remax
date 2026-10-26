@@ -12,17 +12,17 @@ export default async function Page() {
   const session = await getSession();
   const Asociado = await getAsociadoByProfileId(session?.profile?.id || "");
 
-  let id_asociado:number;
+  let id_asociado: number;
   id_asociado = Asociado?.personas?.asociados[0].id_asociado || 0;
 
   const DataOperaciones = await getOperaciones();
   const DateTiposContrato = await getTiposContrato();
 
-  console.log(DataOperaciones,DateTiposContrato)
-  
+  //console.log(DataOperaciones,DateTiposContrato)
+
   return (
     <main className="mx-auto">
-        <GenerarContratos TipoContratos={DateTiposContrato} TipoOperaciones={DataOperaciones} Asociado={id_asociado || 0}/>
+      <GenerarContratos TipoContratos={DateTiposContrato} TipoOperaciones={DataOperaciones} Asociado={id_asociado || 0} />
     </main>
   );
 }
