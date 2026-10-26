@@ -32,6 +32,8 @@ export default async function ValidarContratoPage(props: { searchParams: Promise
   const session = await getSession();
   const Asociado = await getAsociadoByProfileId(session?.profile?.id || "");
 
+  console.log(detalle)
+
   // Revisar si el usuario está autorizado (pertenece a id_asociado 13 o 15 o undefined)
   if ([13, 15, undefined].includes(Asociado?.personas?.asociados?.[0]?.id_asociado)) {
     // No autorizado

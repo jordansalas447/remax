@@ -185,7 +185,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>DÉCIMO SEGUNDA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>_____</Text> del mes de <Text style={styles.dataInput}>__________________</Text> del año <Text style={styles.bold}>2026</Text>.
+            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>_____</Text> del mes de <Text style={styles.dataInput}>__________________</Text> del año <Text style={styles.bold}>_____</Text>.
           </Text>
         </View>
    

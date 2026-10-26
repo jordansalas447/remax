@@ -37,6 +37,7 @@ export async function getDocumentosxCodigo(codigo: string): Promise<DocumentosRo
         asociados(*)`)
     .eq('id_publico', codigo)
     .single();
+
   if (error) throw new Error(error.message);
   return data ?? [];
 }
