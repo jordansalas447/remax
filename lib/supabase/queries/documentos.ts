@@ -38,8 +38,10 @@ export async function getDocumentosxCodigo(codigo: string): Promise<DocumentosRo
     .eq('id_publico', codigo)
     .single();
 
+  if (!data) return null
+
   if (error) throw new Error(error.message);
-  return data ?? [];
+  return data ?? null;
 }
 
 export async function getDocumentosById(id: number): Promise<DocumentosRow | null> {

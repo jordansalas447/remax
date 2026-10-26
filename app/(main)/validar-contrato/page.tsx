@@ -32,8 +32,6 @@ export default async function ValidarContratoPage(props: { searchParams: Promise
   const session = await getSession();
   const Asociado = await getAsociadoByProfileId(session?.profile?.id || "");
 
-  console.log(detalle)
-
   // Revisar si el usuario está autorizado (pertenece a id_asociado 13 o 15 o undefined)
   if ([13, 15, undefined].includes(Asociado?.personas?.asociados?.[0]?.id_asociado)) {
     // No autorizado
@@ -42,6 +40,16 @@ export default async function ValidarContratoPage(props: { searchParams: Promise
         <div className="bg-white p-6 rounded-lg shadow-md text-center max-w-xs">
           <h2 className="text-xl font-semibold text-red-600 mb-2">No autorizado</h2>
           <p className="text-gray-500">No tienes permiso para validar contratos.</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!detalle) {
+    return (
+      <main className="flex flex-col items-center justify-center h-screen bg-gray-100">
+        <div className="bg-white p-6 rounded-lg shadow-md text-center max-w-xs">
+          <h2 className="text-xl font-semibold text-red-600 mb-2">No Existe</h2>
         </div>
       </main>
     );
