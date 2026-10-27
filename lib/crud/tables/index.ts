@@ -41,6 +41,9 @@ import { profilesConfig } from "./profiles";
 import { llamadasConfig } from "./llamadas";
 import { estado_llamadaConfig } from "./estado_llamada";
 import { areasConfig } from "./areas";
+import { controlaccesoConfig } from "./control_acceso";
+import { sesionesaccesoConfig } from "./sesiones_acceso";
+import { horariosaccesoConfig } from "./horarios_acceso";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -58,6 +61,9 @@ export const tableConfigs: Record<string, TableConfig> = {
   concepto_multa:concepto_multaConfig,
   items_checklist: itemsChecklistConfig,
   justificaciones:justificacionesConfig,
+  control_acceso:controlaccesoConfig,
+  sesiones_acceso:sesionesaccesoConfig,
+  horarios_acceso:horariosaccesoConfig,
   mes: mesConfig,
   nivel_asociado: nivelAsociadoConfig,
   areas:areasConfig,

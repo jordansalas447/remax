@@ -15,6 +15,11 @@ import { ArrendamientoPDFNoExclusiva } from "@/components/generar-contrato/Contr
 import { ArrendamientoPDF } from "@/components/generar-contrato/Contratos/Arrendamiento";
 import { TraspasoPDF } from "@/components/generar-contrato/Contratos/Traspaso";
 import { TraspasoExlusivaPDF } from "@/components/generar-contrato/Contratos/Traspaso No Exclusiva";
+import {
+  CLAVES_PROPIETARIO,
+  CLAVES_TEXTO_CONTRATO,
+} from "@/components/generar-contrato/Contratos/shared/campos";
+import type { Propietario } from "@/components/generar-contrato/Contratos/shared/types";
 
 export const runtime = "nodejs";
 
@@ -35,6 +40,34 @@ function asText(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
+}
+
+const MAX_LONGITUD_CAMPO = 300;
+const MAX_PROPIETARIOS = 10;
+
+// Solo acepta las claves conocidas; los vacíos quedan undefined para que
+// el PDF use sus líneas en blanco por defecto.
+function extraerCamposTexto(body: Record<string, unknown>) {
+  const campos: Partial<ContratoPDFProps> = {};
+  for (const clave of CLAVES_TEXTO_CONTRATO) {
+    const valor = asText(body[clave]);
+    if (valor) campos[clave] = valor.slice(0, MAX_LONGITUD_CAMPO);
+  }
+  return campos;
+}
+
+function extraerPropietarios(value: unknown): Propietario[] | undefined {
+  if (!Array.isArray(value) || value.length === 0) return undefined;
+  return value.slice(0, MAX_PROPIETARIOS).map((raw) => {
+    const p: Propietario = {};
+    if (raw && typeof raw === "object") {
+      for (const clave of CLAVES_PROPIETARIO) {
+        const valor = asText((raw as Record<string, unknown>)[clave]);
+        if (valor) p[clave] = valor.slice(0, MAX_LONGITUD_CAMPO);
+      }
+    }
+    return p;
+  });
 }
 
 async function generarQR(url: string) {
@@ -86,9 +119,13 @@ export async function POST(request: Request) {
   }
 
 
+  const propietarios = extraerPropietarios(body.propietarios);
+
   const datos: ContratoPDFProps = {
+    ...extraerCamposTexto(body as Record<string, unknown>),
+    propietarios,
     nroContrato,
-    nroPropietarios: body.nroPropietarios,
+    nroPropietarios: propietarios?.length ?? body.nroPropietarios,
     logoIzquierdo: LOGO_ADELANTE,
     logoDerecho: LOGO_GLOBO,
     logoMarcadeAgua: LOGO_REMAX_ADELANTE,

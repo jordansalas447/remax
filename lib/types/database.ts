@@ -18,6 +18,9 @@ type SupportedTableName =
   | "contratos"
   | "conformidad"
   | "revisiones"
+  | "control_acceso"
+  | "sesiones_acceso"
+  | "horarios_acceso"
   | "items_checklist"
   | "checklist_estado"
   | "situaciones"
@@ -67,6 +70,9 @@ export type Alcances = TableRow<"alcances">
 export type Areas = TableRow<"areas">
 export type Eventos = TableRow<"eventos">
 export type Multas = TableRow<"multas">
+export type Control_Acceso = TableRow<"control_acceso">
+export type Sesiones_Acceso = TableRow<"sesiones_acceso">
+export type Horarios_Acceso = TableRow<"horarios_acceso">
 export type Llamadas = TableRow<"llamadas">
 export type Asistencias = TableRow<"asistencias">
 export type Documentos = TableRow<"documentos">

@@ -38,14 +38,14 @@ export function LoginForm({ next, initialError }: { next?: string; initialError?
           icon={<Lock />}
           required
         />
-        <div className="flex justify-end">
+        {/* <div className="flex justify-end">
           <Link
             href="/recuperar-contrasena"
             className="text-xs font-medium text-[#003DA5] hover:underline dark:text-blue-400"
           >
             ¿Olvidaste tu contraseña?
           </Link>
-        </div>
+        </div> */}
       </div>
 
       <SubmitButton id="login-submit" pendingText="Ingresando…">

@@ -469,6 +469,7 @@ export type Database = {
           id_tipo_moneda_comision: number | null
           id_tipo_moneda_operacion_venta: number | null
           id_tipo_moneda_precio_venta: number | null
+          is_expired: boolean
           nro_contrato: string | null
           observaciones: string | null
           operacion: string | null
@@ -507,6 +508,7 @@ export type Database = {
           id_tipo_moneda_comision?: number | null
           id_tipo_moneda_operacion_venta?: number | null
           id_tipo_moneda_precio_venta?: number | null
+          is_expired?: boolean
           nro_contrato?: string | null
           observaciones?: string | null
           operacion?: string | null
@@ -545,6 +547,7 @@ export type Database = {
           id_tipo_moneda_comision?: number | null
           id_tipo_moneda_operacion_venta?: number | null
           id_tipo_moneda_precio_venta?: number | null
+          is_expired?: boolean
           nro_contrato?: string | null
           observaciones?: string | null
           operacion?: string | null
@@ -668,6 +671,24 @@ export type Database = {
             referencedColumns: ["nro_contrato"]
           },
         ]
+      }
+      control_acceso: {
+        Row: {
+          activo: boolean
+          actualizado_at: string
+          user_id: string
+        }
+        Insert: {
+          activo?: boolean
+          actualizado_at?: string
+          user_id: string
+        }
+        Update: {
+          activo?: boolean
+          actualizado_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       detalle_asociado: {
         Row: {
@@ -1088,6 +1109,33 @@ export type Database = {
           },
         ]
       }
+      horarios_acceso: {
+        Row: {
+          activo: boolean
+          dia_semana: number
+          hora_fin: string
+          hora_inicio: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          activo?: boolean
+          dia_semana: number
+          hora_fin: string
+          hora_inicio: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          activo?: boolean
+          dia_semana?: number
+          hora_fin?: string
+          hora_inicio?: string
+          id?: never
+          user_id?: string
+        }
+        Relationships: []
+      }
       inmuebles: {
         Row: {
           area_construida: number | null
@@ -1470,6 +1518,7 @@ export type Database = {
           deleted_at: string | null
           descripcion: string | null
           eliminado: boolean
+          habilitado: boolean | null
           id: number
           operacion: string
         }
@@ -1478,6 +1527,7 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
+          habilitado?: boolean | null
           id?: number
           operacion: string
         }
@@ -1486,6 +1536,7 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
+          habilitado?: boolean | null
           id?: number
           operacion?: string
         }
@@ -2140,6 +2191,27 @@ export type Database = {
           },
         ]
       }
+      sesiones_acceso: {
+        Row: {
+          creado_at: string
+          session_id: string
+          user_id: string
+          valido_hasta: string
+        }
+        Insert: {
+          creado_at?: string
+          session_id: string
+          user_id: string
+          valido_hasta: string
+        }
+        Update: {
+          creado_at?: string
+          session_id?: string
+          user_id?: string
+          valido_hasta?: string
+        }
+        Relationships: []
+      }
       situaciones: {
         Row: {
           created_at: string
@@ -2249,6 +2321,7 @@ export type Database = {
           deleted_at: string | null
           descripcion: string | null
           eliminado: boolean
+          habilitado: boolean | null
           id: number
           tipo_contrato: string
         }
@@ -2256,6 +2329,7 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
+          habilitado?: boolean | null
           id?: number
           tipo_contrato: string
         }
@@ -2263,6 +2337,7 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           eliminado?: boolean
+          habilitado?: boolean | null
           id?: number
           tipo_contrato?: string
         }
@@ -2428,6 +2503,7 @@ export type Database = {
           id: number | null
           id_llamada: number | null
           id_remax: number | null
+          is_expired: boolean | null
           modalidad: string | null
           numero_telefono: string | null
           observacion: string | null
@@ -2511,6 +2587,9 @@ export type Database = {
       }
     }
     Functions: {
+      acceso_habilitado: { Args: never; Returns: boolean }
+      actualizar_contratos_vencidos: { Args: never; Returns: number }
+      horario_actual_permitido: { Args: never; Returns: boolean }
       obtener_reporte_contrato: {
         Args: never
         Returns: {
@@ -2549,6 +2628,7 @@ export type Database = {
           tipo_propiedad: string
         }[]
       }
+      registrar_sesion_acceso: { Args: never; Returns: boolean }
     }
     Enums: {
       aviso: "1er. Aviso" | "2do. Aviso" | "Falta Grave"

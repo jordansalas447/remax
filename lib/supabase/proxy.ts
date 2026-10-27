@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { MENSAJE_FUERA_DE_HORARIO, accesoHabilitado } from "@/lib/auth/acceso";
 
 /** Rutas accesibles sin sesión. */
 const PUBLIC_ROUTES = ["/login", "/registro", "/recuperar-contrasena", "/auth"];
@@ -54,6 +55,14 @@ export async function updateSession(request: NextRequest) {
 
   if (!isAuthenticated && !matches(pathname, PUBLIC_ROUTES)) {
     return redirectTo("/login", { next: `${pathname}${search}` });
+  }
+
+  // Control de acceso por horario (se omite en /auth, que registra la sesión por su cuenta)
+  if (isAuthenticated && !matches(pathname, ["/auth"])) {
+    if (!(await accesoHabilitado(supabase))) {
+      await supabase.auth.signOut({ scope: "local" });
+      return redirectTo("/login", { error: MENSAJE_FUERA_DE_HORARIO });
+    }
   }
 
   if (isAuthenticated && matches(pathname, GUEST_ONLY_ROUTES)) {

@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { MENSAJE_FUERA_DE_HORARIO, registrarSesionAcceso } from "@/lib/auth/acceso";
 
 /**
  * Destino de los enlaces de los correos de Supabase
@@ -31,6 +32,13 @@ export async function GET(request: NextRequest) {
   if (error) {
     const url = new URL("/login", origin);
     url.searchParams.set("error", "El enlace no es válido o ha expirado.");
+    return NextResponse.redirect(url);
+  }
+
+  if (!(await registrarSesionAcceso(supabase))) {
+    await supabase.auth.signOut({ scope: "local" });
+    const url = new URL("/login", origin);
+    url.searchParams.set("error", MENSAJE_FUERA_DE_HORARIO);
     return NextResponse.redirect(url);
   }
 

@@ -22,36 +22,39 @@ export const documentosConfig: TableConfig = {
       },
     },
     {
-        name: "id_tipo_contrato",
-        label: "Tipo Contrato",
-        type: "select",
-        foreignKey: {
-          table: "tipo_contrato",
-          valueField: "id",
-          labelField: "tipo_contrato",
-        },
+      name: "id_tipo_contrato",
+      label: "Tipo Contrato",
+      type: "select",
+      foreignKey: {
+        table: "tipo_contrato",
+        valueField: "id",
+        labelField: "tipo_contrato",
+      },
     },
     {
-        name: "id_operacion",
-        label: "Operacion",
-        type: "select",
-        required:true,
-        foreignKey: {
-          table: "operacion",
-          valueField: "id",
-          labelField: "operacion",
-        },
+      name: "id_operacion",
+      label: "Operacion",
+      type: "select",
+      required: true,
+      foreignKey: {
+        table: "operacion",
+        valueField: "id",
+        labelField: "operacion",
+      },
     },
     {
-        name: "id_estado",
-        label: "Estado Contrato",
-        type: "select",
-        foreignKey: {
-          table: "estado_documento",
-          valueField: "id",
-          labelField: "estado",
-        },
+      name: "id_estado",
+      label: "Estado Contrato",
+      type: "select",
+      foreignKey: {
+        table: "estado_documento",
+        valueField: "id",
+        labelField: "estado",
+      },
     },
+    { name: "fecha_generacion", label: "Fecha Generacion", type: "date", hiddenInForm: true },
+    { name: "created_at", label: "Fecha Creacion", type: "date", hiddenInForm: true },
+    { name: "plazo", label: "Plazo", type: "number", hiddenInForm: true },
     { name: "motivo_anulacion", label: "Motivo Anulacion", type: "text" }
   ]
 };

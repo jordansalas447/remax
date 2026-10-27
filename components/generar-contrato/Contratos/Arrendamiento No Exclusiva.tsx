@@ -33,6 +33,7 @@ export function ArrendamientoPDFNoExclusiva({
   diaFirma = "____",
   mesFirma = "________________",
   anoFirma = "_____",
+  mesesObligacionPostVencimiento = "____",
 }: ContratoPDFProps) {
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
@@ -212,7 +213,7 @@ export function ArrendamientoPDFNoExclusiva({
             </Text>
           </Text>
           <Text style={styles.justified}>
-            En el caso que algún cliente que haya conocido <Text style={styles.bold}>EL INMUEBLE</Text> por gestión de <Text style={styles.bold}>EL COMISIONISTA</Text> y esté debidamente registrado por éste, lo arriende después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}>EL PROPIETARIO</Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}>EL COMISIONISTA</Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>{"____"}</Text> meses una vez vencido el presente documento.
+            En el caso que algún cliente que haya conocido <Text style={styles.bold}>EL INMUEBLE</Text> por gestión de <Text style={styles.bold}>EL COMISIONISTA</Text> y esté debidamente registrado por éste, lo arriende después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}>EL PROPIETARIO</Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}>EL COMISIONISTA</Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>{mesesObligacionPostVencimiento}</Text> meses una vez vencido el presente documento.
           </Text>
         </View>
 

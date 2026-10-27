@@ -232,7 +232,7 @@ export function VentaPDFNoExclusiva({
             <Text style={styles.bold}>DECIMO SEGUNDA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día {diaFirma} del mes de {mesFirma} del año _____.
+            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día {diaFirma} del mes de {mesFirma} del año {anoFirma}.
           </Text>
         </View>
    

@@ -25,17 +25,17 @@ export function TraspasoPDF({
   qr,
   fecha_generacion,
   id_publico,
-  nombreAsesor = "_____________________________________________",
-  inmuebleDireccion = "__________________________________________________",
-  inmuebleDistrito = "_______________",
-  inmueblePartida = "______________________",
-  nombreNegocio = "___________",
-  giroNegocio = "_____________",
+  nombreAsesor = "_________________________________________________",
+  inmuebleDireccion = "____________________________________________________________________",
+  inmuebleDistrito = "______________",
+  nombreNegocio = "________________________",
+  giroNegocio = "__________________________________",
   comision = "____",
   duracionMeses = "_____",
+  mesesObligacionPostVencimiento = "___",
   diaFirma = "_____",
-  mesFirma = "_____________________",
-  anoFirma = "2026",
+  mesFirma = "__________________",
+  anoFirma = "_____",
 }: ContratoPDFProps) {
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
@@ -59,7 +59,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>PRIMERA:</Text>
           </Text>
           <Text style={styles.justified}>
-            <Text style={styles.bold}>EL CLIENTE</Text> es el dueño de un local comercial de <Text style={styles.dataInput}>__________________________________</Text> llamado “ <Text style={styles.dataInput}>________________________</Text> ” ubicado en: <Text style={styles.dataInput}>____________________________________________________________________</Text> , distrito de <Text style={styles.dataInput}>______________</Text>, provincia y departamento de <Text style={styles.bold}>AREQUIPA</Text>, y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL LOCAL COMERCIAL</Text>.
+            <Text style={styles.bold}>EL CLIENTE</Text> es el dueño de un local comercial de <Text style={styles.dataInput}>{giroNegocio}</Text> llamado “ <Text style={styles.dataInput}>{nombreNegocio}</Text> ” ubicado en: <Text style={styles.dataInput}>{inmuebleDireccion}</Text> , distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de <Text style={styles.bold}>AREQUIPA</Text>, y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL LOCAL COMERCIAL</Text>.
           </Text>
         </View>
 
@@ -79,7 +79,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>TERCERA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Por medio del presente acuerdo, <Text style={styles.bold}>EL CLIENTE</Text> otorga a <Text style={styles.bold}>EL COMISIONISTA</Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}>TRASPASO</Text> de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>EXCLUSIVIDAD</Text>, gestión que será realizada por El Asesor Sr./Sra./Srta: <Text style={styles.dataInput}> _________________________________________________</Text>, <Text style={styles.bold}>EL COMISIONISTA</Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato, siendo <Text style={styles.bold}>EL COMISIONISTA</Text> y su grupo de trabajo, las únicas personas autorizadas para promover <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> dentro de los medios que se enunciarán en la cláusula siguiente, no pudiendo <Text style={styles.bold}>EL CLIENTE</Text> contratar con otra empresa o persona que se dedique al corretaje inmobiliario, dentro del plazo de duración del presente documento.
+            Por medio del presente acuerdo, <Text style={styles.bold}>EL CLIENTE</Text> otorga a <Text style={styles.bold}>EL COMISIONISTA</Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}>TRASPASO</Text> de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>EXCLUSIVIDAD</Text>, gestión que será realizada por El Asesor Sr./Sra./Srta: <Text style={styles.dataInput}> {nombreAsesor}</Text>, <Text style={styles.bold}>EL COMISIONISTA</Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato, siendo <Text style={styles.bold}>EL COMISIONISTA</Text> y su grupo de trabajo, las únicas personas autorizadas para promover <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> dentro de los medios que se enunciarán en la cláusula siguiente, no pudiendo <Text style={styles.bold}>EL CLIENTE</Text> contratar con otra empresa o persona que se dedique al corretaje inmobiliario, dentro del plazo de duración del presente documento.
           </Text>
         </View>
 
@@ -99,7 +99,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>QUINTA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Que, a consecuencia del presente acuerdo, <Text style={styles.bold}>EL CLIENTE</Text> se compromete a brindar todas las facilidades para mostrar <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> y a entregar a <Text style={styles.bold}>EL COMISIONISTA</Text> una comisión equivalente a <Text style={styles.dataInput}>____</Text>% (no incluye <Text style={styles.bold}>IGV</Text>), sobre la base del precio final de traspaso negociado por <Text style={styles.bold}>EL COMISIONISTA</Text> con el futuro cliente interesado y previamente aceptado por <Text style={styles.bold}>EL CLIENTE</Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}>EL COMISIONISTA</Text> al momento de la firma del Contrato de Traspaso que se genere entre <Text style={styles.bold}>EL CLIENTE</Text> y el cliente interesado que haya sido presentado por <Text style={styles.bold}>EL COMISIONISTA</Text>. Asimismo, <Text style={styles.bold}>EL CLIENTE</Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de venta de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text>:
+            Que, a consecuencia del presente acuerdo, <Text style={styles.bold}>EL CLIENTE</Text> se compromete a brindar todas las facilidades para mostrar <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> y a entregar a <Text style={styles.bold}>EL COMISIONISTA</Text> una comisión equivalente a <Text style={styles.dataInput}>{comision}</Text>% (no incluye <Text style={styles.bold}>IGV</Text>), sobre la base del precio final de traspaso negociado por <Text style={styles.bold}>EL COMISIONISTA</Text> con el futuro cliente interesado y previamente aceptado por <Text style={styles.bold}>EL CLIENTE</Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}>EL COMISIONISTA</Text> al momento de la firma del Contrato de Traspaso que se genere entre <Text style={styles.bold}>EL CLIENTE</Text> y el cliente interesado que haya sido presentado por <Text style={styles.bold}>EL COMISIONISTA</Text>. Asimismo, <Text style={styles.bold}>EL CLIENTE</Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de venta de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text>:
           </Text>
           <View style={{ marginLeft: 14, marginTop: 4 }}>
             <Text style={styles.justified}> - Copia del documento de identidad de <Text style={styles.bold}>EL CLIENTE</Text></Text>
@@ -114,7 +114,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>SEXTA:</Text>
           </Text>
           <Text style={styles.justified}>
-            El plazo de duración del presente acuerdo será de <Text style={styles.dataInput}>_____</Text> meses contados a partir de la fecha consignada al final del presente documento. Las partes podrán renovar este contrato por mutuo acuerdo, debiendo realizarlo de manera escrita.
+            El plazo de duración del presente acuerdo será de <Text style={styles.dataInput}>{duracionMeses}</Text> meses contados a partir de la fecha consignada al final del presente documento. Las partes podrán renovar este contrato por mutuo acuerdo, debiendo realizarlo de manera escrita.
           </Text>
         </View>
 
@@ -124,7 +124,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>SÉPTIMA:</Text>
           </Text>
           <Text style={styles.justified}>
-            El presente contrato quedará resuelto automáticamente y sin necesidad de documento alguno, al vencimiento del mismo, salvo acuerdo de renovación de las partes. De igual manera en el caso que <Text style={styles.bold}>EL COMISIONISTA</Text> consiga el objetivo de realizar el traspaso de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> en un plazo menor a los <Text style={styles.dataInput}>____</Text> meses, el contrato quedará resuelto en el momento que ambas partes hayan cumplido con las obligaciones adquiridas por el presente documento.
+            El presente contrato quedará resuelto automáticamente y sin necesidad de documento alguno, al vencimiento del mismo, salvo acuerdo de renovación de las partes. De igual manera en el caso que <Text style={styles.bold}>EL COMISIONISTA</Text> consiga el objetivo de realizar el traspaso de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> en un plazo menor a los <Text style={styles.dataInput}>{duracionMeses}</Text> meses, el contrato quedará resuelto en el momento que ambas partes hayan cumplido con las obligaciones adquiridas por el presente documento.
           </Text>
         </View>
 
@@ -144,7 +144,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>NOVENA:</Text>
           </Text>
           <Text style={styles.justified}>
-            En el caso que algún cliente que haya conocido <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> por gestión de <Text style={styles.bold}>EL COMISIONISTA</Text> y esté debidamente registrado por éste, lo traspase después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}>EL CLIENTE</Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}>EL COMISIONISTA</Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>___</Text> meses una vez vencido el presente documento.
+            En el caso que algún cliente que haya conocido <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> por gestión de <Text style={styles.bold}>EL COMISIONISTA</Text> y esté debidamente registrado por éste, lo traspase después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}>EL CLIENTE</Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}>EL COMISIONISTA</Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>{mesesObligacionPostVencimiento}</Text> meses una vez vencido el presente documento.
           </Text>
         </View>
 
@@ -185,7 +185,7 @@ export function TraspasoPDF({
             <Text style={styles.bold}>DÉCIMO SEGUNDA:</Text>
           </Text>
           <Text style={styles.justified}>
-            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>_____</Text> del mes de <Text style={styles.dataInput}>__________________</Text> del año <Text style={styles.bold}>_____</Text>.
+            Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año <Text style={styles.dataInput}>{anoFirma}</Text>.
           </Text>
         </View>
    

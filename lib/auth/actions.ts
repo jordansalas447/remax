@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { MENSAJE_FUERA_DE_HORARIO, registrarSesionAcceso } from "@/lib/auth/acceso";
 
 export type ActionState = {
   error?: string;
@@ -56,6 +57,12 @@ export async function login(_prev: ActionState, formData: FormData): Promise<Act
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) return { error: translateAuthError(error.message), fields: { email } };
+
+  // Control de acceso por horario: registra la sesión o la cierra
+  if (!(await registrarSesionAcceso(supabase))) {
+    await supabase.auth.signOut({ scope: "local" });
+    return { error: MENSAJE_FUERA_DE_HORARIO, fields: { email } };
+  }
 
   revalidatePath("/", "layout");
   redirect(next);
