@@ -26,7 +26,7 @@ export function ArrendamientoPDFNoExclusiva({
   id_publico,
   nombreAsesor = "____________________________________________",
   inmuebleDireccion = "__________________________________________________",
-  inmuebleDistrito = "_______________",
+  inmuebleDistrito = "_______________ , ",
   inmueblePartida = "______________",
   comision = "________________________",
   duracionMeses = "____",
@@ -90,7 +90,7 @@ export function ArrendamientoPDFNoExclusiva({
             <Text style={styles.dataInput}>
               {" "}{inmuebleDistrito}
             </Text>
-            , provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos de la Partida Electrónica N°
+            provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos de la Partida Electrónica N°
             <Text style={styles.dataInput}>
               {" "}{inmueblePartida}
             </Text>
@@ -121,7 +121,7 @@ export function ArrendamientoPDFNoExclusiva({
             </Text>
           </Text>
           <Text style={styles.justified}>
-            Por medio del presente acuerdo, <Text style={styles.bold}>EL PROPIETARIO</Text> otorga a <Text style={styles.bold}>EL COMISIONISTA</Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}>ARRENDAMIENTO</Text> de <Text style={styles.bold}>EL INMUEBLE</Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>NO EXCLUSIVIDAD</Text>, gestión que será realizada por El Agente Sr./Sra./Srta.:
+            Por medio del presente acuerdo, <Text style={styles.bold}>EL PROPIETARIO</Text> otorga a <Text style={styles.bold}>EL COMISIONISTA</Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}>ARRENDAMIENTO</Text> de <Text style={styles.bold}>EL INMUEBLE</Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}>NO EXCLUSIVIDAD</Text>, gestión que será realizada por El Agente Sr./Sra./Srta:
             <Text style={styles.dataInput}> {nombreAsesor} </Text>
             , <Text style={styles.bold}>EL COMISIONISTA</Text> iniciará el proceso de búsqueda de posibles arrendatarios, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato siendo <Text style={styles.bold}>EL COMISIONISTA</Text> y su grupo de trabajo, las personas autorizadas para promover <Text style={styles.bold}>EL INMUEBLE</Text> dentro de los medios que se enunciarán en la cláusula siguiente.
           </Text>
@@ -154,8 +154,10 @@ export function ArrendamientoPDFNoExclusiva({
           <View style={{ marginLeft: 14, marginTop: 4 }}>
             <Text style={styles.justified}>- 1 mes de arrendamiento (no incluye IGV), si el arrendamiento fuera por el plazo de uno a dos años</Text>
             <Text style={styles.justified}>- 2 meses de arrendamiento (no incluye IGV), si el arrendamiento fuera por el plazo de tres años a más.</Text>
-            <Text style={styles.justified}>- Tiempo parcial que sería equivalente al <Text style={styles.dataInput}>{"____"}</Text>% del monto de alquiler.</Text>
+            <Text style={styles.justified}>- Tiempo parcial que sería equivalente al <Text style={styles.dataInput}>{"_____"}</Text>% del monto de alquiler.</Text>
+          </View>  
             <Text style={styles.justified}>Sobre la base del monto negociado por <Text style={styles.bold}>EL COMISIONISTA</Text> con el futuro arrendatario y previamente aceptado por <Text style={styles.bold}>EL PROPIETARIO</Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}>EL COMISIONISTA</Text> al momento de la firma del Contrato de arrendamiento que se genere entre <Text style={styles.bold}>EL PROPIETARIO</Text> con el arrendatario que haya sido presentado por <Text style={styles.bold}>EL COMISIONISTA</Text>. Asimismo, <Text style={styles.bold}>EL PROPIETARIO</Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de arrendamiento de <Text style={styles.bold}>EL INMUEBLE</Text>:</Text>
+          <View style={{ marginLeft: 14, marginTop: 4 }}>  
             <Text style={styles.justified}>- Copia Simple de la partida registral de <Text style={styles.bold}>EL INMUEBLE</Text> actualizada con menos de 30 días.</Text>
             <Text style={styles.justified}>- Copia del documento de identidad de <Text style={styles.bold}>EL PROPIETARIO</Text></Text>
             <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>

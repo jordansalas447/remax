@@ -24,7 +24,7 @@ export default async function QrContratoPage({ searchParams }: { searchParams: R
   const codigo = searchParams.codigo;
   const detalle = await getContratoDetallePorCodigo(codigo);
 
-  console.log(codigo,detalle)
+  //console.log(codigo,detalle)
 
   if (!codigo || !detalle) {
     return (
