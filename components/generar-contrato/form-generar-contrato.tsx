@@ -212,6 +212,8 @@ export default function FormGenerarContrato({
     setError(null);
     setEnviando(true);
 
+    console.log(e)
+
     try {
 
     //  value={(() => {
@@ -361,7 +363,7 @@ export default function FormGenerarContrato({
                   <NativeSelect
                     id="id_tipo_contrato"
                     name="id_tipo_contrato"
-                    value={form.id_tipo_contrato || 1}
+                    value={form.id_tipo_contrato || 0}
                     onChange={handleChange}
                     required
                     disabled={enviando}
