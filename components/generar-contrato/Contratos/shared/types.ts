@@ -15,6 +15,7 @@ export type ContratoPDFProps = {
   tipoOperacion?: number;
   id_publico?: string;
   fecha_generacion?:string;
+  porcentajeMontoAlquiler?:string;
   qr?: string;
   logoMarcadeAgua?: NonSharedBuffer;
   logoIzquierdo?: NonSharedBuffer;

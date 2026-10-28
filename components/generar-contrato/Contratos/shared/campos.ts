@@ -17,6 +17,7 @@ export type CampoTextoContratoKey =
   | "inmuebleDistrito"
   | "inmuebleProvincia"
   | "inmuebleDepartamento"
+  | "porcentajeMontoAlquiler"
   | "inmueblePartida"
   | "comision"
   | "duracionMeses"
@@ -57,6 +58,7 @@ export const CLAVES_TEXTO_CONTRATO: CampoTextoContratoKey[] = [
   "inmuebleProvincia",
   "inmuebleDepartamento",
   "inmueblePartida",
+  "porcentajeMontoAlquiler",
   "comision",
   "duracionMeses",
   "mesesObligacionPostVencimiento",
@@ -136,6 +138,14 @@ const OBLIGACION_POST: CampoContrato = {
   sufijo: "meses",
 };
 
+const PORCENTAJEMONTOALQUILER:CampoContrato = {
+  key: "porcentajeMontoAlquiler",
+  label: "Porcentaje Meses Alquiler",
+  seccion: "condiciones",
+  type: "number",
+  placeholder: "3",
+}
+
 const FIRMA: CampoContrato[] = [
   { key: "diaFirma", label: "Día", seccion: "firma", type: "number", placeholder: "15" },
   { key: "mesFirma", label: "Mes", seccion: "firma", type: "mes" },
@@ -176,7 +186,7 @@ export function getCamposContrato(
 
     // ARRENDAMIENTO
     case 2:
-      return [DIRECCION, DISTRITO, PARTIDA, ASESOR, DURACION, OBLIGACION_POST, ...FIRMA];
+      return [DIRECCION, DISTRITO, PARTIDA, ASESOR, DURACION, OBLIGACION_POST, ...(exclusiva ? [] : [PORCENTAJEMONTOALQUILER]), ...FIRMA];
 
     // ANTICRESIS
     case 3:

@@ -43,7 +43,7 @@ export async function AppSidebar() {
 
   const soloGenerarContrato = !isAdmin && [13, 15,undefined].includes(idAsociado);
 
-  console.log(isAdmin,idAsociado,soloGenerarContrato)
+ // console.log(isAdmin,idAsociado,soloGenerarContrato)
 
   return (
     <Sidebar>

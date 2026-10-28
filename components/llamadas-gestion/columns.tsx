@@ -112,6 +112,13 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     },
   },
   {
+    accessorKey: "nro_contrato",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nro Contrato" />
+    ),
+    cell: ({ row }) => formatCell(row.getValue("nro_contrato")),
+  },
+  {
     accessorKey: "Dias_Transcurridos",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Días Transcurridos" />

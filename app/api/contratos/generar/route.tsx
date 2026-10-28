@@ -118,7 +118,6 @@ export async function POST(request: Request) {
     }
   }
 
-
   const propietarios = extraerPropietarios(body.propietarios);
 
   const datos: ContratoPDFProps = {
@@ -141,7 +140,7 @@ export async function POST(request: Request) {
 
   let TipoContratoLabel;
 
-  
+  //console.log(datos)
 
   if  (tipoOperacion == 3) {
     if (tipocontrato == 1) {

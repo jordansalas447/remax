@@ -17,6 +17,7 @@ export type LlamadasRowDetalle = {
   tipo_propiedad?: string; // tp.tipo_propiedad
   direccion: string; // i.direccion
   tipo_negocio: string; // op.operacion
+  nro_contrato: string;
   modalidad: string; // tc.tipo_contrato
   id_estado_llamada?: number;
   estado_llamada?: any;

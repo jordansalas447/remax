@@ -238,12 +238,16 @@ function LlamadaCard({ row }: { row: LlamadasRowDetalle }) {
     <li className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
+        <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+              {row.nro_contrato}
+          </p>
           <p className="truncate text-base font-semibold text-zinc-900 dark:text-zinc-50">
             {row.propietario ?? "Propietario sin nombre"}
           </p>
           <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
             Asociado: {row.asociado ?? "sin asignar"}
           </p>
+
         </div>
         <Badge variant={row.color as BadgeVariant} className="shrink-0 rounded-full px-2.5 py-0.5 font-medium">
           {row.estado_llamada ?? ESTADO_PENDIENTE}
