@@ -26,6 +26,9 @@ export default function GenerarContratos({
       setFetching(true);
       try {
         const data = await getDocumentosByAsociado(Asociado);
+
+        console.log(data)
+
         setDocumentos(data || []);
       } catch (err) {
         setDocumentos([]);

@@ -64,13 +64,19 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => formatBoolean(row.getValue("apoderado")),
   },
-
   {
     accessorKey: "nro_propietarios",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Nro Propietario(s)" />
     ),
     cell: ({ row }) => formatCell(row.getValue("nro_propietarios")),
+  },
+  {
+    accessorKey: "plazo",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Plazo" />
+    ),
+    cell: ({ row }) => formatCell(row.getValue("plazo")),
   },
   {
     accessorKey: "eliminado",
