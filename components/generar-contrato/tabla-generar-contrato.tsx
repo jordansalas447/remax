@@ -12,6 +12,9 @@ interface TablaGenerarContratoProps {
 export default function TablaGenerarContrato({
   documentos,
 }: TablaGenerarContratoProps) {
+
+  //console.log(documentos)
+
   return (
     <div className="bg-white p-8 shadow rounded-lg border">
       <DataTable

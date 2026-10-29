@@ -7,6 +7,7 @@ export type FieldType =
   | "boolean"
   | "date"
   | "datenative"
+  | "datetime"
   | "textarea"
   | "select"
   | "enum"

@@ -52,8 +52,8 @@ export const documentosConfig: TableConfig = {
         labelField: "estado",
       },
     },
-    { name: "fecha_generacion", label: "Fecha Generacion", type: "date", hiddenInForm: true },
-    { name: "created_at", label: "Fecha Creacion", type: "date", hiddenInForm: true },
+    { name: "fecha_generacion", label: "Fecha Generacion", type: "datetime", hiddenInForm: true },
+    // { name: "created_at", label: "Fecha Creacion", type: "date", hiddenInForm: true },
     { name: "plazo", label: "Plazo", type: "number", hiddenInForm: true },
     { name: "motivo_anulacion", label: "Motivo Anulacion", type: "text" }
   ]

@@ -4,6 +4,7 @@ import type { LegacyColumnDef } from "@tanstack/react-table/legacy"
 
 import { DataTableColumnHeader } from "@/components/data-table"
 import type { DocumentosRowDetalle } from "@/lib/supabase/queries/documentos"
+import { Badge, BadgeVariant } from "../ui/badge"
 
 function formatCell(value: unknown) {
   if (value === null || value === undefined || value === "") return "--"
@@ -74,7 +75,7 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
   {
     accessorKey: "plazo",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Plazo" />
+      <DataTableColumnHeader column={column} title="Plazo (días)" />
     ),
     cell: ({ row }) => formatCell(row.getValue("plazo")),
   },
@@ -88,9 +89,32 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
   {
     accessorKey: "id_estado",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Estado" />
+      <DataTableColumnHeader column={column} title="Fecha Expiración" />
     ),
-    cell: ({ row }) => formatCell(row.original.estado_documento?.estado),
+    cell: ({ row }) => {
+      const estado =  formatCell(row.original.estado_documento?.estado)
+      const color = formatCell(row.original.estado_documento?.color)
+      const emitido = row.getValue("created_at");
+      const plazo:number = row.getValue("plazo") ?? 0;
+      
+      const fechaVencimiento = emitido
+      ? new Date(emitido as string | Date)
+      : null;
+    
+    if (fechaVencimiento) {
+      fechaVencimiento.setDate(fechaVencimiento.getDate() + plazo);
+    }
+    
+    const fechaFormateada = fechaVencimiento
+      ? fechaVencimiento.toLocaleDateString("es-PE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      : "—";
+    
+    return fechaFormateada
+    },
   },
   {
     accessorKey: "motivo_anulacion",
@@ -109,15 +133,22 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
   {
     accessorKey: "created_at",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Fecha Registro" />
+      <DataTableColumnHeader column={column} title="Fecha Emisión" />
     ),
     cell: ({ row }) => {
       const value = row.getValue("created_at");
       if (!value) return "";
-      const date = typeof value === "string" || typeof value === "number"
-        ? new Date(value)
-        : value; // fallback if already Date
-      return date.toLocaleString();
+      
+      const date =
+        typeof value === "string" || typeof value === "number"
+          ? new Date(value)
+          : value as Date; // Si ya es Date
+      
+      return date.toLocaleDateString("es-PE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
     },
   },
 ]

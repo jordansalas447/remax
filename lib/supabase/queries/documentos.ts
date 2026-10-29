@@ -16,6 +16,7 @@ export type DocumentosRowDetalle = DocumentosRow & {
   } | null;
   estado_documento?: {
     estado: string;
+    color:string;
   } | null;
 };
 

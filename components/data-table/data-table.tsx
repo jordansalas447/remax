@@ -343,6 +343,8 @@ export function DataTable<TData extends RowData>({
                                                     cell.getContext()
                                                 )
 
+                                                console.log(content)
+
                                                 return (
                                                     <TableCell
                                                         key={cell.id}

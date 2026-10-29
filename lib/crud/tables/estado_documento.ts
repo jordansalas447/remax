@@ -7,5 +7,6 @@ export const estado_documentoConfig: TableConfig = {
   primaryKey: "id",
   fields: [
     { name: "estado", label: "Estado", type: "text" },
+    { name: "color", label: "Color", type: "text" },
   ],
 };

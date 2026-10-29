@@ -48,8 +48,36 @@ function normalizeInputValue(field: FieldConfig, value: string | number | boolea
     return String(value);
   }
 
+  if (field.type === "datetime") {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (!trimmed) return "";
+
+      // Si ya viene en formato datetime-local (YYYY-MM-DDTHH:mm)
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(trimmed)) {
+        return trimmed.slice(0, 16); // YYYY-MM-DDTHH:mm
+      }
+
+      // Intentar parsear y convertir a formato local
+      const parsed = new Date(trimmed);
+      if (!Number.isNaN(parsed.getTime())) {
+        // Ajustar a zona local (datetime-local usa hora local)
+        const year = parsed.getFullYear();
+        const month = String(parsed.getMonth() + 1).padStart(2, "0");
+        const day = String(parsed.getDate()).padStart(2, "0");
+        const hours = String(parsed.getHours()).padStart(2, "0");
+        const minutes = String(parsed.getMinutes()).padStart(2, "0");
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+      }
+      return "";
+    }
+    return String(value);
+  }
+
   return String(value);
 }
+
+
 
 export function FieldInput(props: FieldInputProps) {
   const { field, value, options, onChange, onQuickCreate } = props;
@@ -216,6 +244,27 @@ export function FieldInput(props: FieldInputProps) {
         disabled={disabled}
         className={baseClass}
         dateConstraints={field.dateConstraints}
+      />
+    );
+  }
+
+  if (field.type === "datetime") {
+    const isReadOnly = field.readOnlyOnEdit || !onChange;
+    return (
+      <Input
+        id={inputId}
+        name={inputName}
+        type="datetime-local"
+        value={inputValue}
+        required={required}
+        disabled={disabled}
+        className={baseClass}
+        readOnly={isReadOnly}
+        onChange={
+          !isReadOnly
+            ? (e) => onChange?.(e.target.value)
+            : undefined
+        }
       />
     );
   }

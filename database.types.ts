@@ -676,16 +676,19 @@ export type Database = {
         Row: {
           activo: boolean
           actualizado_at: string
+          eliminado: boolean | null
           user_id: string
         }
         Insert: {
           activo?: boolean
           actualizado_at?: string
+          eliminado?: boolean | null
           user_id: string
         }
         Update: {
           activo?: boolean
           actualizado_at?: string
+          eliminado?: boolean | null
           user_id?: string
         }
         Relationships: []
@@ -891,18 +894,21 @@ export type Database = {
       }
       estado_documento: {
         Row: {
+          color: string | null
           created_at: string
           eliminado: boolean | null
           estado: string | null
           id: number
         }
         Insert: {
+          color?: string | null
           created_at?: string
           eliminado?: boolean | null
           estado?: string | null
           id?: number
         }
         Update: {
+          color?: string | null
           created_at?: string
           eliminado?: boolean | null
           estado?: string | null
@@ -1113,6 +1119,7 @@ export type Database = {
         Row: {
           activo: boolean
           dia_semana: number
+          eliminado: boolean | null
           hora_fin: string
           hora_inicio: string
           id: number
@@ -1121,17 +1128,19 @@ export type Database = {
         Insert: {
           activo?: boolean
           dia_semana: number
+          eliminado?: boolean | null
           hora_fin: string
           hora_inicio: string
-          id?: never
+          id?: number
           user_id: string
         }
         Update: {
           activo?: boolean
           dia_semana?: number
+          eliminado?: boolean | null
           hora_fin?: string
           hora_inicio?: string
-          id?: never
+          id?: number
           user_id?: string
         }
         Relationships: []
@@ -2194,18 +2203,21 @@ export type Database = {
       sesiones_acceso: {
         Row: {
           creado_at: string
+          eliminado: boolean | null
           session_id: string
           user_id: string
           valido_hasta: string
         }
         Insert: {
           creado_at?: string
+          eliminado?: boolean | null
           session_id: string
           user_id: string
           valido_hasta: string
         }
         Update: {
           creado_at?: string
+          eliminado?: boolean | null
           session_id?: string
           user_id?: string
           valido_hasta?: string
@@ -2505,6 +2517,7 @@ export type Database = {
           id_remax: number | null
           is_expired: boolean | null
           modalidad: string | null
+          nro_contrato: string | null
           numero_telefono: string | null
           observacion: string | null
           observacion_seguimiento: string | null
@@ -2514,6 +2527,13 @@ export type Database = {
           tipo_propiedad: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "contratos_nro_contrato_fkey"
+            columns: ["nro_contrato"]
+            isOneToOne: true
+            referencedRelation: "documentos"
+            referencedColumns: ["nro_contrato"]
+          },
           {
             foreignKeyName: "propiedad_propietario_id_llamada_fkey"
             columns: ["id_llamada"]

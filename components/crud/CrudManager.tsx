@@ -145,19 +145,8 @@ export function CrudManager<T extends TableName = TableName>({
       id: field.name,
       accessorFn: (row: TableRow<T>) => {
         const raw = (row as Record<string, unknown>)[field.name];
-        // Resolver etiqueta FK para que el filtro busque por nombre visible
-        if (options[field.name]) {
-          const match = options[field.name].find((o) => o.value === String(raw ?? ""));
-          if (match) return match.label;
-        }
-        // Resolver etiqueta enum (opciones estáticas)
-        if (field.type === "enum" && field.options) {
-          const match = field.options.find((o) => o.value === String(raw ?? ""));
-          if (match) return match.label;
-        }
-        if (raw === null || raw === undefined) return "";
-        if (typeof raw === "boolean") return raw ? "Sí" : "No";
-        return String(raw);
+        if (raw === null || raw === undefined || raw === "") return "";
+        return formatDisplayValue(field, raw, options);
       },
       header: field.label,
       filterFn: "includesString" as const,
