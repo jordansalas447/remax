@@ -323,6 +323,38 @@ export type Database = {
         }
         Relationships: []
       }
+      clausulas: {
+        Row: {
+          created_at: string
+          id: number
+          id_plantilla_documento: number | null
+          texto: string | null
+          titulo: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          id_plantilla_documento?: number | null
+          texto?: string | null
+          titulo?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          id_plantilla_documento?: number | null
+          texto?: string | null
+          titulo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clausulas_id_plantilla_documento_fkey"
+            columns: ["id_plantilla_documento"]
+            isOneToOne: false
+            referencedRelation: "plantillas_documentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       concepto_multa: {
         Row: {
           created_at: string
@@ -728,6 +760,27 @@ export type Database = {
           },
         ]
       }
+      dias_semana: {
+        Row: {
+          created_at: string
+          descripcion: string | null
+          dia: string | null
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          descripcion?: string | null
+          dia?: string | null
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string | null
+          dia?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
       distritos: {
         Row: {
           deleted_at: string | null
@@ -763,6 +816,7 @@ export type Database = {
           id_asociado: number | null
           id_estado: number | null
           id_operacion: number | null
+          id_plantilla_documento: number | null
           id_publico: string
           id_tipo_contrato: number | null
           motivo_anulacion: string | null
@@ -783,6 +837,7 @@ export type Database = {
           id_asociado?: number | null
           id_estado?: number | null
           id_operacion?: number | null
+          id_plantilla_documento?: number | null
           id_publico?: string
           id_tipo_contrato?: number | null
           motivo_anulacion?: string | null
@@ -803,6 +858,7 @@ export type Database = {
           id_asociado?: number | null
           id_estado?: number | null
           id_operacion?: number | null
+          id_plantilla_documento?: number | null
           id_publico?: string
           id_tipo_contrato?: number | null
           motivo_anulacion?: string | null
@@ -830,6 +886,13 @@ export type Database = {
             columns: ["id_operacion"]
             isOneToOne: false
             referencedRelation: "operacion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentos_id_plantilla_documento_fkey"
+            columns: ["id_plantilla_documento"]
+            isOneToOne: false
+            referencedRelation: "plantillas_documentos"
             referencedColumns: ["id"]
           },
           {
@@ -1143,7 +1206,15 @@ export type Database = {
           id?: number
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "horarios_acceso_dia_semana_fkey"
+            columns: ["dia_semana"]
+            isOneToOne: false
+            referencedRelation: "dias_semana"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       inmuebles: {
         Row: {
@@ -1715,33 +1786,57 @@ export type Database = {
           activo: boolean | null
           created_at: string
           id: number
+          id_operacion: number | null
+          id_tipo_contrato: number | null
           imagekit_file_id: number | null
           imagekit_url: string | null
+          introduccion: string | null
           nombre: string | null
-          tipo: string | null
+          propietarios: string | null
           version: string | null
         }
         Insert: {
           activo?: boolean | null
           created_at?: string
           id?: number
+          id_operacion?: number | null
+          id_tipo_contrato?: number | null
           imagekit_file_id?: number | null
           imagekit_url?: string | null
+          introduccion?: string | null
           nombre?: string | null
-          tipo?: string | null
+          propietarios?: string | null
           version?: string | null
         }
         Update: {
           activo?: boolean | null
           created_at?: string
           id?: number
+          id_operacion?: number | null
+          id_tipo_contrato?: number | null
           imagekit_file_id?: number | null
           imagekit_url?: string | null
+          introduccion?: string | null
           nombre?: string | null
-          tipo?: string | null
+          propietarios?: string | null
           version?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "plantillas_documentos_id_operacion_fkey"
+            columns: ["id_operacion"]
+            isOneToOne: false
+            referencedRelation: "operacion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plantillas_documentos_id_tipo_contrato_fkey"
+            columns: ["id_tipo_contrato"]
+            isOneToOne: false
+            referencedRelation: "tipo_contrato"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       precios: {
         Row: {
@@ -2609,6 +2704,7 @@ export type Database = {
     Functions: {
       acceso_habilitado: { Args: never; Returns: boolean }
       actualizar_contratos_vencidos: { Args: never; Returns: number }
+      actualizar_estado_documentos_vencidos: { Args: never; Returns: number }
       horario_actual_permitido: { Args: never; Returns: boolean }
       obtener_reporte_contrato: {
         Args: never

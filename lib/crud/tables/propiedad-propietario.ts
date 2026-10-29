@@ -56,6 +56,7 @@ export const propiedadPropietarioConfig: TableConfig = {
       name: "id_llamada",
       label: "Llamada",
       type: "textplus",
+      hiddenInForm:true,
       selectplus:true,
       foreignKey: {
         table: "llamadas",

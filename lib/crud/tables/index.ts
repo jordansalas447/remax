@@ -44,6 +44,7 @@ import { areasConfig } from "./areas";
 import { controlaccesoConfig } from "./control_acceso";
 import { sesionesaccesoConfig } from "./sesiones_acceso";
 import { horariosaccesoConfig } from "./horarios_acceso";
+import { diasemanaaccesoConfig } from "./dias_semana";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -59,6 +60,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   estado: estadoConfig,
   alcances:alcanceConfig,
   concepto_multa:concepto_multaConfig,
+  dias_semana:diasemanaaccesoConfig,
   items_checklist: itemsChecklistConfig,
   justificaciones:justificacionesConfig,
   control_acceso:controlaccesoConfig,

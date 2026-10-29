@@ -33,6 +33,7 @@ type SupportedTableName =
   | "estado"
   | "tardanzas"
   | "resource"
+  | "dias_semana"
   | "alcance"
   | "mes"
   | "llamadas"
@@ -77,6 +78,7 @@ export type Llamadas = TableRow<"llamadas">
 export type Asistencias = TableRow<"asistencias">
 export type Documentos = TableRow<"documentos">
 export type EstadoDocumentos = TableRow<"estado_documento">
+export type DiasSemana = TableRow<"dias_semana">
 export type Profiles = TableRow<"profiles">
 export type Justificaciones = TableRow<"justificaciones">
 export type Tipo_Multa = TableRow<"tipo_multa">
