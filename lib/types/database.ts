@@ -27,11 +27,13 @@ type SupportedTableName =
   | "empresas"
   | "eventos"
   | "multas"
+  | "plantillas_documentos"
   | "areas"
   | "alcances"
   | "documentos"
   | "estado"
   | "tardanzas"
+  | "clausulas"
   | "resource"
   | "dias_semana"
   | "alcance"
@@ -70,6 +72,7 @@ export type Empresas = TableRow<"empresas">
 export type Alcances = TableRow<"alcances">
 export type Areas = TableRow<"areas">
 export type Eventos = TableRow<"eventos">
+export type PlantillasDocumentos = TableRow<"plantillas_documentos">
 export type Multas = TableRow<"multas">
 export type Control_Acceso = TableRow<"control_acceso">
 export type Sesiones_Acceso = TableRow<"sesiones_acceso">
@@ -78,6 +81,7 @@ export type Llamadas = TableRow<"llamadas">
 export type Asistencias = TableRow<"asistencias">
 export type Documentos = TableRow<"documentos">
 export type EstadoDocumentos = TableRow<"estado_documento">
+export type Clausulas = TableRow<"clausulas">
 export type DiasSemana = TableRow<"dias_semana">
 export type Profiles = TableRow<"profiles">
 export type Justificaciones = TableRow<"justificaciones">

@@ -45,6 +45,8 @@ import { controlaccesoConfig } from "./control_acceso";
 import { sesionesaccesoConfig } from "./sesiones_acceso";
 import { horariosaccesoConfig } from "./horarios_acceso";
 import { diasemanaaccesoConfig } from "./dias_semana";
+import { plantillasDocumentosConfig } from "./plantillas_documentos";
+import { clausulasConfig } from "./clausulas";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -62,6 +64,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   concepto_multa:concepto_multaConfig,
   dias_semana:diasemanaaccesoConfig,
   items_checklist: itemsChecklistConfig,
+  plantillas_documentos:plantillasDocumentosConfig,
   justificaciones:justificacionesConfig,
   control_acceso:controlaccesoConfig,
   sesiones_acceso:sesionesaccesoConfig,
@@ -73,6 +76,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,
+  clausulas:clausulasConfig,
   asistencias:asistenciasConfig,
   documentos:documentosConfig,
   estado_documento:estado_documentoConfig,
