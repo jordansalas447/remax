@@ -15,14 +15,17 @@ export default async function Page() {
   let id_asociado: number;
   id_asociado = Asociado?.personas?.asociados[0].id_asociado || 0;
 
+  const NombreAsociado = Asociado?.personas?.asociados[0].nombre_completo;
+
   const DataOperaciones = await getOperaciones();
   const DateTiposContrato = await getTiposContrato();
 
   //console.log(DataOperaciones,DateTiposContrato)
+  //console.log(Asociado?.personas?.asociados[0].nombre_completo)
 
   return (
     <main className="mx-auto">
-      <GenerarContratos TipoContratos={DateTiposContrato} TipoOperaciones={DataOperaciones} Asociado={id_asociado || 0} />
+      <GenerarContratos TipoContratos={DateTiposContrato} TipoOperaciones={DataOperaciones} Asociado={id_asociado || 0} NombreAsociado={NombreAsociado} />
     </main>
   );
 }

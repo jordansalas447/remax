@@ -23,6 +23,7 @@ interface FormularioProps {
   TipoContratos: TipoContratoRow[]
   TipoOperaciones: OperacionesRow[]
   Asociado: number
+  NombreAsociado: string | undefined | null;
   onResultado: (valor: string) => void;
 }
 
@@ -38,6 +39,7 @@ export default function FormGenerarContrato({
   TipoContratos,
   TipoOperaciones,
   Asociado,
+  NombreAsociado,
   onResultado
 }: FormularioProps) {
 
@@ -554,6 +556,7 @@ export default function FormGenerarContrato({
                             tipoOperacion={tipoOperacionId}
                             tipoContrato={tipoContratoId}
                             nroPropietarios={nroPropietarios}
+                            NombreAsociado={NombreAsociado}
                             datos={datosContrato}
                             propietarios={propietarios}
                             disabled={enviando}

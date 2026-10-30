@@ -35,6 +35,7 @@ export const asociadosConfig: TableConfig = {
     { name: "nombre_completo", label: "Nombre Completo", type: "text" },
     { name: "fecha_ingreso", label: "Fecha Ingreso", type: "datenative" },
     { name: "fecha_retiro", label: "Fecha Retiro", type: "datenative" },
+    { name: "nro_max_generacion_documentos", label: "Nro max Documentos", type: "datenative" },
     // En tu TableConfig:
     {
       name: "estado",

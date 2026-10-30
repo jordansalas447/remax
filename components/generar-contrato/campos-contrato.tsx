@@ -22,6 +22,7 @@ export type DatosContrato = Partial<Record<CampoTextoContratoKey, string>>;
 interface CamposContratoProps {
   tipoOperacion: number;
   tipoContrato: number;
+  NombreAsociado: string | undefined | null;
   nroPropietarios: number;
   datos: DatosContrato;
   propietarios: Propietario[];
@@ -85,6 +86,7 @@ export default function CamposContrato({
   tipoOperacion,
   tipoContrato,
   nroPropietarios,
+  NombreAsociado,
   datos,
   propietarios,
   disabled,
@@ -101,6 +103,41 @@ export default function CamposContrato({
     const id = `campo-${campo.key}`;
     const value = datos[campo.key] ?? "";
 
+    if (campo.key === "nombreAsesor") {
+      return (
+        <Campo
+          key={campo.key}
+          id={id}
+          label={campo.label}
+          ancho={campo.ancho}
+        >
+          <div className="flex items-center gap-2">
+            <Input
+              id={id}
+              placeholder={campo.placeholder}
+              value={value ?? NombreAsociado ?? ""}
+              disabled={disabled}
+              onChange={(e) =>
+                onDatoChange(campo.key, e.target.value)
+              }
+              className="flex-1"
+            />
+    
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={disabled || !NombreAsociado}
+              onClick={() =>
+                onDatoChange(campo.key, NombreAsociado ?? "")
+              }
+            >
+              + 
+            </Button>
+          </div>
+        </Campo>
+      );
+    }
     if (campo.type === "mes") {
       return (
         <Campo key={campo.key} id={id} label={campo.label} ancho={campo.ancho}>

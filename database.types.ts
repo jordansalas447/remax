@@ -228,6 +228,7 @@ export type Database = {
           id_persona: number | null
           id_public: string
           nombre_completo: string | null
+          nro_max_generacion_documentos: number | null
           url_resource: string | null
         }
         Insert: {
@@ -245,6 +246,7 @@ export type Database = {
           id_persona?: number | null
           id_public?: string
           nombre_completo?: string | null
+          nro_max_generacion_documentos?: number | null
           url_resource?: string | null
         }
         Update: {
@@ -262,6 +264,7 @@ export type Database = {
           id_persona?: number | null
           id_public?: string
           nombre_completo?: string | null
+          nro_max_generacion_documentos?: number | null
           url_resource?: string | null
         }
         Relationships: [
@@ -765,18 +768,21 @@ export type Database = {
           created_at: string
           descripcion: string | null
           dia: string | null
+          eliminado: boolean | null
           id: number
         }
         Insert: {
           created_at?: string
           descripcion?: string | null
           dia?: string | null
+          eliminado?: boolean | null
           id?: number
         }
         Update: {
           created_at?: string
           descripcion?: string | null
           dia?: string | null
+          eliminado?: boolean | null
           id?: number
         }
         Relationships: []
@@ -819,6 +825,7 @@ export type Database = {
           id_plantilla_documento: number | null
           id_publico: string
           id_tipo_contrato: number | null
+          motivo_ampliacion_plazo: string | null
           motivo_anulacion: string | null
           nro_contrato: string
           nro_propietarios: number | null
@@ -840,6 +847,7 @@ export type Database = {
           id_plantilla_documento?: number | null
           id_publico?: string
           id_tipo_contrato?: number | null
+          motivo_ampliacion_plazo?: string | null
           motivo_anulacion?: string | null
           nro_contrato: string
           nro_propietarios?: number | null
@@ -861,6 +869,7 @@ export type Database = {
           id_plantilla_documento?: number | null
           id_publico?: string
           id_tipo_contrato?: number | null
+          motivo_ampliacion_plazo?: string | null
           motivo_anulacion?: string | null
           nro_contrato?: string
           nro_propietarios?: number | null
@@ -1212,6 +1221,13 @@ export type Database = {
             columns: ["dia_semana"]
             isOneToOne: false
             referencedRelation: "dias_semana"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "horarios_acceso_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

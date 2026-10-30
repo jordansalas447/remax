@@ -10,12 +10,14 @@ interface GenerarContratosProps {
   TipoContratos: any[];
   TipoOperaciones: any[];
   Asociado: number;
+  NombreAsociado: string | undefined | null;
 }
 
 export default function GenerarContratos({
   TipoContratos,
   TipoOperaciones,
   Asociado,
+  NombreAsociado
 }: GenerarContratosProps) {
   const [documentos, setDocumentos] = useState<any[]>([]);
   const [fetching, setFetching] = useState(false);
@@ -55,6 +57,7 @@ export default function GenerarContratos({
           TipoContratos={TipoContratos}
           TipoOperaciones={TipoOperaciones}
           Asociado={Asociado}
+          NombreAsociado={NombreAsociado}
           onResultado={handleResultado}
            // Asumiendo que FormGenerarContrato soporta modo modal via prop, si no editar dentro de FormGenerarContrato
         />
