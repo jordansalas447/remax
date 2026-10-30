@@ -7,6 +7,6 @@ export const diasemanaaccesoConfig: TableConfig = {
   primaryKey: "id",
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
-    { name: "dia", label: "Dias Semana", type: "text" },
+    { name: "dia", label: "Días Semana", type: "text" },
   ],
 };

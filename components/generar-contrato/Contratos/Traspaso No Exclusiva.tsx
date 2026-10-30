@@ -59,7 +59,7 @@ export function TraspasoExlusivaPDF({
             <Text style={styles.bold}><Text>PRIMERA:</Text></Text>
           </Text>
           <Text style={styles.justified}>
-            <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> es el dueño de un local comercial de <Text style={styles.dataInput}>{giroNegocio}</Text> llamado “ <Text style={styles.dataInput}>{nombreNegocio}</Text> ” ubicado en: <Text style={styles.dataInput}>{inmuebleDireccion}</Text> , distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de Arequipa, y al que en lo sucesivo se le denominará <Text style={styles.bold}><Text>EL LOCAL COMERCIAL</Text></Text>.
+            <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> es el dueño de un local comercial de <Text style={styles.dataInput}>{giroNegocio}</Text>{" "}llamado “ <Text style={styles.dataInput}>{nombreNegocio}</Text> ” ubicado en: <Text style={styles.dataInput}>{inmuebleDireccion}</Text> , distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de Arequipa, y al que en lo sucesivo se le denominará <Text style={styles.bold}><Text>EL LOCAL COMERCIAL</Text></Text>.
           </Text>
         </View>
 

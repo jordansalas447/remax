@@ -140,7 +140,7 @@ const OBLIGACION_POST: CampoContrato = {
 
 const PORCENTAJEMONTOALQUILER:CampoContrato = {
   key: "porcentajeMontoAlquiler",
-  label: "Porcentaje Meses Alquiler",
+  label: "Porcentaje Monto Alquiler",
   seccion: "condiciones",
   type: "number",
   placeholder: "3",

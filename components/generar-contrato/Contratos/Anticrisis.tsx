@@ -84,8 +84,8 @@ export function AnticrisisPDF({
             <Text style={styles.bold}>
               <Text style={styles.bold}>EL PROPIETARIO</Text>
             </Text> es dueña(o){varios ? "(s)" : ""} del inmueble, ubicado en{" "}
-            <Text style={styles.dataInput}>{inmuebleDireccion}</Text>, Distrito de{" "}
-            <Text style={styles.dataInput}>{inmuebleDistrito}</Text>provincia y departamento de <Text style={styles.bold}>AREQUIPA</Text>, cuyos linderos y medidas perimétricas constan inscritos de la partida electrónica N°{" "}
+            <Text style={styles.dataInput}>{inmuebleDireccion}</Text>{" "}, Distrito de{" "}
+            <Text style={styles.dataInput}>{inmuebleDistrito}</Text>{" "}provincia y departamento de <Text style={styles.bold}>AREQUIPA</Text>, cuyos linderos y medidas perimétricas constan inscritos de la partida electrónica N°{" "}
             <Text style={styles.dataInput}>{inmueblePartida}</Text> en Registro de Predios de la Zona Registral XII - Sede <Text style={styles.bold}>AREQUIPA</Text> y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL INMUEBLE</Text>.
           </Text>
         </View>

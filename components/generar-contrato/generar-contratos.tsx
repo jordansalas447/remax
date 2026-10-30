@@ -27,8 +27,6 @@ export default function GenerarContratos({
       try {
         const data = await getDocumentosByAsociado(Asociado);
 
-        console.log(data)
-
         setDocumentos(data || []);
       } catch (err) {
         setDocumentos([]);
