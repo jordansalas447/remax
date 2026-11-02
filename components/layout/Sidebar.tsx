@@ -76,7 +76,7 @@ export async function AppSidebar() {
               </SidebarMenuItem>
             ) : (
               <>
-                <SidebarMenuItem>
+                {/* <SidebarMenuItem>
                   <Link href="/dashboard" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                     <FontAwesomeIcon icon={faChartLine} />
                     Dashboard
@@ -115,13 +115,13 @@ export async function AppSidebar() {
                   <Link href="/revisiones-gestion" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                     Revisiones
                   </Link>
-                </SidebarMenuItem>
+                </SidebarMenuItem> */}
 
-                <SidebarMenuItem>
+                {/* <SidebarMenuItem>
                   <Options Icons={response} />
-                </SidebarMenuItem>
+                </SidebarMenuItem> */}
 
-                <SidebarMenuItem>
+                {/* <SidebarMenuItem>
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       render={
@@ -157,7 +157,7 @@ export async function AppSidebar() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </SidebarMenuItem>
+                </SidebarMenuItem> */}
 
                 <SidebarMenuItem>
                   <Link href="/perfil" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">

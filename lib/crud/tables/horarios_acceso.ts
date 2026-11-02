@@ -31,7 +31,7 @@ export const horariosaccesoConfig: TableConfig = {
           labelField: "dia"
       },
     },
-    { name: "hora_inicio", label: "Hora Inicio", type: "datetime" },
-    { name: "hora_fin", label: "Hora Fin", type: "datetime" },
+    { name: "hora_inicio", label: "Hora Inicio", type: "text" },
+    { name: "hora_fin", label: "Hora Fin", type: "text" },
   ],
 };

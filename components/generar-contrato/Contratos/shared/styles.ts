@@ -8,7 +8,7 @@ export const contratoStyles = StyleSheet.create({
     paddingBottom: 72,
     paddingLeft: 50,
     paddingRight: 50,
-    fontSize: 11,
+    fontSize: 9,
     lineHeight: 1.5,
     position: "relative",
     minHeight: "100%",
@@ -94,7 +94,7 @@ export const contratoStyles = StyleSheet.create({
     textAlign: "justify",
   },
   clauseTitle: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 700,
     marginTop: 8,
     marginBottom: 3,

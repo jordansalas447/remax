@@ -82,7 +82,7 @@ export function AnticrisisPDFNoExclusiva({
           <Text style={styles.justified}>
             <Text style={styles.bold}>
               EL PROPIETARIO
-            </Text> es dueña(o) del inmueble, ubicado en <Text style={styles.dataInput}>{inmuebleDireccion}</Text>, Distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos en la partida electrónica N° <Text style={styles.dataInput}>{inmueblePartida}</Text> en el Registro de Predios de la Zona Registral XII - Sede Arequipa y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL INMUEBLE</Text>.
+            </Text> es dueño del inmueble, ubicado en <Text style={styles.dataInput}>{inmuebleDireccion}</Text>, Distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos en la partida electrónica N° <Text style={styles.dataInput}>{inmueblePartida}</Text> en el Registro de Predios de la Zona Registral XII - Sede Arequipa y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL INMUEBLE</Text>.
           </Text>
         </View>
         {/* Segunda cláusula */}

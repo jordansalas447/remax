@@ -15,6 +15,8 @@ export default async function Page() {
   let id_asociado: number;
   id_asociado = Asociado?.personas?.asociados[0].id_asociado || 0;
 
+  console.log(Asociado)
+
   const NombreAsociado = Asociado?.personas?.asociados[0].nombre_completo;
 
   const DataOperaciones = await getOperaciones();
