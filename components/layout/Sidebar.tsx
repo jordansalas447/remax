@@ -76,8 +76,7 @@ export async function AppSidebar() {
               </SidebarMenuItem>
             ) : (
               <>
-
-                <SidebarMenuItem>
+               <SidebarMenuItem>
                   <Link
                     href="/generar-contrato"
                     className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
@@ -86,20 +85,22 @@ export async function AppSidebar() {
                     Generar Contrato
                   </Link>
                 </SidebarMenuItem>
-                {/* <SidebarMenuItem>
+                {isAdmin && (<>
+                  <SidebarMenuItem>
+                  <Link
+                    href="/generar-contrato"
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                  >
+                    <FontAwesomeIcon icon={faFileContract} />
+                    Generar Contrato
+                  </Link>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
                   <Link href="/dashboard" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                     <FontAwesomeIcon icon={faChartLine} />
                     Dashboard
                   </Link>
                 </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <Link href="/generar-contrato" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
-                    <FontAwesomeIcon icon={faFileContract} />
-                    Generar Contrato
-                  </Link>
-                </SidebarMenuItem>
-
                 <SidebarMenuItem>
                   <Link href="/asociado" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                     <FontAwesomeIcon icon={faUserTie} />
@@ -125,13 +126,13 @@ export async function AppSidebar() {
                   <Link href="/revisiones-gestion" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                     Revisiones
                   </Link>
-                </SidebarMenuItem> */}
+                </SidebarMenuItem>
 
-                {/* <SidebarMenuItem>
+                 <SidebarMenuItem>
                   <Options Icons={response} />
-                </SidebarMenuItem> */}
+                </SidebarMenuItem> 
 
-                {/* <SidebarMenuItem>
+                 <SidebarMenuItem>
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       render={
@@ -167,7 +168,7 @@ export async function AppSidebar() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </SidebarMenuItem> */}
+                </SidebarMenuItem> 
 
                 <SidebarMenuItem>
                   <Link href="/perfil" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
@@ -175,14 +176,13 @@ export async function AppSidebar() {
                     Mi perfil
                   </Link>
                 </SidebarMenuItem>
-
-                {isAdmin && (
-                  <SidebarMenuItem>
+                <SidebarMenuItem>
                     <Link href="/accesos" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                       <FontAwesomeIcon icon={faClock} />
                       Control de acceso
                     </Link>
                   </SidebarMenuItem>
+                </>
                 )}
               </>
             )}
