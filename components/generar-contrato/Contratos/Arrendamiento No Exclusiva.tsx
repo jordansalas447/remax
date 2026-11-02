@@ -25,7 +25,7 @@ export function ArrendamientoPDFNoExclusiva({
   fecha_generacion,
   id_publico,
   nombreAsesor = "____________________________________________",
-  inmuebleDireccion = "__________________________________________________",
+  inmuebleDireccion = "______________________________________________________________________________________",
   inmuebleDistrito = "_______________ , ",
   inmueblePartida = "______________",
   comision = "________________________",
@@ -58,7 +58,7 @@ export function ArrendamientoPDFNoExclusiva({
                 {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
                 {i > 0 ? "el Sr./Sra: " : ""}
                 <Text style={styles.dataInput}>
-                  {val(p.nombre, "____________________________")}{" "}
+                  {val(p.nombre, "________________________________________")}{" "}
                 </Text>
                 , debidamente identificado(a) con DNI N°{" "}
                 <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>{" "}, estado civil{" "}

@@ -25,8 +25,8 @@ export function ArrendamientoPDF({
   fecha_generacion,
   id_publico,
   nombreAsesor = "____________________________________________",
-  inmuebleDireccion = "__________________________________________________ , ",
-  inmuebleDistrito = "_______________ , ",
+  inmuebleDireccion = "______________________________________________________________________________________",
+  inmuebleDistrito = "_______________ ",
   inmueblePartida = "______________",
   comision = "________________________",
   duracionMeses = "____",
@@ -57,7 +57,7 @@ export function ArrendamientoPDF({
                 {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
                 {i > 0 ? "el Sr./Sra: " : ""}
                 <Text style={styles.dataInput}>
-                  {val(p.nombre, "____________________________")}
+                  {val(p.nombre, "________________________________________")}
                 </Text>
                 {" "}, debidamente identificado(a) con DNI N°{" "}
                 <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>{" "}, estado civil{" "}
@@ -82,11 +82,11 @@ export function ArrendamientoPDF({
           <Text style={styles.justified}>
             <Text style={styles.bold}>EL PROPIETARIO</Text> es dueño del inmueble ubicado en:
             <Text style={styles.dataInput}>
-              {" "}{inmuebleDireccion}{" "}
+              {" "}{inmuebleDireccion}{" "},{" "}
             </Text>
             distrito de
             <Text style={styles.dataInput}>
-              {" "}{inmuebleDistrito}{" "}
+              {" "}{inmuebleDistrito}{" "},{" "}
             </Text>
             provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos de la Partida Electrónica N°
             <Text style={styles.dataInput}>

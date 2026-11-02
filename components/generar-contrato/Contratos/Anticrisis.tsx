@@ -25,7 +25,7 @@ export function AnticrisisPDF({
   fecha_generacion,
   id_publico,
   nombreAsesor = "____________________________________________",
-  inmuebleDireccion = "__________________________________________________",
+  inmuebleDireccion = "______________________________________________________________________________________",
   inmuebleDistrito = "_______________ , ",
   inmueblePartida = "______________",
   comision = "____",
@@ -56,7 +56,7 @@ export function AnticrisisPDF({
                 {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
                 {i > 0 ? "el Sr./Sra: " : ""}
                 <Text style={styles.dataInput}>
-                  {val(p.nombre, "____________________________")}
+                  {val(p.nombre, "________________________________________")}
                 </Text>
                 , debidamente identificado(a) con DNI N°{" "}
                 <Text style={styles.dataInput}>{val(p.dni, "_____________ , ")}</Text>estado civil{" "}
@@ -127,10 +127,7 @@ export function AnticrisisPDF({
           <Text style={styles.justified}>
             <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> se compromete a listar <Text style={styles.bold}><Text style={styles.bold}>EL INMUEBLE</Text></Text> dentro de la web de <Text style={styles.bold}>RE/MAX PERÚ</Text> (www.remax.pe), y a promocionarla según lo convenido con <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>, utilizando las diferentes herramientas con las que cuenta <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> para este fin, así como informar a <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text> de los posibles interesados y los oferentes que tenga para su propiedad. Asimismo, y por tratarse de un contrato en exclusividad, <Text style={styles.bold}><Text style={styles.bold}>EL COMISIONISTA</Text></Text> se compromete al cumplimiento de las actividades de Marketing para propiedades en exclusividad, las cuales son previamente comunicadas a <Text style={styles.bold}><Text style={styles.bold}>EL PROPIETARIO</Text></Text>.
           </Text>
-        </View>
-
-        {/* Quinta cláusula */}
-        <View style={styles.section}>
+           {/* Quinta cláusula */}
           <Text style={styles.clauseTitle}>
             <Text style={styles.bold}>
               <Text style={styles.bold}>QUINTO:</Text>
@@ -147,6 +144,11 @@ export function AnticrisisPDF({
             <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>
           </View>
         </View>
+
+        {/* Quinta cláusula */}
+        {/* <View style={styles.section}>
+
+        </View> */}
 
         {/* Sexta cláusula */}
         <View style={styles.section}>
@@ -243,8 +245,6 @@ export function AnticrisisPDF({
           </Text>
         </View>
    
-   
-
         <ContratoFirmas lista={lista} varios={varios} />
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>

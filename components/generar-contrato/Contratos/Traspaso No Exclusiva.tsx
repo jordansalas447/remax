@@ -26,7 +26,7 @@ export function TraspasoExlusivaPDF({
   fecha_generacion,
   id_publico,
   nombreAsesor = "_________________________________________________",
-  inmuebleDireccion = "____________________________________________________________________",
+  inmuebleDireccion = "______________________________________________________________________________________",
   inmuebleDistrito = "______________",
   nombreNegocio = "________________________",
   giroNegocio = "__________________________________",
