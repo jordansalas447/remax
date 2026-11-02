@@ -41,9 +41,9 @@ export async function AppSidebar() {
 
   const idAsociado = Asociado?.personas?.asociados?.[0]?.id_asociado;
 
-  const soloGenerarContrato = !isAdmin && [13, 15,undefined].includes(idAsociado);
+  const soloGenerarContrato = !isAdmin && [13, 15, undefined].includes(idAsociado);
 
- // console.log(isAdmin,idAsociado,soloGenerarContrato)
+  // console.log(isAdmin,idAsociado,soloGenerarContrato)
 
   return (
     <Sidebar>
@@ -76,6 +76,16 @@ export async function AppSidebar() {
               </SidebarMenuItem>
             ) : (
               <>
+
+                <SidebarMenuItem>
+                  <Link
+                    href="/generar-contrato"
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                  >
+                    <FontAwesomeIcon icon={faFileContract} />
+                    Generar Contrato
+                  </Link>
+                </SidebarMenuItem>
                 {/* <SidebarMenuItem>
                   <Link href="/dashboard" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
                     <FontAwesomeIcon icon={faChartLine} />
