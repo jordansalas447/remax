@@ -35,7 +35,7 @@ export async function getDocumentosxCodigo(codigo: string): Promise<DocumentosRo
     .select(`*,
       operacion(*),
         tipo_contrato(*),
-        asociados(*)`)
+        asociados:id_asociado(*)`)
     .eq('id_publico', codigo)
     .single();
 
