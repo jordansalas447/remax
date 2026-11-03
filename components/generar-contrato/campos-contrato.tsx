@@ -32,6 +32,32 @@ interface CamposContratoProps {
   onUsarFechaHoy: () => void;
 }
 
+const consultarDNI = async (dni: string) => {
+  try {
+    const response = await fetch("/api/dni", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ dni }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Error al consultar DNI");
+    }
+
+    console.log(data);
+
+    return data;
+
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
 const ORDEN_SECCIONES: SeccionCampo[] = ["inmueble", "condiciones", "firma"];
 
 function Seccion({
@@ -154,6 +180,17 @@ export default function CamposContrato({
               </option>
             ))}
           </NativeSelect>
+        </Campo>
+      );
+    }
+
+    if (campo.type === "dni") {
+      return (
+        <Campo key={campo.key} id={id} label={campo.label} ancho={campo.ancho}>
+          <Input id={id} placeholder={campo.placeholder} value={value} disabled={disabled} onChange={(e) => onDatoChange(campo.key, e.target.value)} />
+          <Button type="button" variant="outline" size="sm" onClick={() => consultarDNI(value)}>
+            Consultar DNI
+          </Button>
         </Campo>
       );
     }

@@ -63,7 +63,7 @@ export async function getDocumentosByAsociado(id: number): Promise<DocumentosRow
     .select(`
         *,
         tipo_contrato(*),
-        asociados(*),
+        asociados:id_asociado(*),
         operacion(*),
         estado_documento(*)
         `)

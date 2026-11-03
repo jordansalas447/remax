@@ -24,10 +24,15 @@ export default function GenerarContratos({
 
   // Fetch documentos when Asociado changes or after form submission
   const fetchDocumentos = useCallback(async () => {
+    console.log(Asociado);
     if (Asociado && Asociado > 0) {
+      console.log("Asociado es mayor a 0");
       setFetching(true);
+      const data = await getDocumentosByAsociado(Asociado);
       try {
         const data = await getDocumentosByAsociado(Asociado);
+
+        console.log(data);
 
         setDocumentos(data || []);
       } catch (err) {

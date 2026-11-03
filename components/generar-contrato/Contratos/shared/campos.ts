@@ -33,7 +33,7 @@ export type CampoContrato = {
   label: string;
   seccion: SeccionCampo;
   placeholder?: string;
-  type?: "text" | "number" | "mes";
+  type?: "text" | "number" | "mes" | "dni";
   sufijo?: string;
   /** Ocupa las 2 columnas del grid */
   ancho?: boolean;
