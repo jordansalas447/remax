@@ -80,11 +80,11 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     cell: ({ row }) => formatCell(row.getValue("plazo")),
   },
   {
-    accessorKey: "eliminado",
+    accessorKey: "estado_documento.estado",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Anulado" />
+      <DataTableColumnHeader column={column} title="Estado" />
     ),
-    cell: ({ row }) => formatBoolean(row.getValue("eliminado")),
+    cell: ({ row }) => formatCell(row.original.estado_documento?.estado),
   },
   {
     accessorKey: "id_estado",
@@ -92,8 +92,8 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
       <DataTableColumnHeader column={column} title="Fecha Expiración" />
     ),
     cell: ({ row }) => {
-      const estado =  formatCell(row.original.estado_documento?.estado)
-      const color = formatCell(row.original.estado_documento?.color)
+      //const estado =  formatCell(row.original.estado_documento?.estado)
+      //const color = formatCell(row.original.estado_documento?.color)
       const emitido = row.getValue("created_at");
       const plazo:number = row.getValue("plazo") ?? 0;
       
@@ -123,13 +123,13 @@ export const columns: LegacyColumnDef<DocumentosRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => row.getValue("motivo_anulacion") ?? "",
   },
-  {
-    accessorKey: "id_publico",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
-    ),
-    cell: ({ row }) => row.getValue("id_publico") ?? "",
-  },
+  // {
+  //   accessorKey: "id_publico",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="ID" />
+  //   ),
+  //   cell: ({ row }) => row.getValue("id_publico") ?? "",
+  // },
   {
     accessorKey: "created_at",
     header: ({ column }) => (

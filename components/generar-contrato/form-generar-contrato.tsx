@@ -5,7 +5,6 @@ import { TipoContratoRow } from "@/lib/supabase/queries/tipos_contratos";
 import { OperacionesRow } from "@/lib/supabase/queries/operaciones";
 import { NativeSelect } from "../ui/native-select";
 import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/documentos";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { cn } from "cn";
 import { toast } from "../ui/toast";
@@ -25,6 +24,7 @@ interface FormularioProps {
   Asociado: number
   NombreAsociado: string | undefined | null;
   onResultado: (valor: string) => void;
+  onCancelar: () => void;
 }
 
 const MAX_PROPIETARIOS = 10;
@@ -40,7 +40,8 @@ export default function FormGenerarContrato({
   TipoOperaciones,
   Asociado,
   NombreAsociado,
-  onResultado
+  onResultado,
+  onCancelar,
 }: FormularioProps) {
 
   // Estado base inicial del formulario: función para garantizar siempre desde cero
@@ -52,9 +53,6 @@ export default function FormGenerarContrato({
     apoderado: false,
     id_operacion: 0,
   } as DocumentosRow);
-
-  // Controla apertura del modal
-  const [open, setOpen] = useState(false);
 
   // Form fields state
   const [form, setForm] = useState<DocumentosRow>(getInitialForm());
@@ -144,24 +142,14 @@ export default function FormGenerarContrato({
     limpiarPreview();
   };
 
-  // Importante: Al cerrar el modal, resetea absolutamente todo a cero, para que siempre que abras
-  // todo esté limpio y desde cero, sin conservar ningún dato anterior
-  const handleDialogOpenChange = useCallback((value: boolean) => {
-    if (value) {
-      // Al abrir, limpia todo desde cero por seguridad
-      resetTodo();
-    }
-    setOpen(value);
-    if (!value) {
-      // Al cerrar, LIMPIA TODO; empieza realmente desde cero
-      resetTodo();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Asociado]); // dependemos de Asociado para el form inicial de cada vez
+  const handleCancelar = () => {
+    resetTodo();
+    onCancelar();
+  };
 
   // Genera la vista previa cada vez que cambian las opciones o los datos (con debounce)
   useEffect(() => {
-    if (!open || paso === 1) return;
+    if (paso === 1) return;
 
     if (!tipoContratoId || !tipoOperacionId) {
       limpiarPreview();
@@ -211,7 +199,7 @@ export default function FormGenerarContrato({
       clearTimeout(timer);
       controller.abort();
     };
-  }, [open, paso, tipoContratoId, tipoOperacionId, nroPropietarios, datosExtraKey, limpiarPreview]);
+  }, [paso, tipoContratoId, tipoOperacionId, nroPropietarios, datosExtraKey, limpiarPreview]);
 
   // Libera el blob al desmontar
   useEffect(() => {
@@ -285,9 +273,6 @@ export default function FormGenerarContrato({
     }));
   };
 
-  // Nuevo: manejar cierre programático del modal tras generar documento
-  const closeDialog = () => setOpen(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -341,13 +326,9 @@ export default function FormGenerarContrato({
       document.body.removeChild(link);
       URL.revokeObjectURL(downloadUrl);
 
-      onResultado(nro);
       setNroContrato(nro);
-
-      setTimeout(() => {
-        closeDialog();
-        showToast(nro);
-      }, 600);
+      showToast(nro);
+      onResultado(nro);
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
     } finally {
@@ -364,17 +345,7 @@ export default function FormGenerarContrato({
   }
 
   return (
-    <div className="max-w-lg">
-      <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-        <div>
-          <DialogTrigger render={<Button>Generar Contrato</Button>} />
-          <DialogContent
-          showCloseButton={false}
-            className={cn(
-              "max-h-[90vh] overflow-y-auto",
-              paso !== 1 ? "lg:max-w-7xl" : "lg:max-w-[90vh]"
-            )}
-          >
+    <div className={cn("w-full", paso === 1 && "mx-auto max-w-3xl")}>
             {paso === 1 ? (
               <>
                 {/* Declaración de Uso Restringido */}
@@ -420,7 +391,7 @@ export default function FormGenerarContrato({
                     </div>
                   )}
                   <div className="flex justify-end gap-2 mt-6">
-                    <Button type="button" variant="outline" onClick={closeDialog}>Cancelar
+                    <Button type="button" variant="outline" onClick={handleCancelar}>Cancelar
                     </Button>
                     <Button
                       type="button"
@@ -613,7 +584,7 @@ export default function FormGenerarContrato({
                     <div className="flex flex-row gap-2 justify-end border-t-1 py-2">
                       {paso === 2 ? (
                         <>
-                          <Button type="button" variant="outline" onClick={closeDialog}>
+                          <Button type="button" variant="outline" onClick={handleCancelar}>
                             Cancelar
                           </Button>
                           <Button
@@ -702,9 +673,6 @@ export default function FormGenerarContrato({
                 </div>
               </div>
             )}
-          </DialogContent>
-        </div>
-      </Dialog>
     </div>
   );
 }

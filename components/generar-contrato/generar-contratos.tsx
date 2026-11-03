@@ -1,11 +1,18 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileContract } from "@fortawesome/free-solid-svg-icons";
 import FormGenerarContrato from "@/components/generar-contrato/form-generar-contrato";
-import TablaGenerarContrato from "@/components/generar-contrato/tabla-generar-contrato";
-import { getDocumentosByAsociado } from "@/lib/supabase/queries/documentos";
+import CardsGenerarContrato, {
+  CardsGenerarContratoSkeleton,
+} from "@/components/generar-contrato/cards-generar-contrato";
+import { Button } from "@/components/ui/button";
+import {
+  getDocumentosByAsociado,
+  type DocumentosRowDetalle,
+} from "@/lib/supabase/queries/documentos";
 
-// Props type for the page/component (adapt as needed)
 interface GenerarContratosProps {
   TipoContratos: any[];
   TipoOperaciones: any[];
@@ -17,25 +24,19 @@ export default function GenerarContratos({
   TipoContratos,
   TipoOperaciones,
   Asociado,
-  NombreAsociado
+  NombreAsociado,
 }: GenerarContratosProps) {
-  const [documentos, setDocumentos] = useState<any[]>([]);
+  const [documentos, setDocumentos] = useState<DocumentosRowDetalle[]>([]);
   const [fetching, setFetching] = useState(false);
+  const [vista, setVista] = useState<"lista" | "formulario">("lista");
 
-  // Fetch documentos when Asociado changes or after form submission
   const fetchDocumentos = useCallback(async () => {
-    console.log(Asociado);
     if (Asociado && Asociado > 0) {
-      console.log("Asociado es mayor a 0");
       setFetching(true);
-      const data = await getDocumentosByAsociado(Asociado);
       try {
         const data = await getDocumentosByAsociado(Asociado);
-
-        console.log(data);
-
         setDocumentos(data || []);
-      } catch (err) {
+      } catch {
         setDocumentos([]);
       }
       setFetching(false);
@@ -49,30 +50,60 @@ export default function GenerarContratos({
   }, [fetchDocumentos]);
 
   const handleResultado = async (_valor: string) => {
-    // Refetch documentos after successful contract creation
+    setVista("lista");
     await fetchDocumentos();
   };
 
   return (
     <main>
-      <h1 className="text-3xl font-bold mb-6">Generar Contrato</h1>
-      {/* Botón para abrir el modal */}
-      <div className="mb-2">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-bold">
+          {vista === "formulario" ? "Nuevo contrato" : "Generar Contrato"}
+        </h1>
+        {vista === "lista" ? (
+          <Button
+            size="lg"
+            className="
+              min-h-12 px-5
+              bg-gradient-to-r from-[#003DA5] via-[#0055B8] to-[#003DA5]
+              hover:from-[#002D7A] hover:via-[#00449E] hover:to-[#002D7A]
+              text-white font-semibold
+              rounded-lg
+              border border-blue-400/30
+              transition-all duration-300 ease-out
+              hover:brightness-110
+              active:scale-[0.98]
+            "
+            onClick={() => setVista("formulario")}
+          >
+            <FontAwesomeIcon icon={faFileContract} className="mr-2" />
+            Generar Contrato
+          </Button>
+        ) : (
+          <Button type="button" variant="outline" onClick={() => setVista("lista")}>
+            Volver al listado
+          </Button>
+        )}
+      </div>
+
+      {vista === "formulario" ? (
         <FormGenerarContrato
           TipoContratos={TipoContratos}
           TipoOperaciones={TipoOperaciones}
           Asociado={Asociado}
           NombreAsociado={NombreAsociado}
           onResultado={handleResultado}
-           // Asumiendo que FormGenerarContrato soporta modo modal via prop, si no editar dentro de FormGenerarContrato
+          onCancelar={() => setVista("lista")}
         />
-      </div>
-      {/* La tabla ocupa el 100% del ancho */}
-      <div className="w-full">
-        <TablaGenerarContrato documentos={documentos} />
-        {/* Puede agregar un loading/fallback UI si se desea */}
-        {/* {fetching && <div className="mt-4 text-blue-600">Cargando documentos...</div>} */}
-      </div>
+      ) : (
+        <div className="w-full">
+          {fetching ? (
+            <CardsGenerarContratoSkeleton />
+          ) : (
+            <CardsGenerarContrato documentos={documentos} />
+          )}
+        </div>
+      )}
     </main>
   );
 }

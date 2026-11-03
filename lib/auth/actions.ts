@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { MENSAJE_FUERA_DE_HORARIO, registrarSesionAcceso } from "@/lib/auth/acceso";
+import { getSession } from "./session";
 
 export type ActionState = {
   error?: string;
@@ -64,8 +65,11 @@ export async function login(_prev: ActionState, formData: FormData): Promise<Act
     return { error: MENSAJE_FUERA_DE_HORARIO, fields: { email } };
   }
 
+  const session = await getSession();
+  const Path = session?.profile?.role === "admin" ? next : "/generar-contrato"
+
   revalidatePath("/", "layout");
-  redirect(next);
+  redirect(Path);
 }
 
 // ---------------------------------------------------------------------

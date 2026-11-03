@@ -10,6 +10,7 @@ export type DocumentosRowDetalle = DocumentosRow & {
   } | null;
   operacion?: {
     operacion: string;
+    color?: string | null;
   } | null;
   tipo_contrato?: {
     tipo_contrato: string;
@@ -56,7 +57,7 @@ export async function getDocumentosById(id: number): Promise<DocumentosRow | nul
   return data ?? null;
 }
 
-export async function getDocumentosByAsociado(id: number): Promise<DocumentosRow[] | null> {
+export async function getDocumentosByAsociado(id: number): Promise<DocumentosRowDetalle[] | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('documentos')

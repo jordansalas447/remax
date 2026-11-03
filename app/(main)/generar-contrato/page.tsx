@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import GenerarContratos from "@/components/generar-contrato/generar-contratos";
+import { CardsGenerarContratoSkeleton } from "@/components/generar-contrato/cards-generar-contrato";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSession } from "@/lib/auth/session";
 import { getAsociadoByProfileId } from "@/lib/supabase/queries/asociados";
@@ -43,27 +44,12 @@ export default function Page() {
 
 export function SkeletonGenerarContrato() {
   return (
-    <div className="space-y-6 bg-white shadow-md rounded-lg p-4">
-      {/* Título */}
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-4 w-96 max-w-full" />
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <Skeleton className="h-9 w-64" />
+        <Skeleton className="h-12 w-48 rounded" />
       </div>
-      {/* Tabla */}
-      <div className="rounded-lg border">
-        <div className="flex gap-4 border-b p-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-4 flex-1" />
-          ))}
-        </div>
-        {Array.from({ length: 5 }).map((_, row) => (
-          <div key={row} className="flex gap-4 border-b p-4 last:border-b-0">
-            {Array.from({ length: 4 }).map((_, col) => (
-              <Skeleton key={col} className="h-5 flex-1" />
-            ))}
-          </div>
-        ))}
-      </div>
+      <CardsGenerarContratoSkeleton />
     </div>
   );
 }
