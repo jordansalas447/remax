@@ -28,7 +28,8 @@ export const profilesConfig: TableConfig = {
         table: "areas",
         valueField: "id",
         labelField: "area",
-      },
+    },
   },
+  { name: "role", label: "Rol", type: "text", required: false },
   ],
 };

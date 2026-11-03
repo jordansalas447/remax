@@ -1,33 +1,69 @@
-import FormGenerarContrato from "@/components/generar-contrato/form-generar-contrato";
+import { Suspense } from "react";
 import GenerarContratos from "@/components/generar-contrato/generar-contratos";
-import TablaGenerarContrato from "@/components/generar-contrato/tabla-generar-contrato";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getSession } from "@/lib/auth/session";
-import { getAsociadoByProfileId, ProfilesDetalle } from "@/lib/supabase/queries/asociados";
-import { getDocumentosByAsociado } from "@/lib/supabase/queries/documentos";
+import { getAsociadoByProfileId } from "@/lib/supabase/queries/asociados";
 import { getOperaciones } from "@/lib/supabase/queries/operaciones";
 import { getTiposContrato } from "@/lib/supabase/queries/tipos_contratos";
 
-export default async function Page() {
-
+async function ContratosContent() {
   const session = await getSession();
   const Asociado = await getAsociadoByProfileId(session?.profile?.id || "");
 
-  let id_asociado: number;
-  id_asociado = Asociado?.personas?.asociados[0].id_asociado || 0;
+  const asociado = Asociado?.personas?.asociados[0];
+  const id_asociado = asociado?.id_asociado || 0;
+  const NombreAsociado = asociado?.nombre_completo;
 
-  console.log(Asociado)
-
-  const NombreAsociado = Asociado?.personas?.asociados[0].nombre_completo;
-
-  const DataOperaciones = await getOperaciones();
-  const DateTiposContrato = await getTiposContrato();
-
-  //console.log(DataOperaciones,DateTiposContrato)
-  //console.log(Asociado?.personas?.asociados[0].nombre_completo)
+  // Se ejecutan en paralelo (no dependen del asociado)
+  const [DataOperaciones, DateTiposContrato] = await Promise.all([
+    getOperaciones(),
+    getTiposContrato(),
+  ]);
 
   return (
+    <GenerarContratos
+      TipoContratos={DateTiposContrato}
+      TipoOperaciones={DataOperaciones}
+      Asociado={id_asociado}
+      NombreAsociado={NombreAsociado}
+    />
+  );
+}
+
+export default function Page() {
+  return (
     <main className="mx-auto">
-      <GenerarContratos TipoContratos={DateTiposContrato} TipoOperaciones={DataOperaciones} Asociado={id_asociado || 0} NombreAsociado={NombreAsociado} />
+      <Suspense fallback={<SkeletonGenerarContrato />}>
+        <ContratosContent />
+      </Suspense>
     </main>
+  );
+}
+
+
+export function SkeletonGenerarContrato() {
+  return (
+    <div className="space-y-6 bg-white shadow-md rounded-lg p-4">
+      {/* Título */}
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-4 w-96 max-w-full" />
+      </div>
+      {/* Tabla */}
+      <div className="rounded-lg border">
+        <div className="flex gap-4 border-b p-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-4 flex-1" />
+          ))}
+        </div>
+        {Array.from({ length: 5 }).map((_, row) => (
+          <div key={row} className="flex gap-4 border-b p-4 last:border-b-0">
+            {Array.from({ length: 4 }).map((_, col) => (
+              <Skeleton key={col} className="h-5 flex-1" />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

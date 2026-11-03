@@ -369,6 +369,7 @@ export default function FormGenerarContrato({
         <div>
           <DialogTrigger render={<Button>Generar Contrato</Button>} />
           <DialogContent
+          showCloseButton={false}
             className={cn(
               "max-h-[90vh] overflow-y-auto",
               paso !== 1 ? "lg:max-w-7xl" : "lg:max-w-[90vh]"
@@ -418,7 +419,7 @@ export default function FormGenerarContrato({
                       <span className="font-semibold">Error:</span> {error}
                     </div>
                   )}
-                  <div className="flex justify-end mt-6">
+                  <div className="flex justify-end gap-2 mt-6">
                     <Button type="button" variant="outline" onClick={closeDialog}>Cancelar
                     </Button>
                     <Button
