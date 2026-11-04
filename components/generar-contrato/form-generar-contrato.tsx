@@ -513,7 +513,7 @@ export default function FormGenerarContrato({
                           />
                         </div>
                           {/* Descripcion: text */}
-                          <div>
+                          {/* <div>
                           <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
                             Descripción
                           </label>
@@ -526,7 +526,7 @@ export default function FormGenerarContrato({
                             onChange={handleChange}
                             disabled={enviando}
                           />
-                        </div>
+                        </div> */}
                       </>
                     ) : (
                       <>
