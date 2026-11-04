@@ -1,4 +1,5 @@
 import { Font, StyleSheet } from "@react-pdf/renderer";
+import { Bold } from "lucide-react";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -119,7 +120,8 @@ export const contratoStyles = StyleSheet.create({
     textAlign: "center",
   },
   dataInput: {
-    fontSize: 9,
+    fontSize: 8,
+    fontWeight:900,
     //textDecoration: "underline",
     minWidth: 60,
     lineHeight: 1.4,

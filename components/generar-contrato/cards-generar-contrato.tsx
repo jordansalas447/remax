@@ -116,7 +116,7 @@ export default function CardsGenerarContrato({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-0 sm:flex-row sm:items-center sm:justify-between">
         <InputGroup className="h-9 max-w-sm bg-white">
           <InputGroupAddon>
             <Search />
@@ -145,7 +145,7 @@ export default function CardsGenerarContrato({
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-0 sm:grid-cols-2 xl:grid-cols-3">
           {documentosFiltrados.map((documento) => (
             <DocumentoCard key={documento.id} documento={documento} />
           ))}
@@ -164,11 +164,11 @@ function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }) {
   const operacionColor = documento.operacion?.color
 
   return (
-    <Card className="rounded shadow-none">
-      <CardHeader className="gap-3">
+    <Card className="rounded-none shadow-none">
+      <CardHeader className="gap-0">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="flex items-center gap-2 text-base">
-            <FileText className="size-4 shrink-0 text-blue-600" />
+            <FileText className="size-4 shrink-0 text-black-600" />
             <span className="font-mono">{documento.nro_contrato}</span>
           </CardTitle>
           <Badge
@@ -247,7 +247,7 @@ function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }) {
         </div>
 
         {documento.motivo_anulacion ? (
-          <p className="rounded-lg bg-red-50 px-2.5 py-2 text-xs text-red-800">
+          <p className="bg-red-50 px-2.5 py-2 text-xs text-red-800">
             Motivo anulación: {documento.motivo_anulacion}
           </p>
         ) : null}
@@ -297,7 +297,7 @@ export function CardsGenerarContratoSkeleton({
         <Skeleton className="h-9 w-full max-w-sm rounded-lg" />
         <Skeleton className="h-5 w-24 rounded" />
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-0 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: count }).map((_, index) => (
           <DocumentoCardSkeleton key={index} />
         ))}
