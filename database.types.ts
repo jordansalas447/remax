@@ -833,6 +833,7 @@ export type Database = {
           id_publico: string
           id_tipo_contrato: number | null
           id_usuario_generado: number | null
+          justificacion: string | null
           motivo_ampliacion_plazo: string | null
           motivo_anulacion: string | null
           nro_contrato: string
@@ -857,6 +858,7 @@ export type Database = {
           id_publico?: string
           id_tipo_contrato?: number | null
           id_usuario_generado?: number | null
+          justificacion?: string | null
           motivo_ampliacion_plazo?: string | null
           motivo_anulacion?: string | null
           nro_contrato: string
@@ -881,6 +883,7 @@ export type Database = {
           id_publico?: string
           id_tipo_contrato?: number | null
           id_usuario_generado?: number | null
+          justificacion?: string | null
           motivo_ampliacion_plazo?: string | null
           motivo_anulacion?: string | null
           nro_contrato?: string
@@ -2358,7 +2361,15 @@ export type Database = {
           user_id?: string
           valido_hasta?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sesiones_acceso_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       situaciones: {
         Row: {

@@ -28,7 +28,7 @@ interface FormularioProps {
   onCancelar: () => void;
 }
 
-const MAX_PROPIETARIOS = 10;
+const MAX_PROPIETARIOS = 20;
 
 // Pasos del asistente
 const PASOS_CONTRATO = [
@@ -84,6 +84,8 @@ export default function FormGenerarContrato({
   const tipoContratoId = Number(form.id_tipo_contrato) || 0;
   const tipoOperacionId = Number(form.id_operacion) || 0;
   const nroPropietarios = Math.min(MAX_PROPIETARIOS, Math.max(1, Number(form.nro_propietarios) || 1));
+
+  //console.log(nroPropietarios)
 
   // Solo los campos que aplican al contrato seleccionado (lo que se envía a la API)
   const datosExtra = useMemo(
@@ -215,6 +217,8 @@ export default function FormGenerarContrato({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
+
+    console.log((value))
 
     setForm((f) => ({
       ...f,
@@ -505,7 +509,7 @@ export default function FormGenerarContrato({
                             id="nro_propietarios"
                             name="nro_propietarios"
                             className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
-                            value={form.nro_propietarios || 1}
+                            value={form.nro_propietarios || ""}
                             min={1}
                             max={MAX_PROPIETARIOS}
                             onChange={handleChange}
@@ -608,7 +612,7 @@ export default function FormGenerarContrato({
                           <Button
                             id="btn-siguiente-datos"
                             type="submit"
-                            disabled={enviando || !tipoContratoId || !tipoOperacionId}
+                            disabled={enviando || !tipoContratoId || !tipoOperacionId || form.nro_propietarios == 0}
                           >
                             Siguiente
                           </Button>
