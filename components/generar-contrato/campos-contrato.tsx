@@ -48,7 +48,7 @@ const consultarDNI = async (dni: string) => {
       throw new Error(data.error || "Error al consultar DNI");
     }
 
-    console.log(data);
+   // console.log(data);
 
     return data;
 

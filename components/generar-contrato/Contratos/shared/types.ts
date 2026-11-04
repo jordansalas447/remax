@@ -14,6 +14,7 @@ export type ContratoPDFProps = {
   tipoContrato?: number;
   tipoOperacion?: number;
   id_publico?: string;
+  descripcion?:string;
   fecha_generacion?:string;
   porcentajeMontoAlquiler?:string;
   qr?: string;

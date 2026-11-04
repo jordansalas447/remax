@@ -17,6 +17,7 @@ import {
   type CampoTextoContratoKey,
 } from "./Contratos/shared/campos";
 import CamposContrato, { type DatosContrato } from "./campos-contrato";
+import { Input } from "../ui/input";
 
 interface FormularioProps {
   TipoContratos: TipoContratoRow[]
@@ -52,6 +53,7 @@ export default function FormGenerarContrato({
     empresa: false,
     apoderado: false,
     id_operacion: 0,
+    descripcion: ""
   } as DocumentosRow);
 
   // Form fields state
@@ -300,7 +302,8 @@ export default function FormGenerarContrato({
         tipoContrato: tipoContratoId,
         tipoOperacion: tipoOperacionId,
         fecha_generacion: form.fecha_generacion || undefined,
-        id_publico: documento.id_publico || ""
+        id_publico: documento.id_publico || "",
+        descripcion: documento.descripcion || ""
       };
 
       const response = await fetch("/api/contratos/generar", {
@@ -497,7 +500,7 @@ export default function FormGenerarContrato({
                           <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
                             Nro. de propietarios
                           </label>
-                          <input
+                          <Input
                             type="number"
                             id="nro_propietarios"
                             name="nro_propietarios"
@@ -505,6 +508,21 @@ export default function FormGenerarContrato({
                             value={form.nro_propietarios || 1}
                             min={1}
                             max={MAX_PROPIETARIOS}
+                            onChange={handleChange}
+                            disabled={enviando}
+                          />
+                        </div>
+                          {/* Descripcion: text */}
+                          <div>
+                          <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
+                            Descripción
+                          </label>
+                          <Input
+                            type="text"
+                            id="nro_propietarios"
+                            name="nro_propietarios"
+                            className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
+                            value={form.descripcion || ""}
                             onChange={handleChange}
                             disabled={enviando}
                           />

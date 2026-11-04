@@ -329,6 +329,8 @@ export type Database = {
       clausulas: {
         Row: {
           created_at: string
+          eliminado: boolean | null
+          estado: boolean | null
           id: number
           id_plantilla_documento: number | null
           texto: string | null
@@ -336,6 +338,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          eliminado?: boolean | null
+          estado?: boolean | null
           id?: number
           id_plantilla_documento?: number | null
           texto?: string | null
@@ -343,6 +347,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          eliminado?: boolean | null
+          estado?: boolean | null
           id?: number
           id_plantilla_documento?: number | null
           texto?: string | null
@@ -812,6 +818,7 @@ export type Database = {
         Row: {
           apoderado: boolean | null
           created_at: string | null
+          descripcion: string | null
           eliminado: boolean | null
           empresa: boolean | null
           fecha_asignacion: string | null
@@ -825,6 +832,7 @@ export type Database = {
           id_plantilla_documento: number | null
           id_publico: string
           id_tipo_contrato: number | null
+          id_usuario_generado: number | null
           motivo_ampliacion_plazo: string | null
           motivo_anulacion: string | null
           nro_contrato: string
@@ -834,6 +842,7 @@ export type Database = {
         Insert: {
           apoderado?: boolean | null
           created_at?: string | null
+          descripcion?: string | null
           eliminado?: boolean | null
           empresa?: boolean | null
           fecha_asignacion?: string | null
@@ -847,6 +856,7 @@ export type Database = {
           id_plantilla_documento?: number | null
           id_publico?: string
           id_tipo_contrato?: number | null
+          id_usuario_generado?: number | null
           motivo_ampliacion_plazo?: string | null
           motivo_anulacion?: string | null
           nro_contrato: string
@@ -856,6 +866,7 @@ export type Database = {
         Update: {
           apoderado?: boolean | null
           created_at?: string | null
+          descripcion?: string | null
           eliminado?: boolean | null
           empresa?: boolean | null
           fecha_asignacion?: string | null
@@ -869,6 +880,7 @@ export type Database = {
           id_plantilla_documento?: number | null
           id_publico?: string
           id_tipo_contrato?: number | null
+          id_usuario_generado?: number | null
           motivo_ampliacion_plazo?: string | null
           motivo_anulacion?: string | null
           nro_contrato?: string
@@ -879,6 +891,13 @@ export type Database = {
           {
             foreignKeyName: "documentos_id_asociado_fkey"
             columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "documentos_id_asociado_generado_fkey"
+            columns: ["id_usuario_generado"]
             isOneToOne: false
             referencedRelation: "asociados"
             referencedColumns: ["id_asociado"]
@@ -1801,6 +1820,8 @@ export type Database = {
         Row: {
           activo: boolean | null
           created_at: string
+          eliminado: boolean | null
+          estado: boolean | null
           id: number
           id_operacion: number | null
           id_tipo_contrato: number | null
@@ -1814,6 +1835,8 @@ export type Database = {
         Insert: {
           activo?: boolean | null
           created_at?: string
+          eliminado?: boolean | null
+          estado?: boolean | null
           id?: number
           id_operacion?: number | null
           id_tipo_contrato?: number | null
@@ -1827,6 +1850,8 @@ export type Database = {
         Update: {
           activo?: boolean | null
           created_at?: string
+          eliminado?: boolean | null
+          estado?: boolean | null
           id?: number
           id_operacion?: number | null
           id_tipo_contrato?: number | null

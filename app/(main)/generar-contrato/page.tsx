@@ -13,7 +13,10 @@ async function ContratosContent() {
 
   const asociado = Asociado?.personas?.asociados[0];
   const id_asociado = asociado?.id_asociado || 0;
-  const NombreAsociado = asociado?.nombre_completo;
+  const CodigoAgente = asociado?.cod_agente
+  const NombreAsociado = asociado?.nombre_completo + (CodigoAgente ? (" - " + CodigoAgente) : "");
+  
+  console.log(CodigoAgente)
 
   // Se ejecutan en paralelo (no dependen del asociado)
   const [DataOperaciones, DateTiposContrato] = await Promise.all([
