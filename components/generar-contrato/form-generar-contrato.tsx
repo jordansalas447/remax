@@ -514,18 +514,18 @@ export default function FormGenerarContrato({
                         </div>
                           {/* Descripcion: text */}
                           <div>
-                          {/* <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
+                          <label htmlFor="descripcion" className="block mb-2 font-medium ">
                             Descripción
                           </label>
                           <Input
                             type="text"
-                            id="nro_propietarios"
-                            name="nro_propietarios"
+                            id="descripcion"
+                            name="descripcion"
                             className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
                             value={form.descripcion || ""}
                             onChange={handleChange}
                             disabled={enviando}
-                          /> */}
+                          />
                         </div>
                       </>
                     ) : (
