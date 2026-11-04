@@ -514,7 +514,7 @@ export default function FormGenerarContrato({
                         </div>
                           {/* Descripcion: text */}
                           <div>
-                          <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
+                          {/* <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
                             Descripción
                           </label>
                           <Input
@@ -525,7 +525,7 @@ export default function FormGenerarContrato({
                             value={form.descripcion || ""}
                             onChange={handleChange}
                             disabled={enviando}
-                          />
+                          /> */}
                         </div>
                       </>
                     ) : (
