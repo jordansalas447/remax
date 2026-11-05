@@ -1,11 +1,12 @@
 import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
-  ContratoFirmas,
+  ContratoCierre,
   ContratoFooter,
   ContratoHeader,
   ContratoWatermark,
-  contratoStyles as styles,
+  contratoStyles as defaultStyles,
+  getContratoStyles,
   listaPropietarios,
   val,
   type ContratoPDFProps,
@@ -35,7 +36,10 @@ export function VentaPDFNoExclusiva({
   diaFirma = "____",
   mesFirma = "________________",
   anoFirma = "______",
+  styles: customStyles,
+  ajustesEstilo,
 }: ContratoPDFProps) {
+  const styles = customStyles || (ajustesEstilo ? getContratoStyles(ajustesEstilo) : defaultStyles);
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
   return (
@@ -227,7 +231,8 @@ export function VentaPDFNoExclusiva({
         </View>
 
         {/* Décima segunda cláusula */}
-        <View style={styles.section}>
+        <ContratoCierre lista={lista} varios={varios} styles={styles}>
+        <View style={styles.closingSection || styles.section}>
           <Text style={styles.clauseTitle}>
             <Text style={styles.bold}>DECIMO SEGUNDA:</Text>
           </Text>
@@ -237,7 +242,7 @@ export function VentaPDFNoExclusiva({
         </View>
    
 
-        <ContratoFirmas lista={lista} varios={varios} />
+        </ContratoCierre>
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>

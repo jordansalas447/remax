@@ -1,11 +1,12 @@
 import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
-  ContratoFirmas,
+  ContratoCierre,
   ContratoFooter,
   ContratoHeader,
   ContratoWatermark,
-  contratoStyles as styles,
+  contratoStyles as defaultStyles,
+  getContratoStyles,
   listaPropietarios,
   val,
   type ContratoPDFProps,
@@ -34,7 +35,10 @@ export function AnticrisisPDFNoExclusiva({
   mesesObligacionPostVencimiento = "_______",
   mesFirma = "________________",
   anoFirma = "______",
+  styles: customStyles,
+  ajustesEstilo,
 }: ContratoPDFProps) {
+  const styles = customStyles || (ajustesEstilo ? getContratoStyles(ajustesEstilo) : defaultStyles);
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
   return (
@@ -57,17 +61,17 @@ export function AnticrisisPDFNoExclusiva({
                 {i > 0 ? (i === lista.length - 1 ? "; y " : "; ") : ""}
                 {i > 0 ? "el Sr./Sra.: " : ""}
                 <Text style={styles.dataInput}>
-                  {val(p.nombre, "________________________________________")}
+                  {val(p.nombre, "________________________________________")}{" "}
                 </Text>
                 , debidamente identificado(a) con DNI N°{" "}
-                <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>, estado civil{" "}
-                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>, número de celular{" "}
-                <Text style={styles.dataInput}>{val(p.celular, "_______________")}</Text>, con domicilio para estos efectos en{" "}
+                <Text style={styles.dataInput}>{val(p.dni, "_____________")}</Text>{" "}, estado civil{" "}
+                <Text style={styles.dataInput}>{val(p.estadoCivil, "__________________")}</Text>{" "}, número de celular{" "}
+                <Text style={styles.dataInput}>{val(p.celular, "_______________")}</Text>{" "}, con domicilio para estos efectos en{" "}
                 <Text style={styles.dataInput}>
                   {val(p.domicilio, "__________________________________________________")}
                 </Text>
-                , Distrito de{" "}
-                <Text style={styles.dataInput}>{val(p.distrito, "_______________")}</Text>, provincia y departamento de Arequipa
+                {" "}, Distrito de{" "}
+                <Text style={styles.dataInput}>{val(p.distrito, "_______________")}</Text>{" "}, provincia y departamento de Arequipa
               </React.Fragment>
             ))}
             , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como (REMAX ADELANTE) con RUC Nro. 20612674192 con domicilio en Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani), distrito de José Luis Bustamante y Rivero, Provincia y Departamento de Arequipa; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
@@ -192,7 +196,8 @@ export function AnticrisisPDFNoExclusiva({
           </Text>
         </View>
         {/* Décima segunda cláusula */}
-        <View style={styles.section}>
+        <ContratoCierre lista={lista} varios={varios} styles={styles}>
+        <View style={styles.closingSection || styles.section}>
           <Text style={styles.clauseTitle}>
             <Text style={styles.bold}>DÉCIMA SEGUNDA:</Text>
           </Text>
@@ -202,7 +207,7 @@ export function AnticrisisPDFNoExclusiva({
         </View>
    
         {/* Firmas */}
-        <ContratoFirmas lista={lista} varios={varios} />
+        </ContratoCierre>
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>

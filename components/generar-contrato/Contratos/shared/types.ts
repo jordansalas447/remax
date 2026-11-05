@@ -10,6 +10,16 @@ export type Propietario = {
   departamento?: string;
 };
 
+export type AjustesEstiloContrato = {
+  fontSize?: number;
+  lineHeight?: number;
+  sectionMarginBottom?: number;
+  clauseTitleMarginTop?: number;
+  signatureMarginTop?: number;
+  signatureBoxMarginBottom?: number;
+  closingSectionMinPresenceAhead?: number;
+};
+
 export type ContratoPDFProps = {
   nroContrato: string;
   nroPropietarios?: number;
@@ -54,4 +64,8 @@ export type ContratoPDFProps = {
   representanteTelefono?: string;
   representanteDomicilio?: string;
   representanteDistrito?: string;
+
+  // Ajustes dinámicos de estilos
+  ajustesEstilo?: AjustesEstiloContrato;
+  styles?: any;
 };

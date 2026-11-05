@@ -1,4 +1,4 @@
-import { renderToBuffer } from "@react-pdf/renderer";
+import React from "react";
 import {
   AnticrisisPDF,
   type ContratoPDFProps,
@@ -21,6 +21,7 @@ import {
 } from "@/components/generar-contrato/Contratos/shared/campos";
 import type { Propietario } from "@/components/generar-contrato/Contratos/shared/types";
 import { VentaEmpresaPDF } from "@/components/generar-contrato/Contratos/Venta Empresa";
+import { renderContratoOptimizado } from "@/components/generar-contrato/Contratos/shared";
 
 export const runtime = "nodejs";
 
@@ -139,76 +140,46 @@ export async function POST(request: Request) {
 
  // console.log(tipocontrato,tipoOperacion)
 
-  let TipoContratoLabel;
+  let ContratoComponent: React.ComponentType<ContratoPDFProps> | null = null;
 
-  //console.log(datos)
-
-  if  (tipoOperacion == 3) {
+  if (tipoOperacion == 3) {
     if (tipocontrato == 1) {
-      TipoContratoLabel = <AnticrisisPDF {...datos} />;
+      ContratoComponent = AnticrisisPDF;
     } else if (tipocontrato == 2) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      TipoContratoLabel = <AnticrisisPDFNoExclusiva {...datos} />;
-    } else if (tipocontrato == 3) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      return Response.json(
-        { error: "Tipo de contrato no soportado." },
-        { status: 400 }
-      );
+      ContratoComponent = AnticrisisPDFNoExclusiva;
     } else {
       return Response.json(
         { error: "Tipo de contrato no soportado." },
         { status: 400 }
       );
     }
-  } else if(tipoOperacion == 1) {
+  } else if (tipoOperacion == 1) {
     if (tipocontrato == 1) {
-      TipoContratoLabel = <VentaPDF {...datos} />;
+      ContratoComponent = VentaPDF;
     } else if (tipocontrato == 2) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      TipoContratoLabel = <VentaPDFNoExclusiva {...datos} />;
-    } else if (tipocontrato == 3) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      return Response.json(
-        { error: "Tipo de contrato no soportado." },
-        { status: 400 }
-      );
+      ContratoComponent = VentaPDFNoExclusiva;
     } else {
       return Response.json(
         { error: "Tipo de contrato no soportado." },
         { status: 400 }
       );
     }
-  } else if(tipoOperacion == 2) {
+  } else if (tipoOperacion == 2) {
     if (tipocontrato == 1) {
-      TipoContratoLabel = <ArrendamientoPDF {...datos} />;
+      ContratoComponent = ArrendamientoPDF;
     } else if (tipocontrato == 2) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      TipoContratoLabel = <ArrendamientoPDFNoExclusiva {...datos} />;
-    } else if (tipocontrato == 3) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      return Response.json(
-        { error: "Tipo de contrato no soportado." },
-        { status: 400 }
-      );
+      ContratoComponent = ArrendamientoPDFNoExclusiva;
     } else {
       return Response.json(
         { error: "Tipo de contrato no soportado." },
         { status: 400 }
       );
     }
-  } else if(tipoOperacion == 4) {
+  } else if (tipoOperacion == 4) {
     if (tipocontrato == 1) {
-      TipoContratoLabel = <TraspasoPDF {...datos} />;
+      ContratoComponent = TraspasoPDF;
     } else if (tipocontrato == 2) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      TipoContratoLabel = <TraspasoExlusivaPDF {...datos} />;
-    } else if (tipocontrato == 3) {
-      // Asegúrate de importar el componente correspondiente y ajustar props si es necesario
-      return Response.json(
-        { error: "Tipo de contrato no soportado." },
-        { status: 400 }
-      );
+      ContratoComponent = TraspasoExlusivaPDF;
     } else {
       return Response.json(
         { error: "Tipo de contrato no soportado." },
@@ -217,17 +188,18 @@ export async function POST(request: Request) {
     }
   }
 
-  //TipoContratoLabel = <VentaEmpresaPDF {...datos} />;
-
-  // Asegúrate de que TipoContratoLabel no sea undefined
-  if (!TipoContratoLabel) {
+  if (!ContratoComponent) {
     return Response.json(
       { error: "No se pudo generar el contrato PDF." },
       { status: 500 }
     );
   }
 
-  const pdfBuffer = await renderToBuffer(TipoContratoLabel);
+  const ComponenteFinal = ContratoComponent;
+  const pdfBuffer = await renderContratoOptimizado(
+    (props) => <ComponenteFinal {...props} />,
+    datos
+  );
   const fileName = `contrato-${sanitizeFileName(nroContrato)}.pdf`;
 
   return new Response(new Uint8Array(pdfBuffer), {

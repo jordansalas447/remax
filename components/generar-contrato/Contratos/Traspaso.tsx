@@ -1,11 +1,12 @@
 import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
-  ContratoFirmas,
+  ContratoCierre,
   ContratoFooter,
   ContratoHeader,
   ContratoWatermark,
-  contratoStyles as styles,
+  contratoStyles as defaultStyles,
+  getContratoStyles,
   listaPropietarios,
   val,
   type ContratoPDFProps,
@@ -36,7 +37,10 @@ export function TraspasoPDF({
   diaFirma = "_____",
   mesFirma = "__________________",
   anoFirma = "_____",
+  styles: customStyles,
+  ajustesEstilo,
 }: ContratoPDFProps) {
+  const styles = customStyles || (ajustesEstilo ? getContratoStyles(ajustesEstilo) : defaultStyles);
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
   return (
@@ -146,6 +150,7 @@ export function TraspasoPDF({
           <Text style={styles.justified}>
             En el caso que algún cliente que haya conocido <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> por gestión de <Text style={styles.bold}>EL COMISIONISTA</Text> y esté debidamente registrado por éste, lo traspase después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}>EL CLIENTE</Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}>EL COMISIONISTA</Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>{mesesObligacionPostVencimiento}</Text> meses una vez vencido el presente documento.
           </Text>
+           {/* Décima cláusula */}
           <Text style={styles.clauseTitle}>
             <Text style={styles.bold}>DÉCIMA:</Text>
           </Text>
@@ -181,7 +186,8 @@ export function TraspasoPDF({
         </View>
 
         {/* Décima segunda cláusula */}
-        <View style={styles.section}>
+        <ContratoCierre lista={lista} varios={varios} tipodenominacion="EL CLIENTE" styles={styles}>
+        <View style={styles.closingSection || styles.section}>
           <Text style={styles.clauseTitle}>
             <Text style={styles.bold}>DÉCIMO SEGUNDA:</Text>
           </Text>
@@ -191,7 +197,7 @@ export function TraspasoPDF({
         </View>
    
 
-        <ContratoFirmas lista={lista} varios={varios} tipodenominacion="EL CLIENTE" />
+        </ContratoCierre>
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>

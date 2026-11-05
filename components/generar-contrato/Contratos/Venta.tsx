@@ -1,11 +1,12 @@
 import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
-  ContratoFirmas,
+  ContratoCierre,
   ContratoFooter,
   ContratoHeader,
   ContratoWatermark,
-  contratoStyles as styles,
+  contratoStyles as defaultStyles,
+  getContratoStyles,
   listaPropietarios,
   val,
   type ContratoPDFProps,
@@ -35,7 +36,10 @@ export function VentaPDF({
   diaFirma = "____",
   mesFirma = "________________",
   anoFirma = "______",
+  styles: customStyles,
+  ajustesEstilo,
 }: ContratoPDFProps) {
+  const styles = customStyles || (ajustesEstilo ? getContratoStyles(ajustesEstilo) : defaultStyles);
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
   return (
@@ -113,10 +117,6 @@ export function VentaPDF({
             {"; "}
             <Text style={styles.bold}>EL COMISIONISTA</Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato, siendo <Text style={styles.bold}>EL COMISIONISTA</Text> y su grupo de trabajo, las únicas personas autorizadas para promover <Text style={styles.bold}>EL INMUEBLE</Text>  dentro de los medios que se enunciarán en la cláusula siguiente, no pudiendo <Text style={styles.bold}>EL PROPIETARIO</Text> contratar con otra empresa o persona que se dedique al <Text style={styles.bold}>CORRETAJE INMOBILIARIO</Text>, dentro del plazo de duración del presente documento.
           </Text>
-        </View>
-
-        {/* Cuarta cláusula */}
-        <View style={styles.section}>
           <Text style={styles.clauseTitle}><Text style={styles.bold}>CUARTA:</Text></Text>
           <Text style={styles.justified}>
             <Text style={styles.bold}>EL COMISIONISTA</Text> se compromete a listar <Text style={styles.bold}>EL INMUEBLE</Text> dentro de la web de <Text style={styles.bold}>RE/MAX PERÚ</Text>
@@ -134,6 +134,10 @@ export function VentaPDF({
             <Text style={styles.bold}>EL PROPIETARIO</Text>
             {"."}
           </Text>
+        </View>
+
+        {/* Cuarta cláusula */}
+        <View style={styles.section}>
         </View>
 
         {/* Quinta cláusula */}
@@ -226,7 +230,8 @@ export function VentaPDF({
         </View>
 
         {/* Décima segunda cláusula */}
-        <View style={styles.section}>
+        <ContratoCierre lista={lista} varios={varios} styles={styles}>
+        <View style={styles.closingSection || styles.section}>
           <Text style={styles.clauseTitle}><Text style={styles.bold}>DÉCIMO SEGUNDA:</Text></Text>
           <Text style={styles.justified}>
             Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año <Text style={styles.dataInput}>{anoFirma}</Text>.
@@ -234,7 +239,7 @@ export function VentaPDF({
         </View>
 
 
-        <ContratoFirmas lista={lista} varios={varios} />
+        </ContratoCierre>
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>

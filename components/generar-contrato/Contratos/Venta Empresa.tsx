@@ -1,11 +1,12 @@
 import React from "react";
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import {
-  ContratoFirmas,
+  ContratoCierre,
   ContratoFooter,
   ContratoHeader,
   ContratoWatermark,
-  contratoStyles as styles,
+  contratoStyles as defaultStyles,
+  getContratoStyles,
   listaPropietarios,
   val,
   type ContratoPDFProps,
@@ -51,7 +52,10 @@ export function VentaEmpresaPDF({
   representanteTelefono = "____________________",
   representanteDomicilio = "________________________________________",
   representanteDistrito = "________________",
+  styles: customStyles,
+  ajustesEstilo,
 }: ContratoPDFProps) {
+  const styles = customStyles || (ajustesEstilo ? getContratoStyles(ajustesEstilo) : defaultStyles);
   const { varios, lista } = listaPropietarios(nroPropietarios, propietarios);
 
   return (
@@ -266,7 +270,8 @@ export function VentaEmpresaPDF({
         </View>
 
         {/* Décima segunda cláusula */}
-        <View style={styles.section}>
+        <ContratoCierre lista={lista} varios={varios} styles={styles}>
+        <View style={styles.closingSection || styles.section}>
           <Text style={styles.clauseTitle}><Text style={styles.bold}>DÉCIMO SEGUNDA:</Text></Text>
           <Text style={styles.justified}>
             Las partes reconocen que han leído y entienden este acuerdo y aceptan voluntariamente los derechos y las obligaciones dispuestas y juntos firmamos por duplicado el día <Text style={styles.dataInput}>{diaFirma}</Text> del mes de <Text style={styles.dataInput}>{mesFirma}</Text> del año <Text style={styles.dataInput}>{anoFirma}</Text>.
@@ -274,7 +279,7 @@ export function VentaEmpresaPDF({
         </View>
 
 
-        <ContratoFirmas lista={lista} varios={varios} />
+        </ContratoCierre>
         <ContratoFooter qr={qr} fecha_creacion={fecha_generacion} id_publico={id_publico} />
       </Page>
     </Document>
