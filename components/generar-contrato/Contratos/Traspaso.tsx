@@ -146,10 +146,6 @@ export function TraspasoPDF({
           <Text style={styles.justified}>
             En el caso que algún cliente que haya conocido <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> por gestión de <Text style={styles.bold}>EL COMISIONISTA</Text> y esté debidamente registrado por éste, lo traspase después del vencimiento del presente acuerdo y haya sido negociado en forma directa con <Text style={styles.bold}>EL CLIENTE</Text>, las partes acuerdan que éste quedará obligado a hacer la cancelación de la comisión pactada en el presente documento a <Text style={styles.bold}>EL COMISIONISTA</Text>. Esta obligación será respetada por el plazo de <Text style={styles.dataInput}>{mesesObligacionPostVencimiento}</Text> meses una vez vencido el presente documento.
           </Text>
-        </View>
-
-        {/* Décima cláusula */}
-        <View style={styles.section}>
           <Text style={styles.clauseTitle}>
             <Text style={styles.bold}>DÉCIMA:</Text>
           </Text>
@@ -167,6 +163,11 @@ export function TraspasoPDF({
               10.4 En el supuesto caso que <Text style={styles.bold}>EL CLIENTE</Text> realice el <Text style={styles.bold}>TRASPASO</Text> de <Text style={styles.bold}>EL LOCAL COMERCIAL</Text> por su cuenta incumpliendo la cláusula tercera del presente contrato, éste deberá pagar el total de la comisión señalada en la cláusula quinta de acuerdo al monto del traspaso del contrato celebrado por <Text style={styles.bold}>EL CLIENTE</Text>.
             </Text>
           </View>
+        </View>
+
+        {/* Décima cláusula */}
+        <View style={styles.section}>
+
         </View>
 
         {/* Décima primera cláusula */}
