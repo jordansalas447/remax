@@ -68,6 +68,8 @@ export async function login(_prev: ActionState, formData: FormData): Promise<Act
   const session = await getSession();
   const Path = session?.profile?.role === "admin" ? next : "/generar-contrato"
 
+  
+
   revalidatePath("/", "layout");
   redirect(Path);
 }
