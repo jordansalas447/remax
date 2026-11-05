@@ -150,7 +150,7 @@ export function VentaPDFNoExclusiva({
             <Text style={styles.bold}>EL INMUEBLE</Text>
             {":"}
           </Text>
-          <View style={{ marginLeft: 14, marginTop: 4 }}>
+          <View wrap={false} style={{ marginLeft: 14, marginTop: 4 }}>
             <Text style={styles.justified}> Copia Simple de la partida registral de <Text style={styles.bold}>EL INMUEBLE</Text> actualizada con menos de 30 días.</Text>
             <Text style={styles.justified}> Copia del documento de identidad de <Text style={styles.bold}>EL PROPIETARIO</Text></Text>
             <Text style={styles.justified}> Copia del Testimonio de Compraventa de <Text style={styles.bold}>EL INMUEBLE</Text></Text>

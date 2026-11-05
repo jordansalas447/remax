@@ -130,7 +130,7 @@ export function ArrendamientoPDF({
 
         {/* Quinta cláusula */}
         <View style={styles.section}>
-          <Text style={styles.clauseTitle}>
+          <Text minPresenceAhead={120} style={styles.clauseTitle}>
             <Text style={styles.bold}>QUINTA:</Text>
           </Text>
           <Text style={styles.justified}>

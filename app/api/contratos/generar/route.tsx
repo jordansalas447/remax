@@ -20,6 +20,7 @@ import {
   CLAVES_TEXTO_CONTRATO,
 } from "@/components/generar-contrato/Contratos/shared/campos";
 import type { Propietario } from "@/components/generar-contrato/Contratos/shared/types";
+import { VentaEmpresaPDF } from "@/components/generar-contrato/Contratos/Venta Empresa";
 
 export const runtime = "nodejs";
 
@@ -215,6 +216,8 @@ export async function POST(request: Request) {
       );
     }
   }
+
+  //TipoContratoLabel = <VentaEmpresaPDF {...datos} />;
 
   // Asegúrate de que TipoContratoLabel no sea undefined
   if (!TipoContratoLabel) {

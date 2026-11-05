@@ -9,8 +9,8 @@ export const contratoStyles = StyleSheet.create({
     paddingBottom: 72,
     paddingLeft: 50,
     paddingRight: 50,
-    fontSize: 8,
-    lineHeight: 1.5,
+    fontSize: 8.5,
+    lineHeight: 1.8,
   },
   watermarkImageContainer: {
     position: "absolute",
@@ -86,7 +86,7 @@ export const contratoStyles = StyleSheet.create({
     fontWeight: 700,
   },
   section: {
-    marginBottom: 4,
+    marginBottom: 6,
   },
   justified: {
     textAlign: "justify",
@@ -96,6 +96,8 @@ export const contratoStyles = StyleSheet.create({
     fontWeight: 700,
     marginTop: 8,
     marginBottom: 3,
+    // Ensure the clause title always has content below it on the same page
+    minPresenceAhead: 40,
   },
   signatureSection: {
     flexDirection: "row",
@@ -112,16 +114,16 @@ export const contratoStyles = StyleSheet.create({
     marginBottom: 36,
   },
   signatureText: {
-    fontSize: 9,
+    fontSize: 7,
     textAlign: "center",
   },
   signatureSubText: {
-    fontSize: 8,
+    fontSize: 7,
     textAlign: "center",
   },
   dataInput: {
     fontSize: 8,
-    fontWeight:900,
+    fontWeight: 900,
     //textDecoration: "underline",
     minWidth: 60,
     lineHeight: 1.4,

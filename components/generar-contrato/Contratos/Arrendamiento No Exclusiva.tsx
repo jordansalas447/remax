@@ -152,13 +152,13 @@ export function ArrendamientoPDFNoExclusiva({
           <Text style={styles.justified}>
             Que a consecuencia del presente acuerdo <Text style={styles.bold}>EL PROPIETARIO</Text> se compromete a brindar todas las facilidades para mostrar <Text style={styles.bold}>EL INMUEBLE</Text> y a entregar a <Text style={styles.bold}>EL COMISIONISTA</Text> una comisión equivalente a:
           </Text>
-          <View style={{ marginLeft: 14, marginTop: 4 }}>
+          <View wrap={false} style={{ marginLeft: 14, marginTop: 4 }}>
             <Text style={styles.justified}>- 1 mes de arrendamiento (no incluye IGV), si el arrendamiento fuera por el plazo de uno a dos años</Text>
             <Text style={styles.justified}>- 2 meses de arrendamiento (no incluye IGV), si el arrendamiento fuera por el plazo de tres años a más.</Text>
             <Text style={styles.justified}>- Tiempo parcial que sería equivalente al <Text style={styles.dataInput}>{porcentajeMontoAlquiler}</Text>% del monto de alquiler.</Text>
           </View>  
             <Text style={styles.justified}>Sobre la base del monto negociado por <Text style={styles.bold}>EL COMISIONISTA</Text> con el futuro arrendatario y previamente aceptado por <Text style={styles.bold}>EL PROPIETARIO</Text>. Las comisiones pactadas en la presente cláusula serán canceladas a <Text style={styles.bold}>EL COMISIONISTA</Text> al momento de la firma del Contrato de arrendamiento que se genere entre <Text style={styles.bold}>EL PROPIETARIO</Text> con el arrendatario que haya sido presentado por <Text style={styles.bold}>EL COMISIONISTA</Text>. Asimismo, <Text style={styles.bold}>EL PROPIETARIO</Text> se compromete a entregar los documentos señalados a continuación para poder iniciar el proceso de arrendamiento de <Text style={styles.bold}>EL INMUEBLE</Text>:</Text>
-          <View style={{ marginLeft: 14, marginTop: 4 }}>  
+          <View wrap={false} style={{ marginLeft: 14, marginTop: 4 }}>  
             <Text style={styles.justified}>- Copia Simple de la partida registral de <Text style={styles.bold}>EL INMUEBLE</Text> actualizada con menos de 30 días.</Text>
             <Text style={styles.justified}>- Copia del documento de identidad de <Text style={styles.bold}>EL PROPIETARIO</Text></Text>
             <Text style={styles.justified}>- Cualquier otro documento que sea solicitado por el Agente Responsable del manejo de la Propiedad y que sea necesario para la consecución del objeto del presente contrato.</Text>

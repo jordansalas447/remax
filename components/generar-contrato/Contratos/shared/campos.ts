@@ -257,7 +257,9 @@ export function getCamposPropietario(tipoOperacion: number): CampoPropietario[] 
   campos.push(
     { key: "celular", label: "Celular", placeholder: "987654321", inputMode: "tel", maxLength: 9 },
     { key: "domicilio", label: "Domicilio", placeholder: "Dirección del domicilio", ancho: true },
-    { key: "distrito", label: "Distrito (domicilio)", placeholder: "Ej. Yanahuara" }
+    { key: "distrito", label: "Distrito (domicilio)", placeholder: "Ej. Yanahuara" },
+   // { key: "provincia", label: "Provincia", placeholder: "Ej. Arequipa" },
+   // { key: "departamento", label: "Departamento", placeholder: "Ej. Arequipa" }
   );
 
   return campos;

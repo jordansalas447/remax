@@ -6,8 +6,19 @@ export const sesionesaccesoConfig: TableConfig = {
   description: "Catálogo de Sessiones Acceso",
   primaryKey: "user_id",
   fields: [
-    { name: "user_id", label: "User ID", type: "number", readOnlyOnEdit: true },
+    // { name: "user_id", label: "User ID", type: "number", readOnlyOnEdit: true },
+    {
+      name: "user_id",
+      label: "Usuario",
+      type: "select",
+      foreignKey: {
+        table: "profiles",
+        valueField: "id",
+        labelField: "email",
+      },
+    },
     { name: "valido_hasta", label: "Valido Hasta", type: "text" },
+    { name: "creado_at", label: "Registrado", type: "text" },
     { name: "session_id", label: "Session ID", type: "text" },
   ],
 };
