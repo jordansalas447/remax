@@ -28,7 +28,7 @@ interface FormularioProps {
   onCancelar: () => void;
 }
 
-const MAX_PROPIETARIOS = 20;
+const MAX_PROPIETARIOS = 10;
 
 // Pasos del asistente
 const PASOS_CONTRATO = [
@@ -218,7 +218,7 @@ export default function FormGenerarContrato({
   ) => {
     const { name, value, type } = e.target;
 
-    console.log((value))
+   // console.log((value))
 
     setForm((f) => ({
       ...f,

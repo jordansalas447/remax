@@ -35,7 +35,7 @@ export function VentaPDFNoExclusiva({
   duracionMeses = "____",
   diaFirma = "____",
   mesFirma = "________________",
-  anoFirma = "______",
+  anoFirma = "__________",
   styles: customStyles,
   ajustesEstilo,
 }: ContratoPDFProps) {
@@ -72,7 +72,7 @@ export function VentaPDFNoExclusiva({
                   {val(p.domicilio, "__________________________________________________")}
                 </Text>
                 {" "}, Distrito de{" "}
-                <Text style={styles.dataInput}>{val(p.distrito, "_______________ ")}</Text>{" "}, provincia y departamento de Arequipa
+                <Text style={styles.dataInput}>{val(p.distrito, "_______________ ")}</Text>{" "}, provincia de <Text style={styles.dataInput}>{val(p.provincia, "_______________")}</Text> y departamento de <Text style={styles.dataInput}>{val(p.departamento, "_______________")}</Text>
               </React.Fragment>
             ))}
             , y a {varios ? "quienes" : "quien"} en adelante se {varios ? "les denominará conjuntamente" : "le denominará"} como <Text style={styles.bold}>EL PROPIETARIO</Text>; y de la otra parte, la empresa <Text style={styles.bold}>ADELANTE ASESORES INMOBILIARIOS SAC.</Text> Comercialmente conocida como <Text style={styles.bold}>(REMAX ADELANTE)</Text> con <Text style={styles.bold}>RUC Nro. 20612674192</Text> con domicilio en <Text style={styles.bold}>Urbanización Santo Domingo Segunda Etapa, Quinta Estancia Mz. A, Lote 2 (Av. Lambramani)</Text> , distrito de <Text style={styles.bold}>José Luis Bustamante y Rivero</Text> , Provincia y Departamento de <Text style={styles.bold}>Arequipa</Text> ; debidamente representada por su Representante Legal, la señora Janelly Hurtado López, debidamente identificado con DNI Nº 44309957, y poderes inscritos en la Partida N° 11450349 del Registro de Personas Jurídicas de Arequipa a quien en adelante se le denominará <Text style={styles.bold}>EL COMISIONISTA</Text>; en los términos y condiciones de las cláusulas siguientes:
@@ -87,9 +87,13 @@ export function VentaPDFNoExclusiva({
           <Text style={styles.justified}>
             <Text style={styles.bold}>EL PROPIETARIO</Text> es dueño del inmueble ubicado en:{" "}
             <Text style={styles.dataInput}>{inmuebleDireccion}</Text>
-            {", distrito de "}
+            {" , distrito de "}
             <Text style={styles.dataInput}>{inmuebleDistrito}</Text>
-            {", provincia y departamento de Arequipa, cuyos linderos y medidas perimétricas constan inscritos en la Partida Electrónica N° "}
+            {" , provincia "}
+            <Text style={styles.dataInput}>{inmuebleProvincia}</Text>
+            {" y departamento de "}
+            <Text style={styles.dataInput}>{inmuebleDepartamento}</Text>
+            {" , cuyos linderos y medidas perimétricas constan inscritos en la Partida Electrónica N° "}
             <Text style={styles.dataInput}>{inmueblePartida}</Text>
             {" del Registro de Predios de la Zona Registral XII - Sede Arequipa y al que en lo sucesivo se le denominará "}
             <Text style={styles.bold}>EL INMUEBLE.</Text>

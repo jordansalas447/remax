@@ -87,10 +87,37 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
   {
     accessorKey: "numero_telefono",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Numero de Telefono" />
+      <DataTableColumnHeader column={column} title="Número de Telefono" />
     ),
     cell: ({ row }) => {
       const numero = row.getValue("numero_telefono");
+      const numeroSanitizado = typeof numero === "string"
+        ? numero.replace(/[^\d]/g, "")
+        : "";
+      return (
+        <div className="flex items-center space-x-2">
+          <span>{formatCell(numero)}</span>
+          {numeroSanitizado && (
+            <a
+              href={`https://wa.me/${numeroSanitizado}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition-colors"
+            >
+              <FontAwesomeIcon icon={faPhone} />
+            </a>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "numero_telefono_2",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Número de Telefono 2" />
+    ),
+    cell: ({ row }) => {
+      const numero = row.getValue("numero_telefono_2");
       const numeroSanitizado = typeof numero === "string"
         ? numero.replace(/[^\d]/g, "")
         : "";
@@ -247,7 +274,7 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
   {
     accessorKey: "direccion",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Direccion" />
+      <DataTableColumnHeader column={column} title="Dirección" />
     ),
     cell: ({ row }) => formatCell(row.getValue("direccion")),
   },

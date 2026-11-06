@@ -75,6 +75,8 @@ export const CLAVES_PROPIETARIO: (keyof Propietario)[] = [
   "celular",
   "domicilio",
   "distrito",
+  "provincia",
+  "departamento",
 ];
 
 export const MESES = [
@@ -111,6 +113,20 @@ const DISTRITO: CampoContrato = {
   label: "Distrito",
   seccion: "inmueble",
   placeholder: "Ej. Cayma",
+};
+
+const PROVINCIA: CampoContrato = {
+  key: "inmuebleProvincia",
+  label: "Provincia",
+  seccion: "inmueble",
+  placeholder: "Arequipa",
+};
+
+const DEPARTAMENTO: CampoContrato = {
+  key: "inmuebleDepartamento",
+  label: "Departamento",
+  seccion: "inmueble",
+  placeholder: "Arequipa",
 };
 
 const PARTIDA: CampoContrato = {
@@ -166,12 +182,8 @@ export function getCamposContrato(
       return [
         DIRECCION,
         DISTRITO,
-        ...(exclusiva
-          ? [
-              { key: "inmuebleProvincia", label: "Provincia", seccion: "inmueble", placeholder: "Arequipa" } as CampoContrato,
-              { key: "inmuebleDepartamento", label: "Departamento", seccion: "inmueble", placeholder: "Arequipa" } as CampoContrato,
-            ]
-          : []),
+        PROVINCIA,
+        DEPARTAMENTO,
         PARTIDA,
         ASESOR,
         {
@@ -186,13 +198,26 @@ export function getCamposContrato(
 
     // ARRENDAMIENTO
     case 2:
-      return [DIRECCION, DISTRITO, PARTIDA, ASESOR, DURACION, OBLIGACION_POST, ...(exclusiva ? [] : [PORCENTAJEMONTOALQUILER]), ...FIRMA];
+      return [
+        DIRECCION,
+        DISTRITO,
+        PROVINCIA,
+        DEPARTAMENTO,
+        PARTIDA,
+        ASESOR,
+        DURACION,
+        OBLIGACION_POST,
+        ...(exclusiva ? [] : [PORCENTAJEMONTOALQUILER]),
+        ...FIRMA,
+      ];
 
     // ANTICRESIS
     case 3:
       return [
         DIRECCION,
         DISTRITO,
+        PROVINCIA,
+        DEPARTAMENTO,
         PARTIDA,
         ASESOR,
         {
@@ -223,6 +248,8 @@ export function getCamposContrato(
         },
         { ...DIRECCION, label: "Dirección del local" },
         DISTRITO,
+        PROVINCIA,
+        DEPARTAMENTO,
         ASESOR,
         {
           key: "comision",
@@ -258,8 +285,8 @@ export function getCamposPropietario(tipoOperacion: number): CampoPropietario[] 
     { key: "celular", label: "Celular", placeholder: "987654321", inputMode: "tel", maxLength: 9 },
     { key: "domicilio", label: "Domicilio", placeholder: "Dirección del domicilio", ancho: true },
     { key: "distrito", label: "Distrito (domicilio)", placeholder: "Ej. Yanahuara" },
-   // { key: "provincia", label: "Provincia", placeholder: "Ej. Arequipa" },
-   // { key: "departamento", label: "Departamento", placeholder: "Ej. Arequipa" }
+    { key: "provincia", label: "Provincia", placeholder: "Ej. Arequipa" },
+    { key: "departamento", label: "Departamento", placeholder: "Ej. Arequipa" }
   );
 
   return campos;
@@ -287,6 +314,8 @@ export function construirDatosContrato(
     const valor = datos[campo.key]?.trim();
     if (valor) resultado[campo.key] = valor;
   }
+
+  console.log("resultado", propietarios);
 
   const clavesPropietario = getCamposPropietario(tipoOperacion).map((c) => c.key);
   const lista = Array.from({ length: Math.max(1, nroPropietarios) }, (_, i) => {

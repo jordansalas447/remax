@@ -200,7 +200,7 @@ export async function getPropiedadPropietarioInmueblesByContrato(
   const { data, error } = await query;
 
 
-  console.log(data)
+  //console.log(data)
 
   if (error) {
     throw new Error(`Error consultando propiedad_propietario + inmuebles por contrato: ${error.message}`);

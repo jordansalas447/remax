@@ -120,7 +120,10 @@ export async function POST(request: Request) {
     }
   }
 
+  //console.log("body", body);
+
   const propietarios = extraerPropietarios(body.propietarios);
+  //console.log("propietarios", propietarios);
 
   const datos: ContratoPDFProps = {
     ...extraerCamposTexto(body as Record<string, unknown>),
@@ -139,6 +142,8 @@ export async function POST(request: Request) {
   const tipoOperacion = body.tipoOperacion;
 
  // console.log(tipocontrato,tipoOperacion)
+
+ //console.log("datos", datos);
 
   let ContratoComponent: React.ComponentType<ContratoPDFProps> | null = null;
 

@@ -129,6 +129,11 @@ export default function CamposContrato({
     const id = `campo-${campo.key}`;
     const value = datos[campo.key] ?? "";
 
+    //console.log("campo", campo);
+    //console.log("value", value);
+    //console.log("NombreAsociado", NombreAsociado);
+   // console.log("datos", camposPropietario);
+
     if (campo.key === "nombreAsesor") {
       return (
         <Campo

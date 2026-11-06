@@ -29,6 +29,8 @@ export function TraspasoPDF({
   nombreAsesor = "_________________________________________________",
   inmuebleDireccion = "______________________________________________________________________________________",
   inmuebleDistrito = "______________",
+  inmuebleProvincia = "______________",
+  inmuebleDepartamento = "______________",
   nombreNegocio = "________________________",
   giroNegocio = "__________________________________",
   comision = "____",
@@ -36,7 +38,7 @@ export function TraspasoPDF({
   mesesObligacionPostVencimiento = "___",
   diaFirma = "_____",
   mesFirma = "__________________",
-  anoFirma = "_____",
+  anoFirma = "__________",
   styles: customStyles,
   ajustesEstilo,
 }: ContratoPDFProps) {
@@ -63,7 +65,15 @@ export function TraspasoPDF({
             <Text style={styles.bold}>PRIMERA:</Text>
           </Text>
           <Text style={styles.justified}>
-            <Text style={styles.bold}>EL CLIENTE</Text> es el dueño de un local comercial de <Text style={styles.dataInput}>{giroNegocio}</Text> llamado “ <Text style={styles.dataInput}>{nombreNegocio}</Text> ” ubicado en: <Text style={styles.dataInput}>{inmuebleDireccion}</Text> , distrito de <Text style={styles.dataInput}>{inmuebleDistrito}</Text>, provincia y departamento de <Text style={styles.bold}>AREQUIPA</Text>, y al que en lo sucesivo se le denominará <Text style={styles.bold}>EL LOCAL COMERCIAL</Text>.
+            <Text style={styles.bold}>EL CLIENTE</Text> es el dueño de un local comercial de <Text style={styles.dataInput}>{giroNegocio}</Text> llamado “ <Text style={styles.dataInput}>{nombreNegocio}</Text> ” ubicado en: <Text style={styles.dataInput}>{inmuebleDireccion}</Text>
+            {" , distrito de "}
+            <Text style={styles.dataInput}>{inmuebleDistrito}</Text>
+            {" , provincia "}
+            <Text style={styles.dataInput}>{inmuebleProvincia}</Text>
+            {" y departamento de "}
+            <Text style={styles.dataInput}>{inmuebleDepartamento}</Text>
+            {", y al que en lo sucesivo se le denominará "}
+            <Text style={styles.bold}>EL LOCAL COMERCIAL.</Text>
           </Text>
         </View>
 
