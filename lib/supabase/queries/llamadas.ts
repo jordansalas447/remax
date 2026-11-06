@@ -12,6 +12,7 @@ export type LlamadasRowDetalle = {
   id?: number; // id_propiedad_propietario
   id_llamada?: number | null;
   id_remax?: string | number | null;
+  id_propiedad:number;
   color?: string;
   asociado?: string; // a.nombre_completo
   tipo_propiedad?: string; // tp.tipo_propiedad
@@ -21,6 +22,7 @@ export type LlamadasRowDetalle = {
   modalidad: string; // tc.tipo_contrato
   id_estado_llamada?: number;
   estado_llamada?: any;
+  id_propietario:number;
   propietario: string; // p.nombre_completo
   numero_telefono: string; // pe.numero_telefono
   fecha_contrato_recibido: string | null; // c.fecha_contrato_recibido
@@ -79,6 +81,20 @@ export async function getResumenLlamadas(): Promise<LlamadasRowDetalle[]> {
     .select('*')
     //.eq('(fecha_registro - '05:00:00'::interval)::date = CURRENT_DATE')
     .order('fecha_registro', { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  return data ?? [];
+}
+
+
+export async function getResumenLlamadasxIdRemax(idremax:number): Promise<LlamadasRowDetalle[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('vista_llamadas_propietarios')
+    .select('*')
+    .eq('id_propiedad',idremax)
+    //.order('fecha_registro', { ascending: false });
 
   if (error) throw new Error(error.message);
 

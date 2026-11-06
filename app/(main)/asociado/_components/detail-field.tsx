@@ -32,7 +32,7 @@ export function DetailField({
       </dt>
       <dd
         className={cn(
-          "text-sm text-zinc-900 dark:text-zinc-100",
+          "text-sm text-zinc-900 dark:text-zinc-100 pb-2",
           boldValue && "font-semibold",
           textColorClass
         )}

@@ -34,6 +34,7 @@ import ObservacionInput from "./_components/componente-observaciones";
 import { createHistorialObservacion, getHistorialObservacionById, getHistorialObservacionByIdInmueblePropietarioContrato, HistorialObservacionesDetalle } from "@/lib/supabase/queries/historial_observaciones";
 import { toast } from "@/components/ui/toast";
 import { AlcanceDetalle, getAlcances } from "@/lib/supabase/queries/alcance";
+import { getResumenLlamadasxIdRemax, LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas";
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -65,6 +66,8 @@ export default function AsociadoPage() {
   const [historialObservacionesData, sethistorialObservacionesData] = useState<HistorialObservacionesDetalle[] | null>([]);
 
   const [alcancesData, setalcancesData] = useState<AlcanceDetalle[]>([]);
+
+  const [llamadaData,setllamadaData] = useState<LlamadasRowDetalle[]>([])
 
   const [RevisionesCheckDataContrato, setRevisionesCheckDataContrato] = useState<any[]>([]);
   const [RevisionesCheckDataPropiedad, setRevisionesCheckDataPropiedad] = useState<any[]>([]);
@@ -195,13 +198,17 @@ export default function AsociadoPage() {
         ]);
 
 
-        const [HistorialObservacionesData, AlcancesData] = await Promise.all([
+        const [HistorialObservacionesData, AlcancesData,LlamadaData] = await Promise.all([
           getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0]?.id),
-          getAlcances()
+          getAlcances(),
+
+          // LLAMADA
+          getResumenLlamadasxIdRemax(propiedadData[0]?.inmueble?.id_propiedad ?? 0)
 
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
 
+        setllamadaData(LlamadaData)
         sethistorialObservacionesData(HistorialObservacionesData)
         setalcancesData(AlcancesData)
 
@@ -448,6 +455,7 @@ export default function AsociadoPage() {
           />
 
           <PropietariosSection
+            llamadas={llamadaData}
             propietarios={propietarios}
             loading={loadingPropietarios}
             propiedadId={selectedPropiedadId}

@@ -5,28 +5,32 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import type { PropietarioDetalle } from "@/lib/supabase/queries/propietarios";
 import { DetailField } from "./detail-field";
-import { Badge } from "@/components/ui/badge";
+import { Badge, BadgeVariant } from "@/components/ui/badge";
 import { DocumentResource } from "./document-resource";
 import { getVistaRevisiones } from "@/lib/supabase/queries/revisiones";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas";
 
 interface PropietariosSectionProps {
   propietarios: PropietarioDetalle[];
+  llamadas: LlamadasRowDetalle[]
   loading: boolean;
-  CheckRevision:any[];
+  CheckRevision: any[];
   propiedadId: number | null;
 }
 
-export function PropietariosSection({ propietarios,CheckRevision ,loading, propiedadId }: PropietariosSectionProps) {
+export function PropietariosSection({ propietarios, CheckRevision, loading, propiedadId, llamadas }: PropietariosSectionProps) {
 
   // Eliminate the incorrect log and replace with a proper example log per-propietario matching CheckRevision
 
   // For debugging: print CheckRevision entries grouped/matched by propietario
 
-    const matches = CheckRevision.filter(
-      i => i.id_ref_propiedad_propietario_contrato == propietarios[0]?.id_propietario
-    )
+  console.log(llamadas)
+
+  const matches = CheckRevision.filter(
+    i => i.id_ref_propiedad_propietario_contrato == propietarios[0]?.id_propietario
+  )
 
 
   if (!propiedadId) {
@@ -59,69 +63,110 @@ export function PropietariosSection({ propietarios,CheckRevision ,loading, propi
   }
 
   return (
-<Card>
-  <CardHeader>
-    <CardTitle className="flex items-center gap-2">
-      <Users className="size-5 text-blue-600 dark:text-blue-400" />
-      Propietarios
-      {propietarios.length > 0 && (
-        <Badge variant="secondary" className="ml-1 rounded-full px-2 py-0 text-xs font-medium">
-          {propietarios.length}
-        </Badge>
-      )}
-    </CardTitle>
-    <CardDescription>
-      {propietarios.length === 0
-        ? "No hay propietarios vinculados a esta propiedad"
-        : `${propietarios.length} propietario${propietarios.length === 1 ? "" : "s"} registrado${propietarios.length === 1 ? "" : "s"}`}
-    </CardDescription>
-  </CardHeader>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="size-5 text-blue-600 dark:text-blue-400" />
+          Propietarios
+          {propietarios.length > 0 && (
+            <Badge variant="secondary" className="ml-1 rounded-full px-2 py-0 text-xs font-medium">
+              {propietarios.length}
+            </Badge>
+          )}
+        </CardTitle>
+        <CardDescription>
+          {propietarios.length === 0
+            ? "No hay propietarios vinculados a esta propiedad"
+            : `${propietarios.length} propietario${propietarios.length === 1 ? "" : "s"} registrado${propietarios.length === 1 ? "" : "s"}`}
+        </CardDescription>
+      </CardHeader>
 
-  {propietarios.length > 0 ? (
-    <CardContent className="grid gap-3 md:grid-cols-2">
-      {propietarios.map((propietario) => {
-        const persona = propietario.personas;
-        const nombre = propietario.nombre_completo ?? persona?.nombre_completo ?? "Sin nombre";
-        const situacion = propietario.situacion?.descripcion;
+      {propietarios.length > 0 ? (
+        <CardContent className="grid gap-3 md:grid-cols-2">
+          {propietarios.map((propietario) => {
+            const persona = propietario.personas;
+            const nombre = propietario.nombre_completo ?? persona?.nombre_completo ?? "Sin nombre";
+            const situacion = propietario.situacion?.descripcion;
 
-        return (
-          <div
-            key={propietario.id_propietario}
-            className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-blue-300 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-blue-800/60"
-          >
-            <div className="relative">
-              <div className="absolute right-0">
-              <DocumentResource url={undefined} document={propietario} type={"propietario"} CheckRevision={matches} />
-              </div>         
-            </div>  
-            <div className="mb-3 flex items-center gap-3">
-              <div className="min-w-0">
-                <p className="truncate font-medium text-zinc-900 dark:text-zinc-50"><FontAwesomeIcon icon={faUser} />{nombre}</p>
-                <p>{situacion}</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  ID #{propietario.id_propietario}
-                </p>
+            return (
+              <div
+                key={propietario.id_propietario}
+                className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-blue-300 dark:border-zinc-800 dark:bg-zinc-900/40 dark:hover:border-blue-800/60"
+              >
+                <div className="relative">
+                  <div className="absolute right-0">
+                    {/* <DocumentResource url={undefined} document={propietario} type={"propietario"} CheckRevision={matches} /> */}
+                  </div>
+                </div>
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-zinc-900 dark:text-zinc-50"><FontAwesomeIcon icon={faUser} />{nombre}</p>
+                    <p>{situacion}</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      ID #{propietario.id_propietario}
+                    </p>
+                  </div>
+                </div>
+                <dl className="grid gap-2 border-t border-zinc-100 pt-3 sm:grid-cols-2 dark:border-zinc-800">
+                  <DetailField label="Contacto" value={propietario.contacto ?? persona?.numero_telefono} />
+                  <DetailField label="Documento" value={persona?.documento_identidad} />
+                  <DetailField label="Dirección" value={persona?.direccion} className="sm:col-span-2" />
+                </dl>
+                <dl className="border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                  {
+                    llamadas.map((i) => {
+                      if (i.id_propietario === propietario.id_propietario) {
+                        return (
+                          <div key={i.id_propietario}>
+                            <DetailField
+                              label="Estado Llamada"
+                              badge={true}
+                              badgeVariant={i.color as BadgeVariant}
+                              value={i.estado_llamada}
+                              className="sm:col-span-2"
+                            />
+                            <DetailField
+                              label="Curso Llamada / Bienvenida"
+                              value={i.curso_llamada}
+                              className="sm:col-span-2"
+                            />
+                            <DetailField
+                              label="Observacion"
+                              value={i.observacion}
+                              className="sm:col-span-2"
+                            />
+                            <DetailField
+                              label="Observacion Seguimiento"
+                              value={i.observacion_seguimiento}
+                              className="sm:col-span-2"
+                            />
+                            <DetailField
+                              label="Fecha Bienvenida"
+                              value={new Date(i.fecha_bienvenida ?? "-").toLocaleDateString()}
+                              className="sm:col-span-2"
+                            />
+                          </div>
+                        );
+                      }
+
+                      return null;
+                    })
+                  }
+                </dl>
               </div>
-            </div>   
-            <dl className="grid gap-2 border-t border-zinc-100 pt-3 sm:grid-cols-2 dark:border-zinc-800">
-              <DetailField label="Contacto" value={propietario.contacto ?? persona?.numero_telefono} />
-              <DetailField label="Documento" value={persona?.documento_identidad} />
-              <DetailField label="Dirección" value={persona?.direccion} className="sm:col-span-2" />
-            </dl>
+            );
+          })}
+        </CardContent>
+      ) : (
+        <CardContent>
+          <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-200 py-10 text-center dark:border-zinc-800">
+            <Users className="size-8 text-zinc-300 dark:text-zinc-700" />
+            <p className="text-sm text-zinc-400 dark:text-zinc-500">
+              Sin propietarios vinculados a esta propiedad.
+            </p>
           </div>
-        );
-      })}
-    </CardContent>
-  ) : (
-    <CardContent>
-      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-zinc-200 py-10 text-center dark:border-zinc-800">
-        <Users className="size-8 text-zinc-300 dark:text-zinc-700" />
-        <p className="text-sm text-zinc-400 dark:text-zinc-500">
-          Sin propietarios vinculados a esta propiedad.
-        </p>
-      </div>
-    </CardContent>
-  )}
-</Card>
+        </CardContent>
+      )}
+    </Card>
   );
 }
