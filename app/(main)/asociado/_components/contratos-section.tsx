@@ -750,11 +750,11 @@ function ContratoCard({
   return (
     <div className={cardClasses}>
       {/* Nuevo botón con icono de documento en la esquina superior derecha */}
-      <div className="relative">
+      {/* <div className="relative">
         <div className="absolute right-0">
           <DocumentResource url={documentoUrl} document={contrato} type="contrato" CheckRevision={CheckRevision}></DocumentResource>
         </div>
-      </div>
+      </div> */}
       {/* Card body button para selección */}
       <button
         type="button"

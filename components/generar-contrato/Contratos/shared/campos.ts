@@ -154,7 +154,7 @@ const OBLIGACION_POST: CampoContrato = {
   sufijo: "meses",
 };
 
-const PORCENTAJEMONTOALQUILER:CampoContrato = {
+const PORCENTAJEMONTOALQUILER: CampoContrato = {
   key: "porcentajeMontoAlquiler",
   label: "Porcentaje Monto Alquiler",
   seccion: "condiciones",
@@ -315,7 +315,7 @@ export function construirDatosContrato(
     if (valor) resultado[campo.key] = valor;
   }
 
-  console.log("resultado", propietarios);
+  //console.log("resultado", propietarios);
 
   const clavesPropietario = getCamposPropietario(tipoOperacion).map((c) => c.key);
   const lista = Array.from({ length: Math.max(1, nroPropietarios) }, (_, i) => {

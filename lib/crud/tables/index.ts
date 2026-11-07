@@ -16,7 +16,7 @@ import { inmueblesConfig } from "./inmuebles";
 import { propiedadPropietarioConfig } from "./propiedad-propietario";
 import { propietariosConfig } from "./propietarios";
 import { configuracion_revisionesConfig } from "./configuracion_revisiones";
-import { revisionesConfig } from "./revisiones" 
+import { revisionesConfig } from "./revisiones"
 import { tipoContratoConfig } from "./tipo-contrato";
 import { tipoMonedaConfig } from "./tipo-moneda";
 import { tipoPropiedadConfig } from "./tipo-propiedad";
@@ -47,6 +47,7 @@ import { horariosaccesoConfig } from "./horarios_acceso";
 import { diasemanaaccesoConfig } from "./dias_semana";
 import { plantillasDocumentosConfig } from "./plantillas_documentos";
 import { clausulasConfig } from "./clausulas";
+import { numerosTelefonicosConfig } from "./numeros_telefonicos";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -57,46 +58,47 @@ export const tableConfigs: Record<string, TableConfig> = {
   conformidad: conformidadConfig,
   contratos: contratosConfig,
   detalle_asociado: detalleAsociadoConfig,
-  situaciones:situacionesConfig,
+  situaciones: situacionesConfig,
   distritos: distritosConfig,
   estado: estadoConfig,
-  alcances:alcanceConfig,
-  concepto_multa:concepto_multaConfig,
-  dias_semana:diasemanaaccesoConfig,
+  alcances: alcanceConfig,
+  concepto_multa: concepto_multaConfig,
+  dias_semana: diasemanaaccesoConfig,
   items_checklist: itemsChecklistConfig,
-  plantillas_documentos:plantillasDocumentosConfig,
-  justificaciones:justificacionesConfig,
-  control_acceso:controlaccesoConfig,
-  sesiones_acceso:sesionesaccesoConfig,
-  horarios_acceso:horariosaccesoConfig,
+  plantillas_documentos: plantillasDocumentosConfig,
+  justificaciones: justificacionesConfig,
+  control_acceso: controlaccesoConfig,
+  numeros_telefonicos: numerosTelefonicosConfig,
+  sesiones_acceso: sesionesaccesoConfig,
+  horarios_acceso: horariosaccesoConfig,
   mes: mesConfig,
   nivel_asociado: nivelAsociadoConfig,
-  areas:areasConfig,
-  empresas:empresasConfig,
+  areas: areasConfig,
+  empresas: empresasConfig,
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,
-  clausulas:clausulasConfig,
-  asistencias:asistenciasConfig,
-  documentos:documentosConfig,
-  estado_documento:estado_documentoConfig,
-  profiles:profilesConfig,
-  llamadas:llamadasConfig,
+  clausulas: clausulasConfig,
+  asistencias: asistenciasConfig,
+  documentos: documentosConfig,
+  estado_documento: estado_documentoConfig,
+  profiles: profilesConfig,
+  llamadas: llamadasConfig,
   eventos: eventosConfig,
-  multas:multasConfig,
-  tipo_multa:tipo_multaConfig,
-  estado_llamada:estado_llamadaConfig,
-  tardanzas:tardanzasConfig,
+  multas: multasConfig,
+  tipo_multa: tipo_multaConfig,
+  estado_llamada: estado_llamadaConfig,
+  tardanzas: tardanzasConfig,
   propiedad_propietario: propiedadPropietarioConfig,
   propietarios: propietariosConfig,
   revisiones: revisionesConfig,
-  configuracion_revisiones:configuracion_revisionesConfig,
+  configuracion_revisiones: configuracion_revisionesConfig,
   tipo_contrato: tipoContratoConfig,
   tipo_moneda: tipoMonedaConfig,
   tipo_propiedad: tipoPropiedadConfig,
-  estados_revision:estados_revisionConfig,
-  operacion_inmobiliaria:operacioninmobiliariaConfig,
-  resource:resourceConfig
+  estados_revision: estados_revisionConfig,
+  operacion_inmobiliaria: operacioninmobiliariaConfig,
+  resource: resourceConfig
 };
 
 export const tableConfigEntries = Object.entries(tableConfigs) as Array<[string, TableConfig]>;

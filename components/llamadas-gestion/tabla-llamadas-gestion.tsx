@@ -24,6 +24,7 @@ export default function TablaLlamadasGestion({
   EstadoLlamadas,
 }: TablaLlamadasGestionProps) {
   const [data, setData] = React.useState<LlamadasRowDetalle[]>(Llamadas)
+  //console.log(Llamadas)
   const [llamadaSeleccionada, setLlamadaSeleccionada] =
     React.useState<LlamadasRowDetalle | null>(null)
   const [dialogOpen, setDialogOpen] = React.useState(false)
@@ -40,18 +41,18 @@ export default function TablaLlamadasGestion({
       prev.map((item) =>
         item.id === id
           ? {
-              ...item,
-              id_llamada: record.id ?? item.id_llamada,
-              observacion: record.observacion || "",
-              observacion_seguimiento: record.observacion_seguimiento || "",
-              curso_llamada: record.curso_llamada || "",
-              id_estado_llamada: record.id_estado_llamada || 0,
-              estado_llamada: estadoObj?.estado_llamada || item.estado_llamada,
-              color: estadoObj?.color || "default",
-              fecha_bienvenida: record.fecha_bienvenida ?? item.fecha_bienvenida,
-              fecha_seguimiento_llamada:
-                record.fecha_seguimiento_llamada ?? item.fecha_seguimiento_llamada,
-            }
+            ...item,
+            id_llamada: record.id ?? item.id_llamada,
+            observacion: record.observacion || "",
+            observacion_seguimiento: record.observacion_seguimiento || "",
+            curso_llamada: record.curso_llamada || "",
+            id_estado_llamada: record.id_estado_llamada || 0,
+            estado_llamada: estadoObj?.estado_llamada || item.estado_llamada,
+            color: estadoObj?.color || "default",
+            fecha_bienvenida: record.fecha_bienvenida ?? item.fecha_bienvenida,
+            fecha_seguimiento_llamada:
+              record.fecha_seguimiento_llamada ?? item.fecha_seguimiento_llamada,
+          }
           : item
       )
     )
@@ -59,56 +60,56 @@ export default function TablaLlamadasGestion({
     setLlamadaSeleccionada((prev) =>
       prev && prev.id === id
         ? {
-            ...prev,
-            id_llamada: record.id ?? prev.id_llamada,
-            observacion: record.observacion || "",
-            observacion_seguimiento: record.observacion_seguimiento || "",
-            curso_llamada: record.curso_llamada || "",
-            id_estado_llamada: record.id_estado_llamada || 0,
-            estado_llamada: estadoObj?.estado_llamada || prev.estado_llamada,
-            color: estadoObj?.color || "default",
-            fecha_bienvenida: record.fecha_bienvenida ?? prev.fecha_bienvenida,
-            fecha_seguimiento_llamada:
-              record.fecha_seguimiento_llamada ?? prev.fecha_seguimiento_llamada,
-          }
+          ...prev,
+          id_llamada: record.id ?? prev.id_llamada,
+          observacion: record.observacion || "",
+          observacion_seguimiento: record.observacion_seguimiento || "",
+          curso_llamada: record.curso_llamada || "",
+          id_estado_llamada: record.id_estado_llamada || 0,
+          estado_llamada: estadoObj?.estado_llamada || prev.estado_llamada,
+          color: estadoObj?.color || "default",
+          fecha_bienvenida: record.fecha_bienvenida ?? prev.fecha_bienvenida,
+          fecha_seguimiento_llamada:
+            record.fecha_seguimiento_llamada ?? prev.fecha_seguimiento_llamada,
+        }
         : prev
     )
   }
 
   const handleExport = () => {
-      // Preparar los datos que aparecerán en Excel
-      const datos = Llamadas.map((p:LlamadasRowDetalle) => ({
-        "ID": p.id_remax,
-        "AGENTE":p.asociado,
-        "TIPO DE PROPIEDAD": p.tipo_propiedad,
-        "DIRECCIÓN":p.direccion,
-        "TIPO DE NEGOCIO":p.tipo_negocio,
-        "MODALIDAD":p.modalidad,
-        "PROPIETARIOS":p.propietario,
-        "NUMERO TELEFONO":p.numero_telefono,
-        "FECHA LLAMADA BIENVENIDA": p.fecha_bienvenida
-          ? new Date(new Date(p.fecha_bienvenida).getTime() - 5 * 60 * 60 * 1000).toISOString().slice(0, 10)
-          : "",
-   
-        "FECHA CONTRATO RECIBIDO": p.fecha_contrato_recibido,
-        "ESTADO LLAMADA":p.estado_llamada,
-        "CURSO DE LLAMADA":p.curso_llamada,
-        "OBSERVACIONES":p.observacion,
-        "FECHA LLAMADA DE SEGUIMIENTO":p.fecha_seguimiento_llamada,
-        "OBSERVACION DE SEGUIMIENTO":p.observacion_seguimiento
-      }));
-  
-      // Crear una hoja de Excel
-      const hoja = XLSX.utils.json_to_sheet(datos);
-  
-      // Crear el libro
-      const libro = XLSX.utils.book_new();
-  
-      // Agregar la hoja al libro
-      XLSX.utils.book_append_sheet(libro, hoja, "llamadas");
-  
-      // Descargar el archivo
-      XLSX.writeFile(libro, "llamadas.xlsx");
+    // Preparar los datos que aparecerán en Excel
+    const datos = Llamadas.map((p: LlamadasRowDetalle) => ({
+      "ID": p.id_remax,
+      "AGENTE": p.asociado,
+      "TIPO DE PROPIEDAD": p.tipo_propiedad,
+      "DIRECCIÓN": p.direccion,
+      "TIPO DE NEGOCIO": p.tipo_negocio,
+      "MODALIDAD": p.modalidad,
+      "PROPIETARIOS": p.propietario,
+      "NUMERO TELEFONO": p.numero_telefono,
+      "FECHA LLAMADA BIENVENIDA": p.fecha_bienvenida
+        ? new Date(new Date(p.fecha_bienvenida).getTime() - 5 * 60 * 60 * 1000).toISOString().slice(0, 10)
+        : "",
+
+      "FECHA CONTRATO RECIBIDO": p.fecha_contrato_recibido,
+      "ESTADO LLAMADA": p.estado_llamada,
+      "CURSO DE LLAMADA": p.curso_llamada,
+      "OBSERVACIONES": p.observacion,
+      "FECHA LLAMADA DE SEGUIMIENTO": p.fecha_seguimiento_llamada,
+      "OBSERVACION DE SEGUIMIENTO": p.observacion_seguimiento
+    }));
+
+    // Crear una hoja de Excel
+    const hoja = XLSX.utils.json_to_sheet(datos);
+
+    // Crear el libro
+    const libro = XLSX.utils.book_new();
+
+    // Agregar la hoja al libro
+    XLSX.utils.book_append_sheet(libro, hoja, "llamadas");
+
+    // Descargar el archivo
+    XLSX.writeFile(libro, "llamadas.xlsx");
   };
 
   const handleAbrirDialogObservacion = (llamada: LlamadasRowDetalle) => {
@@ -118,6 +119,7 @@ export default function TablaLlamadasGestion({
 
   return (
     <div className="rounded-lg border bg-white p-6 shadow-xs">
+      <h1 className="text-2xl font-bold text-gray-800">LLAMADAS</h1>
       <div className="mb-4 flex justify-end">
         <button
           className="flex items-center gap-2 rounded bg-emerald-500 px-4 py-2 text-white font-semibold shadow hover:bg-emerald-600 transition-colors"
@@ -125,7 +127,7 @@ export default function TablaLlamadasGestion({
           onClick={() => handleExport()}
         >
           {/* Icono download, puedes cambiar por cualquiera de lucide-react o FontAwesome */}
-          <Download/>
+          <Download />
           <span>Exportar</span>
         </button>
       </div>
@@ -137,7 +139,7 @@ export default function TablaLlamadasGestion({
         // 1. Anclado de columnas determinadas (permite anclar/desanclar desde el encabezado)
         enableColumnPinning={true}
         initialColumnPinning={{
-          start: ["id_remax","fecha_registro"],
+          start: ["id_remax", "fecha_registro"],
         }}
         // 2. Botón "+ Observación" / "Editar gestión" en la columna de acciones de la tabla
         rowActionsHeader="Acciones"

@@ -14,8 +14,11 @@ export default async function LlamadasPage() {
     errorMsg = error.message || 'Error al obtener las llamadas.';
   }
 
+  //console.log(llamadas)
+
   return (
     <main className="p-4">
+
       <TablaLlamadasGestion Llamadas={llamadas} EstadoLlamadas={estado_llamadas} />
       {/* <h1 className="text-2xl font-bold mb-4">Llamadas a propietarios</h1>
       {errorMsg ? (

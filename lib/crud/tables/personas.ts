@@ -11,8 +11,8 @@ export const personasConfig: TableConfig = {
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
     { name: "nombre", label: "Nombre", type: "text", required: true },
-    { name: "apellido_paterno", label: "Apellido paterno", type: "text",required: true },
-    { name: "apellido_materno", label: "Apellido materno", type: "text",required: true },
+    { name: "apellido_paterno", label: "Apellido paterno", type: "text", required: true },
+    { name: "apellido_materno", label: "Apellido materno", type: "text", required: true },
     { name: "fecha_nacimiento", label: "Fecha de nacimiento", type: "date", collapsedInForm: true },
     // { name: "fecha_registro", label: "Fecha de registro", type: "date" },
     { name: "numero_telefono", label: "Teléfono", type: "text" },
@@ -22,6 +22,7 @@ export const personasConfig: TableConfig = {
     { name: "nombre_completo", label: "Nombre Completo", type: "text" },
     { name: "correo_electronico", label: "Correo Electronico", type: "text", collapsedInForm: true },
     { name: "correo_electronico_2", label: "Correo Electronico 2", type: "text", collapsedInForm: true },
+    { name: "descripcion", label: "Descripción", type: "text", collapsedInForm: false },
     // {
     //   name: "id_resource",
     //   label: "Documento DNI",

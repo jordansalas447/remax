@@ -1,20 +1,21 @@
 import { cn } from "@/lib/utils";
-import { Badge, type badgeVariants } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 interface DetailFieldProps {
   label: string;
   value: React.ReactNode;
   className?: string;
-  boldValue?: boolean; // Permite configurar si el texto debe ir en negrita
-  badge?: boolean; // Nuevo prop para renderizar el valor en un Badge
-  badgeVariant?: React.ComponentProps<typeof Badge>["variant"]; // Fix: use correct type for variant
-  textColorClass?: string; // Nueva prop para color de texto extra, ej. 'text-red-500'
+  boldValue?: boolean; // Texto del valor en negrita
+  badge?: boolean; // Renderiza el valor dentro de un Badge
+  badgeVariant?: React.ComponentProps<typeof Badge>["variant"];
+  textColorClass?: string; // Color extra de texto, ej. 'text-red-500'
 }
 
 /**
- * Si la prop `badge` está activa, renderiza el valor como un <Badge />.
- * Permite customizar el color utilizando el prop `badgeVariant`.
- * Permite customizar el color del texto con textColorClass.
+ * Muestra una etiqueta y su valor.
+ * - `badge`: renderiza el valor como <Badge /> (color con `badgeVariant`).
+ * - `textColorClass`: color de texto adicional.
+ * Los textos largos conservan saltos de línea y no desbordan el contenedor.
  */
 export function DetailField({
   label,
@@ -25,25 +26,20 @@ export function DetailField({
   badgeVariant,
   textColorClass = "",
 }: DetailFieldProps) {
+  const isEmpty = value === null || value === undefined || value === "";
+
   return (
-    <div className={cn("space-y-1", className)}>
-      <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-        {label}
-      </dt>
+    <div className={cn("min-w-0 space-y-0.5", className)}>
+      <dt className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{label}</dt>
       <dd
         className={cn(
-          "text-sm text-zinc-900 dark:text-zinc-100 pb-2",
+          "whitespace-pre-wrap break-words text-sm text-zinc-900 dark:text-zinc-100",
           boldValue && "font-semibold",
+          isEmpty && "text-zinc-400 dark:text-zinc-600",
           textColorClass
         )}
       >
-        {badge ? (
-          <Badge variant={badgeVariant}>
-            {value ?? "—"}
-          </Badge>
-        ) : (
-          value ?? "—"
-        )}
+        {isEmpty ? "—" : badge ? <Badge variant={badgeVariant}>{value}</Badge> : value}
       </dd>
     </div>
   );
@@ -53,7 +49,7 @@ export function formatDate(value: string | null | undefined): string {
   if (!value) return "—";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  // Resta 5 horas (en milisegundos: 5 * 60 * 60 * 1000)
+  // Suma 5 horas para compensar la zona horaria (UTC-5)
   date.setHours(date.getHours() + 5);
   return date.toLocaleDateString("es-PE", {
     day: "2-digit",

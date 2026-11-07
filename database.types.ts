@@ -649,6 +649,13 @@ export type Database = {
             referencedColumns: ["id_propiedad"]
           },
           {
+            foreignKeyName: "contratos_id_propiedad_fkey"
+            columns: ["id_propiedad"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propiedad"]
+          },
+          {
             foreignKeyName: "contratos_id_renovacion_contrato_fkey"
             columns: ["id_renovacion_contrato"]
             isOneToOne: false
@@ -1201,10 +1208,24 @@ export type Database = {
             referencedColumns: ["id_propiedad"]
           },
           {
+            foreignKeyName: "historial_observaciones_id_inmuebles_fkey"
+            columns: ["id_inmuebles"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propiedad"]
+          },
+          {
             foreignKeyName: "historial_observaciones_id_propietarios_fkey"
             columns: ["id_propietarios"]
             isOneToOne: false
             referencedRelation: "propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "historial_observaciones_id_propietarios_fkey"
+            columns: ["id_propietarios"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
             referencedColumns: ["id_propietario"]
           },
         ]
@@ -1339,6 +1360,13 @@ export type Database = {
             columns: ["id_inmueble"]
             isOneToOne: false
             referencedRelation: "inmuebles"
+            referencedColumns: ["id_propiedad"]
+          },
+          {
+            foreignKeyName: "inmuebles_id_inmueble_fkey"
+            columns: ["id_inmueble"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
             referencedColumns: ["id_propiedad"]
           },
           {
@@ -1630,6 +1658,38 @@ export type Database = {
         }
         Relationships: []
       }
+      numeros_telefonicos: {
+        Row: {
+          created_at: string
+          descripcion: string | null
+          id: number
+          id_persona: number | null
+          numero_telefono: string | null
+        }
+        Insert: {
+          created_at?: string
+          descripcion?: string | null
+          id?: number
+          id_persona?: number | null
+          numero_telefono?: string | null
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string | null
+          id?: number
+          id_persona?: number | null
+          numero_telefono?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "numeros_telefonicos_id_persona_fkey"
+            columns: ["id_persona"]
+            isOneToOne: false
+            referencedRelation: "personas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operacion: {
         Row: {
           color: string | null
@@ -1749,6 +1809,7 @@ export type Database = {
           correo_electronico: string | null
           correo_electronico_2: string | null
           deleted_at: string | null
+          descripcion: string | null
           direccion: string | null
           documento_identidad: string | null
           eliminado: boolean
@@ -1760,6 +1821,7 @@ export type Database = {
           id_resource: number | null
           nombre: string
           nombre_completo: string | null
+          numero_actualizado: string | null
           numero_telefono: string | null
           numero_telefono_2: string | null
           url_dni: string | null
@@ -1771,6 +1833,7 @@ export type Database = {
           correo_electronico?: string | null
           correo_electronico_2?: string | null
           deleted_at?: string | null
+          descripcion?: string | null
           direccion?: string | null
           documento_identidad?: string | null
           eliminado?: boolean
@@ -1782,6 +1845,7 @@ export type Database = {
           id_resource?: number | null
           nombre: string
           nombre_completo?: string | null
+          numero_actualizado?: string | null
           numero_telefono?: string | null
           numero_telefono_2?: string | null
           url_dni?: string | null
@@ -1793,6 +1857,7 @@ export type Database = {
           correo_electronico?: string | null
           correo_electronico_2?: string | null
           deleted_at?: string | null
+          descripcion?: string | null
           direccion?: string | null
           documento_identidad?: string | null
           eliminado?: boolean
@@ -1804,6 +1869,7 @@ export type Database = {
           id_resource?: number | null
           nombre?: string
           nombre_completo?: string | null
+          numero_actualizado?: string | null
           numero_telefono?: string | null
           numero_telefono_2?: string | null
           url_dni?: string | null
@@ -2022,10 +2088,24 @@ export type Database = {
             referencedColumns: ["id_propiedad"]
           },
           {
+            foreignKeyName: "propiedad_propietario_id_propiedad_fkey"
+            columns: ["id_propiedad"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propiedad"]
+          },
+          {
             foreignKeyName: "propiedad_propietario_id_propietario_fkey"
             columns: ["id_propietario"]
             isOneToOne: false
             referencedRelation: "propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "propiedad_propietario_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
             referencedColumns: ["id_propietario"]
           },
         ]
@@ -2220,10 +2300,24 @@ export type Database = {
             referencedColumns: ["id_propiedad"]
           },
           {
+            foreignKeyName: "revisiones_id_inmueble_fkey"
+            columns: ["id_inmueble"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propiedad"]
+          },
+          {
             foreignKeyName: "revisiones_id_propietario_fkey"
             columns: ["id_propietario"]
             isOneToOne: false
             referencedRelation: "propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "revisiones_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
             referencedColumns: ["id_propietario"]
           },
           {
@@ -2343,6 +2437,7 @@ export type Database = {
         Row: {
           creado_at: string
           eliminado: boolean | null
+          id: number
           session_id: string
           user_id: string
           valido_hasta: string
@@ -2350,6 +2445,7 @@ export type Database = {
         Insert: {
           creado_at?: string
           eliminado?: boolean | null
+          id?: number
           session_id: string
           user_id: string
           valido_hasta: string
@@ -2357,6 +2453,7 @@ export type Database = {
         Update: {
           creado_at?: string
           eliminado?: boolean | null
+          id?: number
           session_id?: string
           user_id?: string
           valido_hasta?: string
@@ -2661,11 +2758,14 @@ export type Database = {
           fecha_seguimiento_llamada: string | null
           id: number | null
           id_llamada: number | null
+          id_propiedad: number | null
+          id_propietario: number | null
           id_remax: number | null
           is_expired: boolean | null
           modalidad: string | null
           nro_contrato: string | null
           numero_telefono: string | null
+          numero_telefono_2: string | null
           observacion: string | null
           observacion_seguimiento: string | null
           propietario: string | null

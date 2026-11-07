@@ -14,6 +14,7 @@ type SupportedTableName =
   | "propietarios"
   | "inmuebles"
   | "propiedad_propietario"
+  | "numeros_telefonicos"
   | "configuracion_revisiones"
   | "contratos"
   | "conformidad"
@@ -77,6 +78,7 @@ export type Multas = TableRow<"multas">
 export type Control_Acceso = TableRow<"control_acceso">
 export type Sesiones_Acceso = TableRow<"sesiones_acceso">
 export type Horarios_Acceso = TableRow<"horarios_acceso">
+export type Numeros_Telefonicos = TableRow<"numeros_telefonicos">
 export type Llamadas = TableRow<"llamadas">
 export type Asistencias = TableRow<"asistencias">
 export type Documentos = TableRow<"documentos">

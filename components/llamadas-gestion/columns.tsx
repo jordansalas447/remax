@@ -6,6 +6,8 @@ import { LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas"
 import { Badge, BadgeVariant } from "../ui/badge"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPhone } from "@fortawesome/free-solid-svg-icons"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { RefreshCw } from "lucide-react"
 
 
 function formatCell(value: unknown) {
@@ -77,13 +79,13 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => formatCell(row.getValue("renovacion")),
   },
-   {
-     accessorKey: "fecha_contrato_recibido",
-     header: ({ column }) => (
-       <DataTableColumnHeader column={column} title="Fecha Contrato Recibido" />
-     ),
-     cell: ({ row }) => {return formatFechaRegistro(row.getValue("fecha_contrato_recibido"))},
-   },
+  {
+    accessorKey: "fecha_contrato_recibido",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Fecha Contrato Recibido" />
+    ),
+    cell: ({ row }) => { return formatFechaRegistro(row.getValue("fecha_contrato_recibido")) },
+  },
   {
     accessorKey: "numero_telefono",
     header: ({ column }) => (
@@ -91,6 +93,7 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => {
       const numero = row.getValue("numero_telefono");
+      const numero_actualizado: string = row?.original?.numero_actualizado ? formatFechaRegistro(row?.original?.numero_actualizado) : "";
       const numeroSanitizado = typeof numero === "string"
         ? numero.replace(/[^\d]/g, "")
         : "";
@@ -107,6 +110,13 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
               <FontAwesomeIcon icon={faPhone} />
             </a>
           )}
+
+          {numero_actualizado ? <Tooltip>
+            <TooltipTrigger render={<RefreshCw className="text-white bg-red-500 rounded p-1" />} />
+            <TooltipContent>
+              <p>Numero Actualizado {numero_actualizado}</p>
+            </TooltipContent>
+          </Tooltip> : <></>}
         </div>
       );
     },
@@ -241,14 +251,14 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     ),
     cell: ({ row }) => {
       const value = row.getValue("estado_llamada");
-    //  const color:BadgeVariant = row.getValue("color") || "default";
-      const color:BadgeVariant = row?.original?.color as BadgeVariant || "default"
+      //  const color:BadgeVariant = row.getValue("color") || "default";
+      const color: BadgeVariant = row?.original?.color as BadgeVariant || "default"
       if (!value) return null;
       return (
         <>
-        <Badge variant={color}>
+          <Badge variant={color}>
             {formatCell(value)}
-        </Badge>
+          </Badge>
         </>
       );
     },
@@ -317,7 +327,32 @@ export const columns: LegacyColumnDef<LlamadasRowDetalle, unknown>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fecha Registro" />
     ),
-    cell: ({ row }) => formatCell(row.getValue("fecha_registro")),
+    cell: ({ row }) => {
+      const fecha = formatCell(row.getValue("fecha_registro"));
+      const numero_actualizado: string = row?.original?.numero_actualizado
+        ? formatFechaRegistro(row?.original?.numero_actualizado)
+        : "";
+
+      if (!numero_actualizado) {
+        return <span>{fecha}</span>;
+      }
+
+      return (
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <span className="inline-flex items-center gap-1.5 cursor-pointer">
+                <RefreshCw className="h-5 w-5 text-white bg-red-500 rounded p-1 shrink-0" />
+                <span>{fecha}</span>
+              </span>
+            }
+          />
+          <TooltipContent>
+            <p>Numero Actualizado {numero_actualizado}</p>
+          </TooltipContent>
+        </Tooltip>
+      );
+    },
   },
 ]
 
