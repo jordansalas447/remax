@@ -53,7 +53,7 @@ interface TablaGenerarContratoProps {
   documentos: DocumentosRowDetalle[]
 }
 
-function formatDate(value: string | Date | null | undefined) {
+export function formatDate(value: string | Date | null | undefined) {
   if (!value) return "—"
   const date = typeof value === "string" || typeof value === "number"
     ? new Date(value)
@@ -155,7 +155,7 @@ export default function CardsGenerarContrato({
   )
 }
 
-function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }) {
+export function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }) {
   const fechaExpiracion = getFechaExpiracion(
     documento.created_at,
     documento.plazo,

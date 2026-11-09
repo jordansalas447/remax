@@ -35,6 +35,7 @@ import { createHistorialObservacion, getHistorialObservacionById, getHistorialOb
 import { toast } from "@/components/ui/toast";
 import { AlcanceDetalle, getAlcances } from "@/lib/supabase/queries/alcance";
 import { getResumenLlamadasxIdRemax, LlamadasRowDetalle } from "@/lib/supabase/queries/llamadas";
+import ContratosEmitidos from "./_components/contratos-emitidos";
 
 export default function AsociadoPage() {
   const [asociados, setAsociados] = useState<AsociadoListItem[]>([]);
@@ -67,7 +68,7 @@ export default function AsociadoPage() {
 
   const [alcancesData, setalcancesData] = useState<AlcanceDetalle[]>([]);
 
-  const [llamadaData,setllamadaData] = useState<LlamadasRowDetalle[]>([])
+  const [llamadaData, setllamadaData] = useState<LlamadasRowDetalle[]>([])
 
   const [RevisionesCheckDataContrato, setRevisionesCheckDataContrato] = useState<any[]>([]);
   const [RevisionesCheckDataPropiedad, setRevisionesCheckDataPropiedad] = useState<any[]>([]);
@@ -198,7 +199,7 @@ export default function AsociadoPage() {
         ]);
 
 
-        const [HistorialObservacionesData, AlcancesData,LlamadaData] = await Promise.all([
+        const [HistorialObservacionesData, AlcancesData, LlamadaData] = await Promise.all([
           getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0]?.id),
           getAlcances(),
 
@@ -394,6 +395,9 @@ export default function AsociadoPage() {
 
         {/* Columna principal: todo lo demás apilado verticalmente */}
         <div className="flex flex-col gap-6">
+          <ContratosEmitidos
+            Asociado={selectedAsociadoId || 0}
+          />
           <ContratosSection
             contratos={contratos}
             selectedContratoId={selectedContratoId}
