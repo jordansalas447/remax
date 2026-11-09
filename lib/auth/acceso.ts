@@ -8,7 +8,7 @@ export const MENSAJE_FUERA_DE_HORARIO =
  * Salta el control de horario (login + proxy).
  * TODO: volver a `false` cuando se corrija la zona horaria.
  */
-//const SALTAR_CONTROL_HORARIO = true;
+const SALTAR_CONTROL_HORARIO = true;
 
 /**
  * Registra la sesión actual en `sesiones_acceso` (RPC `registrar_sesion_acceso`).
@@ -16,7 +16,7 @@ export const MENSAJE_FUERA_DE_HORARIO =
  * Las funciones RPC aún no figuran en `database.types.ts`, de ahí el cast.
  */
 export async function registrarSesionAcceso(supabase: SupabaseClient): Promise<boolean> {
-  //if (SALTAR_CONTROL_HORARIO) return true;  <---- saltar control horario
+  if (SALTAR_CONTROL_HORARIO) return true; //  <---- saltar control horario
   const { data, error } = await supabase.rpc("registrar_sesion_acceso" as never);
   return !error && data === true;
 }
@@ -26,7 +26,7 @@ export async function registrarSesionAcceso(supabase: SupabaseClient): Promise<b
  * Ante un error de red/BD se deniega el acceso (fail-closed).
  */
 export async function accesoHabilitado(supabase: SupabaseClient): Promise<boolean> {
-  //if (SALTAR_CONTROL_HORARIO) return true;   <---- saltar control horario
+  if (SALTAR_CONTROL_HORARIO) return true; //  <---- saltar control horario
   const { data, error } = await supabase.rpc("acceso_habilitado" as never);
   return !error && data === true;
 }
