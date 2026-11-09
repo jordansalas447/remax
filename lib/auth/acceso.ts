@@ -16,7 +16,7 @@ const SALTAR_CONTROL_HORARIO = true;
  * Las funciones RPC aún no figuran en `database.types.ts`, de ahí el cast.
  */
 export async function registrarSesionAcceso(supabase: SupabaseClient): Promise<boolean> {
-  if (SALTAR_CONTROL_HORARIO) return true; //  <---- saltar control horario
+ // if (SALTAR_CONTROL_HORARIO) return true; //  <---- saltar control horario
   const { data, error } = await supabase.rpc("registrar_sesion_acceso" as never);
   return !error && data === true;
 }
@@ -26,7 +26,7 @@ export async function registrarSesionAcceso(supabase: SupabaseClient): Promise<b
  * Ante un error de red/BD se deniega el acceso (fail-closed).
  */
 export async function accesoHabilitado(supabase: SupabaseClient): Promise<boolean> {
-  if (SALTAR_CONTROL_HORARIO) return true; //  <---- saltar control horario
+//  if (SALTAR_CONTROL_HORARIO) return true; //  <---- saltar control horario
   const { data, error } = await supabase.rpc("acceso_habilitado" as never);
   return !error && data === true;
 }
