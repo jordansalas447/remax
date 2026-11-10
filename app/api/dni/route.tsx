@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const apiKey = process.env.NEXT_PUBLIC_DNI_API_KEY;
     const apiUrl = process.env.NEXT_PUBLIC_DNI_API_URL;
-    const apiKey = process.env.DNI_API_KEY;
 
     if (!apiUrl || !apiKey) {
       return NextResponse.json(

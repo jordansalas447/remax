@@ -271,7 +271,7 @@ export function getCamposContrato(
 
 export function getCamposPropietario(tipoOperacion: number): CampoPropietario[] {
   const campos: CampoPropietario[] = [
-    { key: "nombre", label: "Nombre completo", placeholder: "Nombres y apellidos", ancho: true },
+    { key: "nombre", label: "Nombre completo", placeholder: "Nombre Completo", ancho: true },
     { key: "dni", label: "DNI", placeholder: "12345678", inputMode: "numeric", maxLength: 8 },
     { key: "estadoCivil", label: "Estado civil", placeholder: "Soltero(a)" },
   ];

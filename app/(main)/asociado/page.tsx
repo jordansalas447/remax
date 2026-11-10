@@ -209,6 +209,8 @@ export default function AsociadoPage() {
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
 
+        console.log(HistorialObservacionesData)
+
         setllamadaData(LlamadaData)
         sethistorialObservacionesData(HistorialObservacionesData)
         setalcancesData(AlcancesData)

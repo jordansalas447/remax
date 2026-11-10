@@ -142,9 +142,9 @@ export default function ContratosEmitidos({
                         {documento.operacion?.operacion ?? "Sin operación"}
                       </Badge>
                       {documento.motivo_anulacion ? (
-                        <p className="bg-red-50 px-2.5 py-2 text-xs text-red-800">
+                        <span className="bg-red-50 px-2.5 py-2 text-xs text-red-800">
                           Motivo anulación: {documento.motivo_anulacion}
-                        </p>
+                        </span>
                       ) : null}
                     </CardDescription>
                   </CardHeader>

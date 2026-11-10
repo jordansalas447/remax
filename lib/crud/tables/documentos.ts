@@ -33,7 +33,7 @@ export const documentosConfig: TableConfig = {
     },
     {
       name: "id_operacion",
-      label: "Operacion",
+      label: "Operación",
       type: "select",
       required: true,
       foreignKey: {
@@ -56,6 +56,6 @@ export const documentosConfig: TableConfig = {
     // { name: "created_at", label: "Fecha Creacion", type: "date", hiddenInForm: true },
     { name: "plazo", label: "Plazo", type: "number"},
     { name: "motivo_anulacion", label: "Motivo Anulacion", type: "text" },
-    { name: "descripcion", label: "Descripcion", type: "text" }
+    { name: "descripcion", label: "Descripción", type: "textarea" }
   ]
 };

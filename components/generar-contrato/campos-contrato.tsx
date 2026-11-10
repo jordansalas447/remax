@@ -48,8 +48,6 @@ const consultarDNI = async (dni: string) => {
       throw new Error(data.error || "Error al consultar DNI");
     }
 
-   // console.log(data);
-
     return data;
 
   } catch (error) {
@@ -57,6 +55,7 @@ const consultarDNI = async (dni: string) => {
     return null;
   }
 };
+
 
 const ORDEN_SECCIONES: SeccionCampo[] = ["inmueble", "condiciones", "firma"];
 
@@ -125,11 +124,37 @@ export default function CamposContrato({
   const denominacion = getDenominacionParte(tipoOperacion);
   const total = Math.max(1, nroPropietarios);
 
+
+  const [cargandoDni, setCargandoDni] = React.useState<number | null>(null);
+
+const handleConsultarDNI = async (index: number, dni: string) => {
+  if (!dni || dni.length !== 8) return;
+
+  setCargandoDni(index);
+  const data = await consultarDNI(dni);
+  setCargandoDni(null);
+
+  if (!data) return;
+
+  // Ajusta estos nombres según lo que devuelva tu API
+  const nombreCompleto =
+    data.data.nombre_completo ??
+    [data.data.nombres, data.data.apellido_paterno, data.data.apellido_materno]
+      .filter(Boolean)
+      .join(" ");
+
+  console.log(data)    
+
+  if (nombreCompleto) {
+    onPropietarioChange(index, "nombre", nombreCompleto);
+  }
+};
+
   const renderCampo = (campo: CampoContrato) => {
     const id = `campo-${campo.key}`;
     const value = datos[campo.key] ?? "";
 
-    //console.log("campo", campo);
+    //console.log("campo", campo.key);
     //console.log("value", value);
     //console.log("NombreAsociado", NombreAsociado);
    // console.log("datos", camposPropietario);
@@ -157,6 +182,7 @@ export default function CamposContrato({
             <Button
               type="button"
               variant="outline"
+              title="Agregar nombre de asesor"
               size="sm"
               disabled={disabled || !NombreAsociado}
               onClick={() =>
@@ -189,16 +215,16 @@ export default function CamposContrato({
       );
     }
 
-    if (campo.type === "dni") {
-      return (
-        <Campo key={campo.key} id={id} label={campo.label} ancho={campo.ancho}>
-          <Input id={id} placeholder={campo.placeholder} value={value} disabled={disabled} onChange={(e) => onDatoChange(campo.key, e.target.value)} />
-          <Button type="button" variant="outline" size="sm" onClick={() => consultarDNI(value)}>
-            Consultar DNI
-          </Button>
-        </Campo>
-      );
-    }
+    // if (campo.type === "dni") {
+    //   return (
+    //     <Campo key={campo.key} id={id} label={campo.label} ancho={campo.ancho}>
+    //       <Input id={id} placeholder={campo.placeholder} value={value} disabled={disabled} onChange={(e) => onDatoChange(campo.key, e.target.value)} />
+    //       <Button type="button" variant="outline" size="sm" onClick={() => consultarDNI(value)}>
+    //         Consultar DNI
+    //       </Button>
+    //     </Campo>
+    //   );
+    // }
 
     return (
       <Campo
@@ -227,6 +253,7 @@ export default function CamposContrato({
       {/* Propietarios / Clientes */}
       {Array.from({ length: total }, (_, i) => {
         const p = propietarios[i] ?? {};
+
         return (
           <Seccion
             key={`propietario-${i}`}
@@ -234,6 +261,29 @@ export default function CamposContrato({
           >
             {camposPropietario.map((c) => {
               const id = `propietario-${i}-${c.key}`;
+              //console.log(c.key)
+
+              if (c.key === "dni") {
+                return (
+                  <Campo key={c.key} id={id} label={c.label} ancho={c.ancho}>
+                    <div className="flex items-center gap-2">
+                    <Input
+                    id={id}
+                    placeholder={c.placeholder}
+                    inputMode={c.inputMode}
+                    maxLength={c.maxLength}
+                    value={p[c.key] ?? ""}
+                    disabled={disabled}
+                    onChange={(e) => onPropietarioChange(i, c.key, e.target.value)}
+                  />
+                    <Button type="button" title="Consultar DNI" variant="outline" disabled={disabled || cargandoDni === i || (p[c.key] ?? "").length !== 8} size="sm" onClick={() => handleConsultarDNI(i,p[c.key] ?? "")}>
+                    {cargandoDni === i ? "Consultando..." : "..."}
+                    </Button>
+                    </div>
+                  </Campo>
+                );
+              }
+
               return (
                 <Campo key={c.key} id={id} label={c.label} ancho={c.ancho}>
                   <Input
@@ -255,6 +305,7 @@ export default function CamposContrato({
       {/* Secciones del contrato */}
       {ORDEN_SECCIONES.map((seccion) => {
         const camposSeccion = campos.filter((c) => c.seccion === seccion);
+
         if (camposSeccion.length === 0) return null;
         return (
           <Seccion
