@@ -163,7 +163,7 @@ export function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }
   const estadoColor = documento.estado_documento?.color
   const operacionColor = documento.operacion?.color
 
-  console.log(documento)
+  //console.log(documento)
 
   return (
     <Card className="rounded-none shadow-none">

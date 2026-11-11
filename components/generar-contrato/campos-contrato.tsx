@@ -143,7 +143,7 @@ const handleConsultarDNI = async (index: number, dni: string) => {
       .filter(Boolean)
       .join(" ");
 
-  console.log(data)    
+  //console.log(data)    
 
   if (nombreCompleto) {
     onPropietarioChange(index, "nombre", nombreCompleto);

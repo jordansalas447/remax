@@ -295,47 +295,49 @@ export default function FormGenerarContrato({
 
       form.fecha_generacion = new Date().toISOString()
 
-      const documento = await createDocumentos(form);
+      console.log(datosExtraKey,form)
 
-      const nro = documento.nro_contrato;
+      // const documento = await createDocumentos(form);
 
-      const payload: ContratoPDFProps = {
-        ...datosExtra,
-        nroContrato: nro,
-        nroPropietarios,
-        tipoContrato: tipoContratoId,
-        tipoOperacion: tipoOperacionId,
-        fecha_generacion: form.fecha_generacion || undefined,
-        id_publico: documento.id_publico || "",
-        descripcion: documento.descripcion || ""
-      };
+      // const nro = documento.nro_contrato;
 
-      const response = await fetch("/api/contratos/generar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      // const payload: ContratoPDFProps = {
+      //   ...datosExtra,
+      //   nroContrato: nro,
+      //   nroPropietarios,
+      //   tipoContrato: tipoContratoId,
+      //   tipoOperacion: tipoOperacionId,
+      //   fecha_generacion: form.fecha_generacion || undefined,
+      //   id_publico: documento.id_publico || "",
+      //   descripcion: documento.descripcion || ""
+      // };
 
-      if (!response.ok) {
-        const errorBody = await response.json().catch(() => null);
-        throw new Error(
-          errorBody?.error ?? "No se pudo generar el PDF del contrato"
-        );
-      }
+      // const response = await fetch("/api/contratos/generar", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(payload),
+      // });
 
-      const blob = await response.blob();
-      const downloadUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = `contrato-${nro}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(downloadUrl);
+      // if (!response.ok) {
+      //   const errorBody = await response.json().catch(() => null);
+      //   throw new Error(
+      //     errorBody?.error ?? "No se pudo generar el PDF del contrato"
+      //   );
+      // }
 
-      setNroContrato(nro);
-      showToast(nro);
-      onResultado(nro);
+      // const blob = await response.blob();
+      // const downloadUrl = URL.createObjectURL(blob);
+      // const link = document.createElement("a");
+      // link.href = downloadUrl;
+      // link.download = `contrato-${nro}.pdf`;
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      // URL.revokeObjectURL(downloadUrl);
+
+      // setNroContrato(nro);
+      // showToast(nro);
+      // onResultado(nro);
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
     } finally {
