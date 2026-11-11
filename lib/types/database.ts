@@ -22,6 +22,7 @@ type SupportedTableName =
   | "control_acceso"
   | "sesiones_acceso"
   | "horarios_acceso"
+  | "formulario"
   | "items_checklist"
   | "checklist_estado"
   | "situaciones"
@@ -79,6 +80,7 @@ export type Control_Acceso = TableRow<"control_acceso">
 export type Sesiones_Acceso = TableRow<"sesiones_acceso">
 export type Horarios_Acceso = TableRow<"horarios_acceso">
 export type Numeros_Telefonicos = TableRow<"numeros_telefonicos">
+export type Formulario = TableRow<"formulario">
 export type Llamadas = TableRow<"llamadas">
 export type Asistencias = TableRow<"asistencias">
 export type Documentos = TableRow<"documentos">

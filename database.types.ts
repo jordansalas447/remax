@@ -1113,6 +1113,96 @@ export type Database = {
         }
         Relationships: []
       }
+      formulario: {
+        Row: {
+          anofirma: number | null
+          comision: number | null
+          created_at: string
+          duracionMeses: number | null
+          id: number
+          id_documento: number | null
+          id_formulario: number | null
+          inmuebleDepartamento: string | null
+          inmuebleDireccion: string | null
+          inmuebleDistrito: string | null
+          inmueblePartida: string | null
+          inmuebleProvincia: string | null
+          mesFirma: string | null
+          nombreAsesor: string | null
+          propietariocelular: number | null
+          propietariodepartamento: number | null
+          propietariodistrito: number | null
+          propietariodni: number | null
+          propietariodomicilio: string | null
+          propietarioestadoCivil: string | null
+          propietarionombre: string | null
+          propietarioprovincia: string | null
+        }
+        Insert: {
+          anofirma?: number | null
+          comision?: number | null
+          created_at?: string
+          duracionMeses?: number | null
+          id?: number
+          id_documento?: number | null
+          id_formulario?: number | null
+          inmuebleDepartamento?: string | null
+          inmuebleDireccion?: string | null
+          inmuebleDistrito?: string | null
+          inmueblePartida?: string | null
+          inmuebleProvincia?: string | null
+          mesFirma?: string | null
+          nombreAsesor?: string | null
+          propietariocelular?: number | null
+          propietariodepartamento?: number | null
+          propietariodistrito?: number | null
+          propietariodni?: number | null
+          propietariodomicilio?: string | null
+          propietarioestadoCivil?: string | null
+          propietarionombre?: string | null
+          propietarioprovincia?: string | null
+        }
+        Update: {
+          anofirma?: number | null
+          comision?: number | null
+          created_at?: string
+          duracionMeses?: number | null
+          id?: number
+          id_documento?: number | null
+          id_formulario?: number | null
+          inmuebleDepartamento?: string | null
+          inmuebleDireccion?: string | null
+          inmuebleDistrito?: string | null
+          inmueblePartida?: string | null
+          inmuebleProvincia?: string | null
+          mesFirma?: string | null
+          nombreAsesor?: string | null
+          propietariocelular?: number | null
+          propietariodepartamento?: number | null
+          propietariodistrito?: number | null
+          propietariodni?: number | null
+          propietariodomicilio?: string | null
+          propietarioestadoCivil?: string | null
+          propietarionombre?: string | null
+          propietarioprovincia?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "formulario_id_documento_fkey"
+            columns: ["id_documento"]
+            isOneToOne: false
+            referencedRelation: "documentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "formulario_id_formulario_fkey"
+            columns: ["id_formulario"]
+            isOneToOne: false
+            referencedRelation: "formulario"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       historial_observaciones: {
         Row: {
           eliminado: boolean | null
@@ -1662,6 +1752,7 @@ export type Database = {
         Row: {
           created_at: string
           descripcion: string | null
+          eliminado: boolean | null
           id: number
           id_persona: number | null
           numero_telefono: string | null
@@ -1669,6 +1760,7 @@ export type Database = {
         Insert: {
           created_at?: string
           descripcion?: string | null
+          eliminado?: boolean | null
           id?: number
           id_persona?: number | null
           numero_telefono?: string | null
@@ -1676,6 +1768,7 @@ export type Database = {
         Update: {
           created_at?: string
           descripcion?: string | null
+          eliminado?: boolean | null
           id?: number
           id_persona?: number | null
           numero_telefono?: string | null
@@ -1811,8 +1904,10 @@ export type Database = {
           deleted_at: string | null
           descripcion: string | null
           direccion: string | null
+          distrito: string | null
           documento_identidad: string | null
           eliminado: boolean
+          estado_civil: string | null
           fecha_creacion: string | null
           fecha_nacimiento: string | null
           fecha_registro: string | null
@@ -1824,6 +1919,7 @@ export type Database = {
           numero_actualizado: string | null
           numero_telefono: string | null
           numero_telefono_2: string | null
+          provincia: string | null
           url_dni: string | null
           url_foto: string | null
         }
@@ -1835,8 +1931,10 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           direccion?: string | null
+          distrito?: string | null
           documento_identidad?: string | null
           eliminado?: boolean
+          estado_civil?: string | null
           fecha_creacion?: string | null
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
@@ -1848,6 +1946,7 @@ export type Database = {
           numero_actualizado?: string | null
           numero_telefono?: string | null
           numero_telefono_2?: string | null
+          provincia?: string | null
           url_dni?: string | null
           url_foto?: string | null
         }
@@ -1859,8 +1958,10 @@ export type Database = {
           deleted_at?: string | null
           descripcion?: string | null
           direccion?: string | null
+          distrito?: string | null
           documento_identidad?: string | null
           eliminado?: boolean
+          estado_civil?: string | null
           fecha_creacion?: string | null
           fecha_nacimiento?: string | null
           fecha_registro?: string | null
@@ -1872,6 +1973,7 @@ export type Database = {
           numero_actualizado?: string | null
           numero_telefono?: string | null
           numero_telefono_2?: string | null
+          provincia?: string | null
           url_dni?: string | null
           url_foto?: string | null
         }
@@ -2764,6 +2866,7 @@ export type Database = {
           is_expired: boolean | null
           modalidad: string | null
           nro_contrato: string | null
+          numero_actualizado: string | null
           numero_telefono: string | null
           numero_telefono_2: string | null
           observacion: string | null

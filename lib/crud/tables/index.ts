@@ -48,6 +48,7 @@ import { diasemanaaccesoConfig } from "./dias_semana";
 import { plantillasDocumentosConfig } from "./plantillas_documentos";
 import { clausulasConfig } from "./clausulas";
 import { numerosTelefonicosConfig } from "./numeros_telefonicos";
+import { formularioConfig } from "./formulario";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -75,6 +76,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   nivel_asociado: nivelAsociadoConfig,
   areas: areasConfig,
   empresas: empresasConfig,
+  formulario: formularioConfig,
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,
