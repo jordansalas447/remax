@@ -8,6 +8,7 @@ import { createDocumentos, DocumentosRow } from "@/lib/supabase/queries/document
 import { Button } from "../ui/button";
 import { cn } from "cn";
 import { toast } from "../ui/toast";
+import confetti from "canvas-confetti";
 import type { ContratoPDFProps } from "./Contratos/Anticrisis";
 import type { Propietario } from "./Contratos/shared/types";
 import {
@@ -18,6 +19,7 @@ import {
 } from "./Contratos/shared/campos";
 import CamposContrato, { type DatosContrato } from "./campos-contrato";
 import { Input } from "../ui/input";
+import { createFormulario, FormularioRow, FormularioType } from "@/lib/supabase/queries/formulario";
 
 interface FormularioProps {
   TipoContratos: TipoContratoRow[]
@@ -29,6 +31,43 @@ interface FormularioProps {
 }
 
 const MAX_PROPIETARIOS = 10;
+
+const aNumero = (v?: string): number | null => {
+  if (v === undefined || v.trim() === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+};
+
+// Aplana datosExtra al formato de la tabla `formulario` (una fila por propietario)
+function aplanarDatosExtra(
+  datos: Partial<ContratoPDFProps>,
+  id_documento: number
+): Omit<FormularioRow, "id" | "created_at">[] {
+  const lista = datos.propietarios?.length ? datos.propietarios : [{} as Propietario];
+
+  return lista.map((p) => ({
+    id_documento: id_documento,
+    id_formulario: null,
+    anofirma: aNumero(datos.anoFirma),
+    mesFirma: datos.mesFirma ?? null,
+    comision: aNumero(datos.comision),
+    duracionMeses: aNumero(datos.duracionMeses),
+    nombreAsesor: datos.nombreAsesor ?? null,
+    inmuebleDepartamento: datos.inmuebleDepartamento ?? null,
+    inmuebleProvincia: datos.inmuebleProvincia ?? null,
+    inmuebleDistrito: datos.inmuebleDistrito ?? null,
+    inmuebleDireccion: datos.inmuebleDireccion ?? null,
+    inmueblePartida: datos.inmueblePartida ?? null,
+    propietarionombre: p.nombre ?? null,
+    propietariodni: aNumero(p.dni),
+    propietarioestadoCivil: p.estadoCivil ?? null,
+    propietariocelular: aNumero(p.celular),
+    propietariodomicilio: p.domicilio ?? null,
+    propietariodistrito: aNumero(p.distrito),
+    propietarioprovincia: p.provincia ?? null,
+    propietariodepartamento: aNumero(p.departamento),
+  }));
+}
 
 // Pasos del asistente
 const PASOS_CONTRATO = [
@@ -218,7 +257,7 @@ export default function FormGenerarContrato({
   ) => {
     const { name, value, type } = e.target;
 
-   // console.log((value))
+    // console.log((value))
 
     setForm((f) => ({
       ...f,
@@ -297,6 +336,11 @@ export default function FormGenerarContrato({
 
       const documento = await createDocumentos(form);
 
+      // Un registro por propietario: datos comunes repetidos + propietario<Campo> aplanado
+      const registros = aplanarDatosExtra(datosExtra, documento.id);
+      const formularios = await Promise.all(registros.map((r) => createFormulario(r)));
+
+
       const nro = documento.nro_contrato;
 
       const payload: ContratoPDFProps = {
@@ -334,7 +378,7 @@ export default function FormGenerarContrato({
       URL.revokeObjectURL(downloadUrl);
 
       setNroContrato(nro);
-      showToast(nro);
+      showToast(nro); lanzarConfeti();
       onResultado(nro);
     } catch (err: any) {
       setError(err?.message ?? "Error al generar el contrato");
@@ -343,6 +387,16 @@ export default function FormGenerarContrato({
     }
   };
 
+
+  function lanzarConfeti() {
+    const fin = Date.now() + 3000;
+    const frame = () => {
+      confetti({ particleCount: 4, angle: 60, spread: 70, origin: { x: 0, y: 0 }, zIndex: 10000 });
+      confetti({ particleCount: 4, angle: 120, spread: 70, origin: { x: 1, y: 0 }, zIndex: 10000 });
+      if (Date.now() < fin) requestAnimationFrame(frame);
+    };
+    frame();
+  }
 
   function showToast(NroContrato: string) {
     const id = toast.add({
@@ -353,218 +407,218 @@ export default function FormGenerarContrato({
 
   return (
     <div className={cn("w-full", paso === 1 && "mx-auto max-w-3xl")}>
-            {paso === 1 ? (
-              <>
-                {/* Declaración de Uso Restringido */}
-                <div>
-                  <div className="text-center mb-4">
-                    <span className="  font-bold text-lg block mb-2">
-                      DECLARACIÓN DE USO RESTRINGIDO DE DOCUMENTOS CONTRACTUALES
-                    </span>
-                  </div>
-                  <div className="bg-gray-50 dark:bg-zinc-800/40 border dark:border-blue-800 rounded-lg p-4  text-sm">
-                    <p className="mb-2">
-                      Declaro que el contrato que estoy por descargar ha sido proporcionado para su utilización en el marco de las actividades y operaciones autorizadas por RE/MAX Adelante.
-                    </p>
-                    <p className="mb-2">
-                      Me comprometo a utilizar dicho documento exclusivamente para los fines relacionados con las actividades autorizadas por la empresa, respetando sus políticas internas y las obligaciones de confidencialidad aplicables.
-                    </p>
-                    <p className="mb-2">
-                      Asimismo, me comprometo a no utilizar, reproducir, distribuir, comercializar, modificar ni facilitar el documento para fines ajenos a los autorizados por RE/MAX Adelante, ni a utilizarlo en beneficio de terceros o de otras empresas sin la autorización correspondiente.
-                    </p>
-                    <p className="mb-2">
-                      Declaro conocer que el uso no autorizado del documento podría dar lugar a medidas internas y, cuando corresponda legalmente, a las acciones legales pertinentes.
-                    </p>
-                    <p>
-                      Al aceptar esta declaración, dejo constancia de que he leído y comprendido las condiciones anteriores.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4">
-                    <input
-                      type="checkbox"
-                      id="declaracion_acepto"
-                      checked={aceptado}
-                      onChange={handleDeclaracionChange}
-                      className="w-5 h-5 border-blue-400 rounded"
-                      disabled={enviando}
-                    />
-                    <label htmlFor="declaracion_acepto" className="select-none ">
-                      Acepto la Declaración de Uso Restringido de Documentos Contractuales <span className="text-red-500">*</span>
-                    </label>
-                  </div>
-                  {error && (
-                    <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
-                      <span className="font-semibold">Error:</span> {error}
-                    </div>
-                  )}
-                  <div className="flex justify-end gap-2 mt-6">
-                    <Button type="button" variant="outline" onClick={handleCancelar}>Cancelar
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="default"
-                      onClick={handleSiguiente}
-                      disabled={!aceptado || enviando}
-                    >
-                      Siguiente
-                    </Button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="grid gap-4">
-                {/* INDICADOR DE PASOS */}
-                <ol className="flex flex-wrap items-center gap-2 text-sm" aria-label="Pasos para generar el contrato">
-                  {PASOS_CONTRATO.map((p, idx) => (
-                    <React.Fragment key={p.paso}>
-                      {idx > 0 && <li aria-hidden="true" className="h-px w-8 bg-border" />}
-                      <li
-                        aria-current={paso === p.paso ? "step" : undefined}
-                        className={cn(
-                          "flex items-center gap-2 transition-colors",
-                          paso === p.paso ? "font-semibold" : "text-muted-foreground"
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "flex size-6 items-center justify-center rounded-full border text-xs transition-colors",
-                            paso >= p.paso && "bg-primary text-primary-foreground border-primary"
-                          )}
-                        >
-                          {paso > p.paso ? "✓" : idx + 1}
-                        </span>
-                        {p.label}
-                      </li>
-                    </React.Fragment>
-                  ))}
-                </ol>
-
-                <div
+      {paso === 1 ? (
+        <>
+          {/* Declaración de Uso Restringido */}
+          <div>
+            <div className="text-center mb-4">
+              <span className="  font-bold text-lg block mb-2">
+                DECLARACIÓN DE USO RESTRINGIDO DE DOCUMENTOS CONTRACTUALES
+              </span>
+            </div>
+            <div className="bg-gray-50 dark:bg-zinc-800/40 border dark:border-blue-800 rounded-lg p-4  text-sm">
+              <p className="mb-2">
+                Declaro que el contrato que estoy por descargar ha sido proporcionado para su utilización en el marco de las actividades y operaciones autorizadas por RE/MAX Adelante.
+              </p>
+              <p className="mb-2">
+                Me comprometo a utilizar dicho documento exclusivamente para los fines relacionados con las actividades autorizadas por la empresa, respetando sus políticas internas y las obligaciones de confidencialidad aplicables.
+              </p>
+              <p className="mb-2">
+                Asimismo, me comprometo a no utilizar, reproducir, distribuir, comercializar, modificar ni facilitar el documento para fines ajenos a los autorizados por RE/MAX Adelante, ni a utilizarlo en beneficio de terceros o de otras empresas sin la autorización correspondiente.
+              </p>
+              <p className="mb-2">
+                Declaro conocer que el uso no autorizado del documento podría dar lugar a medidas internas y, cuando corresponda legalmente, a las acciones legales pertinentes.
+              </p>
+              <p>
+                Al aceptar esta declaración, dejo constancia de que he leído y comprendido las condiciones anteriores.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 mt-4">
+              <input
+                type="checkbox"
+                id="declaracion_acepto"
+                checked={aceptado}
+                onChange={handleDeclaracionChange}
+                className="w-5 h-5 border-blue-400 rounded"
+                disabled={enviando}
+              />
+              <label htmlFor="declaracion_acepto" className="select-none ">
+                Acepto la Declaración de Uso Restringido de Documentos Contractuales <span className="text-red-500">*</span>
+              </label>
+            </div>
+            {error && (
+              <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
+                <span className="font-semibold">Error:</span> {error}
+              </div>
+            )}
+            <div className="flex justify-end gap-2 mt-6">
+              <Button type="button" variant="outline" onClick={handleCancelar}>Cancelar
+              </Button>
+              <Button
+                type="button"
+                variant="default"
+                onClick={handleSiguiente}
+                disabled={!aceptado || enviando}
+              >
+                Siguiente
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="grid gap-4">
+          {/* INDICADOR DE PASOS */}
+          <ol className="flex flex-wrap items-center gap-2 text-sm" aria-label="Pasos para generar el contrato">
+            {PASOS_CONTRATO.map((p, idx) => (
+              <React.Fragment key={p.paso}>
+                {idx > 0 && <li aria-hidden="true" className="h-px w-8 bg-border" />}
+                <li
+                  aria-current={paso === p.paso ? "step" : undefined}
                   className={cn(
-                    "grid gap-6",
-                    paso === 3
-                      ? "lg:grid-cols-[minmax(340px,440px)_1fr]"
-                      : "lg:grid-cols-[minmax(260px,320px)_1fr]"
+                    "flex items-center gap-2 transition-colors",
+                    paso === p.paso ? "font-semibold" : "text-muted-foreground"
                   )}
                 >
-                  <form
-                    className="grid gap-6 content-start"
-                    onSubmit={paso === 2 ? handleIrADatos : handleSubmit}
-                    autoComplete="off"
-                  >
-                    {paso === 2 ? (
-                      <>
-                        {/* id_tipo_contrato: SELECT */}
-                        <div>
-                          <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium ">
-                            Tipo de contrato <span className="text-red-500">*</span>
-                          </label>
-                          <NativeSelect
-                            id="id_tipo_contrato"
-                            name="id_tipo_contrato"
-                            value={form.id_tipo_contrato || 0}
-                            onChange={handleChange}
-                            required
-                            disabled={enviando}
-                            className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
-                          >
-                            <option value="">Selecciona un tipo</option>
-                            {tiposContrato.map((tipo: any) => (
-                              <option key={tipo.id} value={tipo.id}>
-                                {tipo.tipo_contrato}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                        </div>
-
-                        <div>
-                          <label htmlFor="id_operacion" className="block mb-2 font-medium ">
-                            Operación <span className="text-red-500">*</span>
-                          </label>
-                          <NativeSelect
-                            id="id_operacion"
-                            name="id_operacion"
-                            value={form.id_operacion || 0}
-                            onChange={handleChange}
-                            required
-                            disabled={enviando}
-                            className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
-                          >
-                            <option value="">Selecciona una operación</option>
-                            {operaciones.map((op: any) => (
-                              <option key={op.id} value={op.id}>
-                                {op.operacion}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                        </div>
-
-                        {/* nro_propietarios: number */}
-                        <div>
-                          <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
-                            Nro. de propietarios
-                          </label>
-                          <Input
-                            type="number"
-                            id="nro_propietarios"
-                            name="nro_propietarios"
-                            className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
-                            value={form.nro_propietarios || ""}
-                            min={1}
-                            max={MAX_PROPIETARIOS}
-                            onChange={handleChange}
-                            disabled={enviando}
-                          />
-                        </div>
-                          {/* Descripcion: text */}
-                          <div>
-                          <label htmlFor="descripcion" className="block mb-2 font-medium ">
-                            Descripción
-                          </label>
-                          <Input
-                            type="text"
-                            id="descripcion"
-                            name="descripcion"
-                            className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
-                            value={form.descripcion || ""}
-                            onChange={handleChange}
-                            disabled={enviando}
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {/* Resumen de la selección */}
-                        <div className="flex flex-col gap-1 rounded-lg border dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/40 px-3 py-2 text-sm">
-                          <span className="font-medium">
-                            {operacionLabel ?? "Operación"} · {tipoContratoLabel ?? "Tipo"}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {progreso.llenos} de {progreso.total} campos del contrato completados.
-                            Los campos que dejes vacíos quedarán en blanco en el PDF.
-                          </span>
-                        </div>
-
-                        <div className="lg:max-h-[55vh] lg:overflow-y-auto lg:pr-2">
-                          <CamposContrato
-                            tipoOperacion={tipoOperacionId}
-                            tipoContrato={tipoContratoId}
-                            nroPropietarios={nroPropietarios}
-                            NombreAsociado={NombreAsociado}
-                            datos={datosContrato}
-                            propietarios={propietarios}
-                            disabled={enviando}
-                            onDatoChange={handleDatoChange}
-                            onPropietarioChange={handlePropietarioChange}
-                            onUsarFechaHoy={handleUsarFechaHoy}
-                          />
-                        </div>
-                      </>
+                  <span
+                    className={cn(
+                      "flex size-6 items-center justify-center rounded-full border text-xs transition-colors",
+                      paso >= p.paso && "bg-primary text-primary-foreground border-primary"
                     )}
+                  >
+                    {paso > p.paso ? "✓" : idx + 1}
+                  </span>
+                  {p.label}
+                </li>
+              </React.Fragment>
+            ))}
+          </ol>
+
+          <div
+            className={cn(
+              "grid gap-6",
+              paso === 3
+                ? "lg:grid-cols-[minmax(340px,440px)_1fr]"
+                : "lg:grid-cols-[minmax(260px,320px)_1fr]"
+            )}
+          >
+            <form
+              className="grid gap-6 content-start"
+              onSubmit={paso === 2 ? handleIrADatos : handleSubmit}
+              autoComplete="off"
+            >
+              {paso === 2 ? (
+                <>
+                  {/* id_tipo_contrato: SELECT */}
+                  <div>
+                    <label htmlFor="id_tipo_contrato" className="block mb-2 font-medium ">
+                      Tipo de contrato <span className="text-red-500">*</span>
+                    </label>
+                    <NativeSelect
+                      id="id_tipo_contrato"
+                      name="id_tipo_contrato"
+                      value={form.id_tipo_contrato || 0}
+                      onChange={handleChange}
+                      required
+                      disabled={enviando}
+                      className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
+                    >
+                      <option value="">Selecciona un tipo</option>
+                      {tiposContrato.map((tipo: any) => (
+                        <option key={tipo.id} value={tipo.id}>
+                          {tipo.tipo_contrato}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </div>
+
+                  <div>
+                    <label htmlFor="id_operacion" className="block mb-2 font-medium ">
+                      Operación <span className="text-red-500">*</span>
+                    </label>
+                    <NativeSelect
+                      id="id_operacion"
+                      name="id_operacion"
+                      value={form.id_operacion || 0}
+                      onChange={handleChange}
+                      required
+                      disabled={enviando}
+                      className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full bg-white dark:bg-zinc-950 focus:border-blue-500 outline-none transition"
+                    >
+                      <option value="">Selecciona una operación</option>
+                      {operaciones.map((op: any) => (
+                        <option key={op.id} value={op.id}>
+                          {op.operacion}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </div>
+
+                  {/* nro_propietarios: number */}
+                  <div>
+                    <label htmlFor="nro_propietarios" className="block mb-2 font-medium ">
+                      Nro. de propietarios
+                    </label>
+                    <Input
+                      type="number"
+                      id="nro_propietarios"
+                      name="nro_propietarios"
+                      className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
+                      value={form.nro_propietarios || ""}
+                      min={1}
+                      max={MAX_PROPIETARIOS}
+                      onChange={handleChange}
+                      disabled={enviando}
+                    />
+                  </div>
+                  {/* Descripcion: text */}
+                  <div>
+                    <label htmlFor="descripcion" className="block mb-2 font-medium ">
+                      Descripción
+                    </label>
+                    <Input
+                      type="text"
+                      id="descripcion"
+                      name="descripcion"
+                      className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
+                      value={form.descripcion || ""}
+                      onChange={handleChange}
+                      disabled={enviando}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Resumen de la selección */}
+                  <div className="flex flex-col gap-1 rounded-lg border dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800/40 px-3 py-2 text-sm">
+                    <span className="font-medium">
+                      {operacionLabel ?? "Operación"} · {tipoContratoLabel ?? "Tipo"}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {progreso.llenos} de {progreso.total} campos del contrato completados.
+                      Los campos que dejes vacíos quedarán en blanco en el PDF.
+                    </span>
+                  </div>
+
+                  <div className="lg:max-h-[55vh] lg:overflow-y-auto lg:pr-2">
+                    <CamposContrato
+                      tipoOperacion={tipoOperacionId}
+                      tipoContrato={tipoContratoId}
+                      nroPropietarios={nroPropietarios}
+                      NombreAsociado={NombreAsociado}
+                      datos={datosContrato}
+                      propietarios={propietarios}
+                      disabled={enviando}
+                      onDatoChange={handleDatoChange}
+                      onPropietarioChange={handlePropietarioChange}
+                      onUsarFechaHoy={handleUsarFechaHoy}
+                    />
+                  </div>
+                </>
+              )}
 
 
-                    {/* empresa: checkbox */}
-                    {/* <div className="flex items-center gap-3">
+              {/* empresa: checkbox */}
+              {/* <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="empresa"
@@ -579,8 +633,8 @@ export default function FormGenerarContrato({
                   </label>
                 </div> */}
 
-                    {/* apoderado: checkbox */}
-                    {/* <div className="flex items-center gap-3">
+              {/* apoderado: checkbox */}
+              {/* <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="apoderado"
@@ -595,106 +649,106 @@ export default function FormGenerarContrato({
                   </label>
                 </div> */}
 
-                    {/* ERROR */}
-                    {error && (
-                      <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
-                        <span className="font-semibold">Error:</span> {error}
-                      </div>
-                    )}
-                    {/* SUBMIT */}
-
-                    <div className="flex flex-row gap-2 justify-end border-t-1 py-2">
-                      {paso === 2 ? (
-                        <>
-                          <Button type="button" variant="outline" onClick={handleCancelar}>
-                            Cancelar
-                          </Button>
-                          <Button
-                            id="btn-siguiente-datos"
-                            type="submit"
-                            disabled={enviando || !tipoContratoId || !tipoOperacionId || form.nro_propietarios == 0}
-                          >
-                            Siguiente
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            id="btn-atras-tipo"
-                            type="button"
-                            variant="outline"
-                            onClick={() => { setError(null); setPaso(2); }}
-                            disabled={enviando}
-                          >
-                            Atrás
-                          </Button>
-                          <Button
-                            id="btn-generar-descargar"
-                            type="submit"
-                            disabled={enviando}
-                          >
-                            {enviando ? (
-                              <span className="flex items-center gap-2 justify-center">
-                                <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                                  <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                  <path className="opacity-70" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                                </svg>
-                                Generando...
-                              </span>
-                            ) : (
-                              <span>Generar y Descargar</span>
-                            )}
-                          </Button>
-                        </>
-                      )}
-                    </div>
-
-
-                  </form>
-
-                  {/* VISTA PREVIA */}
-                  <section aria-label="Vista previa del contrato" className="flex flex-col gap-2 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">Vista previa</span>
-                      {cargandoPreview && (
-                        <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                            <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                            <path className="opacity-70" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                          </svg>
-                          Actualizando...
-                        </span>
-                      )}
-                    </div>
-                    <div className="relative h-[60vh] lg:h-[70vh] rounded-lg border dark:border-zinc-700 bg-gray-100 dark:bg-zinc-900 overflow-hidden">
-                      {previewUrl ? (
-                        <iframe
-                          id="preview-contrato"
-                          title="Vista previa del contrato"
-                          src={`${previewUrl}#toolbar=0&navpanes=0&view=FitH`}
-                          className={cn(
-                            "w-full h-full transition-opacity",
-                            cargandoPreview && "opacity-50"
-                          )}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">
-                          {errorPreview
-                            ? errorPreview
-                            : cargandoPreview
-                              ? "Generando vista previa..."
-                              : "Selecciona el tipo de contrato y la operación para ver la vista previa."}
-                        </div>
-                      )}
-                    </div>
-                    {previewUrl && errorPreview && (
-                      <span className="text-xs text-red-600">{errorPreview}</span>
-                    )}
-                  </section>
+              {/* ERROR */}
+              {error && (
+                <div className="bg-red-100 border border-red-300 text-red-800 rounded-lg px-4 py-2 mt-2">
+                  <span className="font-semibold">Error:</span> {error}
                 </div>
+              )}
+              {/* SUBMIT */}
+
+              <div className="flex flex-row gap-2 justify-end border-t-1 py-2">
+                {paso === 2 ? (
+                  <>
+                    <Button type="button" variant="outline" onClick={handleCancelar}>
+                      Cancelar
+                    </Button>
+                    <Button
+                      id="btn-siguiente-datos"
+                      type="submit"
+                      disabled={enviando || !tipoContratoId || !tipoOperacionId || form.nro_propietarios == 0}
+                    >
+                      Siguiente
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      id="btn-atras-tipo"
+                      type="button"
+                      variant="outline"
+                      onClick={() => { setError(null); setPaso(2); }}
+                      disabled={enviando}
+                    >
+                      Atrás
+                    </Button>
+                    <Button
+                      id="btn-generar-descargar"
+                      type="submit"
+                      disabled={enviando}
+                    >
+                      {enviando ? (
+                        <span className="flex items-center gap-2 justify-center">
+                          <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                            <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-70" fill="currentColor"
+                              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                          </svg>
+                          Generando...
+                        </span>
+                      ) : (
+                        <span>Generar y Descargar</span>
+                      )}
+                    </Button>
+                  </>
+                )}
               </div>
-            )}
+
+
+            </form>
+
+            {/* VISTA PREVIA */}
+            <section aria-label="Vista previa del contrato" className="flex flex-col gap-2 min-w-0">
+              <div className="flex items-center justify-between">
+                <span className="font-medium">Vista previa</span>
+                {cargandoPreview && (
+                  <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-70" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                    Actualizando...
+                  </span>
+                )}
+              </div>
+              <div className="relative h-[60vh] lg:h-[70vh] rounded-lg border dark:border-zinc-700 bg-gray-100 dark:bg-zinc-900 overflow-hidden">
+                {previewUrl ? (
+                  <iframe
+                    id="preview-contrato"
+                    title="Vista previa del contrato"
+                    src={`${previewUrl}#toolbar=0&navpanes=0&view=FitH`}
+                    className={cn(
+                      "w-full h-full transition-opacity",
+                      cargandoPreview && "opacity-50"
+                    )}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">
+                    {errorPreview
+                      ? errorPreview
+                      : cargandoPreview
+                        ? "Generando vista previa..."
+                        : "Selecciona el tipo de contrato y la operación para ver la vista previa."}
+                  </div>
+                )}
+              </div>
+              {previewUrl && errorPreview && (
+                <span className="text-xs text-red-600">{errorPreview}</span>
+              )}
+            </section>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

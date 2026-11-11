@@ -7,6 +7,19 @@ export const formularioConfig: TableConfig = {
   primaryKey: "id",
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
+
+    {
+      name: "id_formulario",
+      label: "Nro Contrato",
+      type: "text",
+      selectplus: false,
+      foreignKey: {
+          table: "documentos",
+          valueField: "id",
+          labelField: "nro_contrato",
+      },
+    },
+
     { name: "anoFirma", label: "anoFirma", type: "textarea" },
     { name: "comision", label: "comision", type: "textarea" },
     { name: "diaFirma", label: "diaFirma", type: "textarea" },
@@ -27,6 +40,7 @@ export const formularioConfig: TableConfig = {
     { name: "propietarioestadoCivil", label: "estadoCivil", type: "textarea" },
     { name: "propietarionombre", label: "nombre", type: "textarea" },
     { name: "propietarioprovincia", label: "provincia", type: "textarea" },
+
   ],
 };
 

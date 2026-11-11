@@ -46,6 +46,19 @@ export async function getDocumentosxCodigo(codigo: string): Promise<DocumentosRo
   return data ?? null;
 }
 
+export async function getDocumentosxEmitidos(codigo?: string): Promise<any | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+  .from('v_documentos')
+  .select('*')
+  .order('fecha', { ascending: false });
+
+  if (!data) return null
+
+  if (error) throw new Error(error);
+  return data ?? null;
+}
+
 export async function getDocumentosById(id: number): Promise<DocumentosRow | null> {
   const supabase = createClient();
   const { data, error } = await supabase

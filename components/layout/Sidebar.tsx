@@ -24,22 +24,46 @@ import { BookOpen, ChevronDown, Play, ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { getAsociadoByProfileId } from "@/lib/supabase/queries/asociados";
 import { getSession } from "@/lib/auth/session";
+import { redirect } from "next/navigation";
 
 export async function AppSidebar() {
 
-  const response = await get_tabla();
+  //const response = await get_tabla();
   const session = await getSession();
-  const Asociado = await getAsociadoByProfileId(session?.profile?.id || "");
+  const profileId = session?.profile?.id;
 
+  //console.log(profileId)
 
-  if (typeof Asociado?.personas?.asociados?.[0]?.id_asociado === "undefined") {
+  if (!profileId) {
+    console.error("AppSidebar: sin sesión/perfil", {
+      hasUser: !!session?.user,
+      hasProfile: !!session?.profile,
+    });
+    return redirect("/login"); // o un sidebar mínimo / redirect("/login")
+  }
+
+  const [response, Asociado] = await Promise.all([
+    get_tabla(),
+    getAsociadoByProfileId(profileId),
+  ]);
+
+  const idAsociado = Asociado?.personas?.asociados?.[0]?.id_asociado;
+  if (idAsociado === undefined) {
+    console.error("AppSidebar: sin asociado para profile", profileId);
     return null;
   }
 
+  //const Asociado = await getAsociadoByProfileId(session?.profile?.id || "");
+
+
+  //if (typeof Asociado?.personas?.asociados?.[0]?.id_asociado === "undefined") {
+    //console.log(Asociado)
+   // return null;
+  //}
 
   const isAdmin = session?.profile?.role === "admin";
 
-  const idAsociado = Asociado?.personas?.asociados?.[0]?.id_asociado;
+  //const idAsociado = Asociado?.personas?.asociados?.[0]?.id_asociado;
 
   // const soloGenerarContrato = !isAdmin && [13, 15, undefined].includes(idAsociado);
 

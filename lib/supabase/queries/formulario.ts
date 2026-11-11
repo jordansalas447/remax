@@ -3,7 +3,9 @@ import type { Database } from '@/database.types';
 
 export type FormularioRow = Database['public']['Tables']['formulario']['Row'];
 
-export async function createFormulario(record: Omit<FormularioRow, 'id'>): Promise<FormularioRow> {
+export type FormularioType = FormularioRow
+
+export async function createFormulario(record: Omit<FormularioRow, 'id' | 'created_at'>): Promise<FormularioRow> {
     const supabase = createClient();
     const { data, error } = await supabase
       .from('formulario')

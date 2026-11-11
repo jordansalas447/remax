@@ -8,23 +8,28 @@ import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
 function Dialog(
-  { 
+  {
     preventOutsideClose = true,
     onOpenChange,
-    ...props 
+    ...props
   }: DialogPrimitive.Root.Props & {
     preventOutsideClose?: boolean
   }) {
-  return <DialogPrimitive.Root 
-  onOpenChange={(open, details) => {
-    if (!open && preventOutsideClose) {
-      return
-    }
+  return (
+    <DialogPrimitive.Root
+      data-slot="dialog"
+      {...props}
+      onOpenChange={(open, details) => {
+        // Solo bloquea el cierre por clic fuera; Escape y el botón de cerrar siguen funcionando
+        if (!open && preventOutsideClose && details?.reason === "outside-press") {
+          details.cancel?.()
+          return
+        }
 
-    onOpenChange?.(open, details)
-  }}
-  data-slot="dialog"
-  {...props} />
+        onOpenChange?.(open, details)
+      }}
+    />
+  )
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {

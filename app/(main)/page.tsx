@@ -1,5 +1,4 @@
-import AnunciosGallery from "@/components/AnunciosGallery/AnunciosGallery";
-import { Button } from "@base-ui/react";
+import { DASHBOARD_WIDGETS } from "@/components/dashboard/widgets";
 import { faFileContract } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -7,62 +6,33 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="space-y-8">
-      <section className="w-full">
-        <div className="p-6 flex flex-col items-center gap-6">
-          {/* <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-200 mb-2">
-            Anuncios destacados
-          </h2> */}
+    <section className="w-full">
+      <div className="p-6 flex flex-col items-center gap-6">
+        {/* <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-200 mb-2">
+          Anuncios destacados
+        </h2> */}
 
-          {/* <AnunciosGallery /> */}
-        </div>
-        <div>
-          <Link
-            href="/generar-contrato"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
-          >
-            <FontAwesomeIcon icon={faFileContract} />
-            Generar Contrato
-          </Link>
-        </div>
-      </section>
-    </div>
-  );
+        {/* <AnunciosGallery /> */}
+      </div>
+      <div>
+        <Link
+          href="/generar-contrato"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+        >
+          <FontAwesomeIcon icon={faFileContract} />
+          Generar Contrato
+        </Link>
+      </div>
+    </section>
+  </div>
+  )
+  // return (
+  //   <div className="space-y-8">
+  //     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+  //       {DASHBOARD_WIDGETS.map(({ id, Component }) => (
+  //         <Component key={id} />
+  //       ))}
+  //     </section>
+  //   </div>
+  // );
 }
-
-
-
-
-{/* <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {TABLE_NAMES.map(async (name) => {
-          const config = TABLE_CONFIGS[name];
-
-          return (
-            <Link
-              key={name}
-              href={`/${name}`}
-              className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-blue-700"
-            >
-              
-              {response && Array.isArray(response) && response.length > 0
-                                    ? response.filter((icn: any) => icn.nombre === config.label)
-                                        .map((icn: any, idx: number) => {
-                                            try {
-                                                return <FontAwesomeIcon key={idx} icon={["fas", icn.icon]} />;
-                                            } catch (e) {
-                                                // Si ocurre error, omite el ícono
-                                                return <></>;
-                                            }
-                                        })
-                                    : null}   
-
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                {config.label}
-              </h2>
-              <p className="mt-2 text-sm text-zinc-500">{config.description}</p>
-              <p className="mt-4 text-sm font-medium text-blue-600">
-                Gestionar registros →
-              </p>          
-            </Link>
-          );
-        })}
-      </section> */}

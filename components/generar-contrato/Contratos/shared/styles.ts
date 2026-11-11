@@ -123,7 +123,7 @@ export function getContratoStyles(ajustes?: AjustesEstiloContrato) {
       borderTop: "1px solid #000",
       minHeight: 40,
       paddingTop: 10,
-      marginTop: 10,
+      marginTop: 50,
       marginBottom: signatureBoxMarginBottom,
     },
     signatureText: {
