@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/input-group"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { DocumentosRowDetalle } from "@/lib/supabase/queries/documentos"
+import type { DocumentosRowDetalle, LimiteDiarioDocumentosxAsesorRow } from "@/lib/supabase/queries/documentos"
 
 const BADGE_VARIANTS = new Set<string>([
   "link",
@@ -50,7 +50,8 @@ const BADGE_VARIANTS = new Set<string>([
 ])
 
 interface TablaGenerarContratoProps {
-  documentos: DocumentosRowDetalle[]
+  documentos: DocumentosRowDetalle[],
+  contador: LimiteDiarioDocumentosxAsesorRow | null
 }
 
 export function formatDate(value: string | Date | null | undefined) {
@@ -103,6 +104,7 @@ function expirationVariant(fecha: Date | null): BadgeVariant {
 
 export default function CardsGenerarContrato({
   documentos,
+  contador
 }: TablaGenerarContratoProps) {
   const [filtro, setFiltro] = useState("")
 
@@ -127,10 +129,21 @@ export default function CardsGenerarContrato({
             placeholder="Filtrar n° contrato..."
           />
         </InputGroup>
-        <Badge variant="outline">
-          {documentosFiltrados.length} documento
-          {documentosFiltrados.length === 1 ? "" : "s"}
-        </Badge>
+        <div className="my-2">
+          <Badge variant="outline" className="m-1">
+            {documentosFiltrados.length} documento
+            {documentosFiltrados.length === 1 ? "" : "s"}
+          </Badge>
+          <Badge variant="outline" className="m-1">
+            Límite Diario: {contador?.limite_diario}
+          </Badge>
+          <Badge variant="outline" className="m-1">
+            Total Diario: {contador?.total_generados}
+          </Badge>
+          <Badge variant="outline" className="m-1">
+            Disponibles: {contador?.disponibles}
+          </Badge>
+        </div>
       </div>
 
       {documentosFiltrados.length === 0 ? (
@@ -199,9 +212,9 @@ export function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }
             style={
               isHexColor(operacionColor)
                 ? {
-                    backgroundColor: operacionColor ?? undefined,
-                    color: "#fff",
-                  }
+                  backgroundColor: operacionColor ?? undefined,
+                  color: "#fff",
+                }
                 : undefined
             }
           >
@@ -253,7 +266,7 @@ export function DocumentoCard({ documento }: { documento: DocumentosRowDetalle }
             Motivo anulación: {documento.motivo_anulacion}
           </p>
         ) : null}
-                {documento.descripcion ? (
+        {documento.descripcion ? (
           <p className="bg-gray-50 px-2.5 py-2 text-xs text-gray-800">
             Descripción: {documento.descripcion}
           </p>

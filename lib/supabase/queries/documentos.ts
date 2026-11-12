@@ -17,10 +17,17 @@ export type DocumentosRowDetalle = DocumentosRow & {
   } | null;
   estado_documento?: {
     estado: string;
-    color:string;
+    color: string;
   } | null;
 };
 
+
+export type LimiteDiarioDocumentosxAsesorRow = {
+  id_asociado: string | null;
+  limite_diario: string | null;
+  total_generados: string | null;
+  disponibles: string | null;
+}
 
 export async function getDocumentoss(): Promise<DocumentosRow[]> {
   const supabase = createClient();
@@ -46,17 +53,20 @@ export async function getDocumentosxCodigo(codigo: string): Promise<DocumentosRo
   return data ?? null;
 }
 
-export async function getDocumentosxEmitidos(codigo?: string): Promise<any | null> {
+export async function getDocumentosxEmitidos(codigo?: string): Promise<DocumentosRowDetalle[] | null> {
   const supabase = createClient();
   const { data, error } = await supabase
-  .from('v_documentos')
-  .select('*')
-  .order('fecha', { ascending: false });
+    .from('documentos')
+    .select(`*,
+        operacion(*),
+        tipo_contrato(*),
+        asociados:id_asociado(*),
+        estado_documento(*)`)
+    .not("id_asociado", "is", null)
+    .order('fecha_generacion', { ascending: false });
 
-  if (!data) return null
-
-  if (error) throw new Error(error);
-  return data ?? null;
+  if (error) throw new Error(error.message);
+  return (data as unknown as DocumentosRowDetalle[]) ?? null;
 }
 
 export async function getDocumentosById(id: number): Promise<DocumentosRow | null> {
@@ -81,7 +91,8 @@ export async function getDocumentosByAsociado(id: number): Promise<DocumentosRow
         operacion(*),
         estado_documento(*)
         `)
-    .eq('id_asociado', id);
+    .eq('id_asociado', id)
+    .order('fecha_generacion', { ascending: false });
   if (error) throw new Error(error.message);
   return data ?? null;
 }
@@ -93,6 +104,17 @@ export async function createDocumentos(record: Omit<DocumentosRow, 'id'>): Promi
     .insert([record])
     .select()
     .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('Failed to create Documentos');
+  return data;
+}
+
+export async function LimiteDiarioDocumentosxAsesor(id: number): Promise<LimiteDiarioDocumentosxAsesorRow[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('vista_limite_diario_documentos')
+    .select('*')
+    .eq('id_asociado', id);
   if (error) throw new Error(error.message);
   if (!data) throw new Error('Failed to create Documentos');
   return data;

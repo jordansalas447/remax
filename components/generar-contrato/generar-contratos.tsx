@@ -10,6 +10,8 @@ import CardsGenerarContrato, {
 import { Button } from "@/components/ui/button";
 import {
   getDocumentosByAsociado,
+  LimiteDiarioDocumentosxAsesor,
+  LimiteDiarioDocumentosxAsesorRow,
   type DocumentosRowDetalle,
 } from "@/lib/supabase/queries/documentos";
 
@@ -27,6 +29,7 @@ export default function GenerarContratos({
   NombreAsociado,
 }: GenerarContratosProps) {
   const [documentos, setDocumentos] = useState<DocumentosRowDetalle[]>([]);
+  const [contador, setcontador] = useState<LimiteDiarioDocumentosxAsesorRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [vista, setVista] = useState<"lista" | "formulario">("lista");
 
@@ -35,7 +38,10 @@ export default function GenerarContratos({
       setFetching(true);
       try {
         const data = await getDocumentosByAsociado(Asociado);
+        const contador = await LimiteDiarioDocumentosxAsesor(Asociado)
         setDocumentos(data || []);
+        console.log(contador)
+        setcontador(contador);
       } catch {
         setDocumentos([]);
       }
@@ -100,7 +106,7 @@ export default function GenerarContratos({
           {fetching ? (
             <CardsGenerarContratoSkeleton />
           ) : (
-            <CardsGenerarContrato documentos={documentos} />
+            <CardsGenerarContrato documentos={documentos} contador={contador[0]} />
           )}
         </div>
       )}

@@ -76,7 +76,7 @@ export default function LlamadasDashboard() {
   }, [resumen, estadoActivo, busqueda]);
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6">
+    <main className="mx-auto w-full max-w-7xl space-y-6">
       {/* Encabezado + filtros */}
       <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
@@ -86,8 +86,8 @@ export default function LlamadasDashboard() {
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             {selectedDate
               ? `Registros del ${format(selectedDate, "PPP", { locale: es })}`
-              : "Todos los registros"}
-            {!isLoading && !errorMsg && ` Â· ${filtrados.length} de ${resumen.length}`}
+              : "Todos los registros:"}
+            {!isLoading && !errorMsg && ` ${filtrados.length} de ${resumen.length}`}
           </p>
         </div>
 
@@ -309,7 +309,7 @@ function LlamadaCard({ row }: { row: LlamadasRowDetalle }) {
         </ol>
       </li>
 
-      <Dialog open={open} onOpenChange={setOpen} preventOutsideClose={true}>
+      <Dialog open={open} onOpenChange={setOpen} preventOutsideClose={false}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{row.propietario ?? "Propietario sin nombre"}</DialogTitle>
@@ -323,11 +323,14 @@ function LlamadaCard({ row }: { row: LlamadasRowDetalle }) {
               </Badge>
             </DetalleItem>
             <DetalleItem label="Asociado">{row.asociado ?? "Sin asignar"}</DetalleItem>
-            <DetalleItem label="Tipo de propiedad">{row.tipo_propiedad ?? "â€”"}</DetalleItem>
-            <DetalleItem label="Curso de la Llamada">{row.curso_llamada ?? "â€”"}</DetalleItem>
-            <DetalleItem label="Observacion">{row.observacion ?? "â€”"}</DetalleItem>
-            <DetalleItem label="Tipo de negocio">{row.tipo_negocio ?? "â€”"}</DetalleItem>
-            <DetalleItem label="Modalidad">{row.modalidad ?? "â€”"}</DetalleItem>
+            <DetalleItem label="ID Remax">{row.id_remax ?? "---"}</DetalleItem>
+            <DetalleItem label="Propietario">{row.propietario ?? "---"}</DetalleItem>
+            <DetalleItem label="Nro Telefono">{row.numero_telefono ?? "---"}</DetalleItem>
+            <DetalleItem label="Tipo de propiedad">{row.tipo_propiedad ?? "---"}</DetalleItem>
+            <DetalleItem label="Curso de la Llamada">{row.curso_llamada ?? "---"}</DetalleItem>
+            <DetalleItem label="Observacion">{row.observacion ?? "---"}</DetalleItem>
+            <DetalleItem label="Tipo de negocio">{row.tipo_negocio ?? "---"}</DetalleItem>
+            <DetalleItem label="Modalidad">{row.modalidad ?? "---"}</DetalleItem>
             {hitos.map((h) => (
               <DetalleItem key={h.label} label={h.label}>
                 {h.value ?? "Pendiente"}
