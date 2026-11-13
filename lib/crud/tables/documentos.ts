@@ -56,6 +56,17 @@ export const documentosConfig: TableConfig = {
     // { name: "created_at", label: "Fecha Creacion", type: "date", hiddenInForm: true },
     { name: "plazo", label: "Plazo", type: "number"},
     { name: "motivo_anulacion", label: "Motivo Anulacion", type: "text" },
-    { name: "descripcion", label: "Descripción", type: "textarea" }
+    { name: "descripcion", label: "Descripción", type: "textarea" },
+    { name: "justificacion", label: "Justificacion", type: "textarea" },
+    {
+      name: "id_usuario_generado",
+      label: "Generado por",
+      type: "select",
+      foreignKey: {
+        table: "asociados",
+        valueField: "id_asociado",
+        labelField: "nombre_completo",
+      },
+    },
   ]
 };
