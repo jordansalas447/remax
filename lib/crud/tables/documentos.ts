@@ -55,9 +55,9 @@ export const documentosConfig: TableConfig = {
     { name: "fecha_generacion", label: "Fecha Generacion", type: "datetime", hiddenInForm: true },
     // { name: "created_at", label: "Fecha Creacion", type: "date", hiddenInForm: true },
     { name: "plazo", label: "Plazo", type: "number"},
-    { name: "motivo_anulacion", label: "Motivo Anulacion", type: "text" },
+    { name: "motivo_anulacion", label: "Motivo Anulacion", type: "textarea" },
     { name: "descripcion", label: "Descripción", type: "textarea" },
-    { name: "justificacion", label: "Justificacion", type: "textarea" },
+    { name: "justificación", label: "Justificacion", type: "textarea" },
     {
       name: "id_usuario_generado",
       label: "Generado por",
@@ -67,6 +67,7 @@ export const documentosConfig: TableConfig = {
         valueField: "id_asociado",
         labelField: "nombre_completo",
       },
+      hiddenInForm: true 
     },
   ]
 };
