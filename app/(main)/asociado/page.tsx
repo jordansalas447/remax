@@ -198,9 +198,8 @@ export default function AsociadoPage() {
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
 
-
         const [HistorialObservacionesData, AlcancesData, LlamadaData] = await Promise.all([
-          getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0]?.id),
+          getHistorialObservacionByIdInmueblePropietarioContrato(propiedadData[0]?.ids),
           getAlcances(),
 
           // LLAMADA
@@ -208,8 +207,6 @@ export default function AsociadoPage() {
 
           //  getContratoRevisionesDetalleByContratoId(selectedContratoId),
         ]);
-
-        console.log(HistorialObservacionesData)
 
         setllamadaData(LlamadaData)
         sethistorialObservacionesData(HistorialObservacionesData)
@@ -311,7 +308,7 @@ export default function AsociadoPage() {
       });
 
       const [HistorialObservacionesData] = await Promise.all([
-        getHistorialObservacionByIdInmueblePropietarioContrato(propiedad[0].id),
+        getHistorialObservacionByIdInmueblePropietarioContrato(propiedad[0].ids),
       ]);
 
       sethistorialObservacionesData(HistorialObservacionesData)

@@ -43,6 +43,7 @@ export type InmuebleDetalle = PropiedadPropietarioRow & {
     } | null
   };
   observaciones:string[] | null;
+  ids:number[] | null;
 }
 
 export type PropiedadInmueblePropietarioContrato = PropiedadPropietarioRow & {

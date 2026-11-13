@@ -14,7 +14,7 @@ async function ContratosContent() {
   const asociado = Asociado?.personas?.asociados[0];
   const id_asociado = asociado?.id_asociado || 0;
   const CodigoAgente = asociado?.cod_agente
-  const NombreAsociado = asociado?.nombre_completo + (CodigoAgente ? (" / Código de Registro N° " + CodigoAgente) : "");
+  const NombreAsociado = (asociado?.nombre_completo + (CodigoAgente ? (" / Código de Registro N° " + CodigoAgente) : "")).toUpperCase();
   
   //console.log(asociado)
 

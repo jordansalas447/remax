@@ -30,8 +30,8 @@ export async function getHistorialObservacionById(id: number): Promise<Historial
   return data ?? null;
 }
 
-export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_inmueble_propietario_contrato: number): Promise<HistorialObservacionesDetalle[] | null> {
-  if (typeof id_inmueble_propietario_contrato !== 'number' || isNaN(id_inmueble_propietario_contrato)) {
+export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_inmueble_propietario_contrato: number[] | null): Promise<HistorialObservacionesDetalle[] | null> {
+  if (typeof id_inmueble_propietario_contrato !== 'object' || id_inmueble_propietario_contrato === null) {
     // Puedes lanzar error o retornar null según la lógica de tu app
     return null;
   }
@@ -41,9 +41,11 @@ export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_
     .select(`*,
       alcance:id_alcance(*)
       `)
-    .eq('id_inmueble_propietario_contrato', id_inmueble_propietario_contrato)
+    //.eq('id_inmueble_propietario_contrato', id_inmueble_propietario_contrato)
+    .in('id_inmueble_propietario_contrato', id_inmueble_propietario_contrato)
     .eq('eliminado', false)
     .order('fecha_creacion', { ascending: true });
+
   if (error) throw new Error(error.message);
   return data ?? null;
 }

@@ -573,13 +573,14 @@ export default function FormGenerarContrato({
                   {/* Descripcion: text */}
                   <div>
                     <label htmlFor="descripcion" className="block mb-2 font-medium ">
-                      Descripción
+                      Referencia
                     </label>
                     <Input
                       type="text"
                       id="descripcion"
                       name="descripcion"
                       className="border  dark:border-zinc-700 px-3 py-2 rounded-lg w-full focus:border-blue-500 dark:bg-zinc-950 dark:text-zinc-100 outline-none transition"
+                      placeholder="Ejm. Av. Siempre Viva 123, Dpto. 4B"
                       value={form.descripcion || ""}
                       onChange={handleChange}
                       disabled={enviando}
