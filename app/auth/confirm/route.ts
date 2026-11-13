@@ -42,6 +42,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const destination = type === "recovery" ? "/restablecer-contrasena" : next;
+  const destination = type === "recovery" || type === "invite" ? "/restablecer-contrasena" : next;
   return NextResponse.redirect(new URL(destination, origin));
 }

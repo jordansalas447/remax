@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/session";
+import { getBannedUserIds } from "@/lib/auth/banned";
 import { AccesosManager } from "./accesos-manager";
 import type { AccesoUsuario } from "./types";
 
@@ -15,7 +16,11 @@ export default async function AccesosPage() {
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("admin_listar_accesos" as never);
-  const usuarios = (data ?? []) as unknown as AccesoUsuario[];
+  const baneados = new Set(await getBannedUserIds());
+  const usuarios = ((data ?? []) as unknown as AccesoUsuario[]).map((u) => ({
+    ...u,
+    baneado: baneados.has(u.user_id),
+  }));
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 py-4">

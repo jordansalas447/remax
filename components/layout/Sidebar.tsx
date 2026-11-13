@@ -57,8 +57,8 @@ export async function AppSidebar() {
 
 
   //if (typeof Asociado?.personas?.asociados?.[0]?.id_asociado === "undefined") {
-    //console.log(Asociado)
-   // return null;
+  //console.log(Asociado)
+  // return null;
   //}
 
   const isAdmin = session?.profile?.role === "admin";
@@ -88,18 +88,18 @@ export async function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-              <>
-               <SidebarMenuItem>
-                  <Link
-                    href="/generar-contrato"
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
-                  >
-                    <FontAwesomeIcon icon={faFileContract} />
-                    Generar Contrato
-                  </Link>
-                </SidebarMenuItem>
-                {isAdmin && (<>
-                  {/* <SidebarMenuItem>
+            <>
+              <SidebarMenuItem>
+                <Link
+                  href="/generar-contrato"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                >
+                  <FontAwesomeIcon icon={faFileContract} />
+                  Generar Contrato
+                </Link>
+              </SidebarMenuItem>
+              {isAdmin && (<>
+                {/* <SidebarMenuItem>
                   <Link
                     href="/generar-contrato"
                     className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30"
@@ -141,11 +141,11 @@ export async function AppSidebar() {
                   </Link>
                 </SidebarMenuItem>
 
-                 <SidebarMenuItem>
+                <SidebarMenuItem>
                   <Options Icons={response} />
-                </SidebarMenuItem> 
+                </SidebarMenuItem>
 
-                 <SidebarMenuItem>
+                <SidebarMenuItem>
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       render={
@@ -181,7 +181,7 @@ export async function AppSidebar() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </SidebarMenuItem> 
+                </SidebarMenuItem>
 
                 <SidebarMenuItem>
                   <Link href="/perfil" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
@@ -189,15 +189,15 @@ export async function AppSidebar() {
                     Mi perfil
                   </Link>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <Link href="/accesos" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
-                      <FontAwesomeIcon icon={faClock} />
-                      Control de acceso
-                    </Link>
-                  </SidebarMenuItem>
-                </>
-                )}
-              </>           
+                {/* <SidebarMenuItem>
+                  <Link href="/accesos" className="flex items-center gap-2 rounded-lg px-3 py-2 text-base transition duration-150 text-zinc-700 dark:text-zinc-200 hover:bg-blue-50 dark:hover:bg-blue-900/30">
+                    <FontAwesomeIcon icon={faClock} />
+                    Control de acceso
+                  </Link>
+                </SidebarMenuItem> */}
+              </>
+              )}
+            </>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

@@ -1,7 +1,18 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { CalendarClock, Pencil, Search, ShieldCheck, ShieldOff } from "lucide-react";
+import {
+  Ban,
+  CalendarClock,
+  KeyRound,
+  Mail,
+  Pencil,
+  Search,
+  ShieldCheck,
+  ShieldOff,
+  UserCheck,
+  UserPlus,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +25,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { guardarAcceso } from "./actions";
+import {
+  cambiarBaneo,
+  enviarMagicLink,
+  enviarResetPassword,
+  invitarUsuario,
+  type UserActionResult,
+} from "./user-actions";
 import { DIAS_CORTOS, DIAS_SEMANA, type AccesoUsuario, type HorarioDia } from "./types";
 
 type FilaDia = { habilitado: boolean; hora_inicio: string; hora_fin: string };
@@ -50,78 +68,157 @@ export function AccesosManager({ usuarios }: { usuarios: AccesoUsuario[] }) {
     );
   }, [usuarios, query]);
 
+  const [aviso, setAviso] = useState<{ ok: boolean; texto: string } | null>(null);
+  const [invitando, setInvitando] = useState(false);
+  const [pending, startAction] = useTransition();
+
+  const ejecutar = (fn: () => Promise<UserActionResult>) => {
+    setAviso(null);
+    startAction(async () => {
+      const res = await fn();
+      setAviso(res.ok ? { ok: true, texto: res.message } : { ok: false, texto: res.error });
+    });
+  };
+
   return (
     <section className="space-y-4">
-      <div className="relative max-w-sm">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-        <Input
-          id="accesos-buscar"
-          placeholder="Buscar por nombre, correo o rol…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="pl-8"
-        />
-      </div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="relative w-full max-w-sm">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
+            <Input
+              id="accesos-buscar"
+              placeholder="Buscar por nombre, correo o rol…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+          <Button id="accesos-invitar" onClick={() => setInvitando(true)}>
+            <UserPlus /> Invitar usuario
+          </Button>
+        </div>
 
-      <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-          {filtrados.length === 0 && (
-            <li className="p-6 text-center text-sm text-zinc-500">No se encontraron usuarios.</li>
-          )}
-          {filtrados.map((u) => {
-            const dias = resumen(u.horarios);
-            return (
-              <li
-                key={u.user_id}
-                className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="min-w-0 space-y-1">
-                  <p className="truncate font-medium text-zinc-900 dark:text-white">
-                    {u.full_name || u.email}
-                  </p>
-                  <p className="truncate text-xs text-zinc-500">
-                    {u.email} · <span className="capitalize">{u.role ?? "sin rol"}</span>
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {dias.length === 0 ? (
-                      <span className="text-xs text-zinc-400">Sin horario asignado</span>
-                    ) : (
-                      dias.map((h) => (
-                        <Badge key={h.dia_semana} variant="gray">
-                          {DIAS_CORTOS[h.dia_semana]} {h.hora_inicio}–{h.hora_fin}
-                        </Badge>
-                      ))
-                    )}
+        {aviso && (
+          <p
+            role="status"
+            className={`rounded-lg p-2 text-sm ${aviso.ok
+                ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300"
+                : "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-300"
+              }`}
+          >
+            {aviso.texto}
+          </p>
+        )}
+        {invitando && (
+          <InvitarDialog
+            onClose={() => setInvitando(false)}
+            onDone={(m) => setAviso({ ok: true, texto: m })}
+          />
+        )}
+
+        <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            {filtrados.length === 0 && (
+              <li className="p-6 text-center text-sm text-zinc-500">No se encontraron usuarios.</li>
+            )}
+            {filtrados.map((u) => {
+              const dias = resumen(u.horarios);
+              return (
+                <li
+                  key={u.user_id}
+                  className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="min-w-0 space-y-1">
+                    <p className="truncate font-medium text-zinc-900 dark:text-white">
+                      {u.full_name || u.email}
+                    </p>
+                    <p className="truncate text-xs text-zinc-500">
+                      {u.email} · <span className="capitalize">{u.role ?? "sin rol"}</span>
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {dias.length === 0 ? (
+                        <span className="text-xs text-zinc-400">Sin horario asignado</span>
+                      ) : (
+                        dias.map((h) => (
+                          <Badge key={h.dia_semana} variant="gray">
+                            {DIAS_CORTOS[h.dia_semana]} {h.hora_inicio}–{h.hora_fin}
+                          </Badge>
+                        ))
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-3">
-                  {u.activo ? (
-                    <Badge variant="green">
-                      <ShieldCheck /> Habilitado
-                    </Badge>
-                  ) : (
-                    <Badge variant="red">
-                      <ShieldOff /> Bloqueado
-                    </Badge>
-                  )}
-                  <Button
-                    id={`accesos-editar-${u.user_id}`}
-                    variant="outline"
-                    onClick={() => setEditando(u)}
-                  >
-                    <Pencil /> Editar
-                  </Button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {u.baneado && (
+                        <Badge variant="red">
+                          <Ban /> Baneado
+                        </Badge>
+                      )}
+                      {u.activo ? (
+                        <Badge variant="green">
+                          <ShieldCheck /> Habilitado
+                        </Badge>
+                      ) : (
+                        <Badge variant="red">
+                          <ShieldOff /> Bloqueado
+                        </Badge>
+                      )}
+                      <Button
+                        id={`accesos-editar-${u.user_id}`}
+                        variant="outline"
+                        onClick={() => setEditando(u)}
+                      >
+                        <Pencil /> Editar
+                      </Button>
+                      {u.email && (
+                        <>
+                          <Button
+                            id={`accesos-reset-${u.user_id}`}
+                            variant="outline"
+                            size="sm"
+                            disabled={pending}
+                            title="Enviar enlace para restablecer contraseña"
+                            onClick={() => ejecutar(() => enviarResetPassword(u.email!))}
+                          >
+                            <KeyRound /> Reset
+                          </Button>
+                          <Button
+                            id={`accesos-magic-${u.user_id}`}
+                            variant="outline"
+                            size="sm"
+                            disabled={pending}
+                            title="Enviar magic link"
+                            onClick={() => ejecutar(() => enviarMagicLink(u.email!))}
+                          >
+                            <Mail /> Magic link
+                          </Button>
+                        </>
+                      )}
+                      <Button
+                        id={`accesos-ban-${u.user_id}`}
+                        variant="outline"
+                        size="sm"
+                        disabled={pending}
+                        title={u.baneado ? "Desbanear usuario" : "Banear usuario"}
+                        onClick={() => {
+                          const accion = u.baneado ? "desbanear" : "banear";
+                          if (confirm(`¿Seguro que deseas ${accion} a ${u.full_name || u.email}?`)) {
+                            ejecutar(() => cambiarBaneo(u.user_id, !u.baneado));
+                          }
+                        }}
+                      >
+                        {u.baneado ? <UserCheck /> : <Ban />} {u.baneado ? "Desbanear" : "Banear"}
+                      </Button>
+                    </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
-      {editando && (
-        <EditarAccesoDialog key={editando.user_id} usuario={editando} onClose={() => setEditando(null)} />
-      )}
+        {editando && (
+          <EditarAccesoDialog key={editando.user_id} usuario={editando} onClose={() => setEditando(null)} />
+        )}
     </section>
   );
 }
@@ -250,6 +347,61 @@ function EditarAccesoDialog({ usuario, onClose }: { usuario: AccesoUsuario; onCl
             {pending ? "Guardando…" : "Guardar"}
           </Button>
         </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function InvitarDialog({ onClose, onDone }: { onClose: () => void; onDone: (msg: string) => void }) {
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  const enviar = (fd: FormData) => {
+    setError(null);
+    startTransition(async () => {
+      const res = await invitarUsuario({
+        email: String(fd.get("email") ?? ""),
+        nombre: String(fd.get("nombre") ?? ""),
+        apellido_paterno: String(fd.get("apellido_paterno") ?? ""),
+        apellido_materno: String(fd.get("apellido_materno") ?? ""),
+      });
+      if (res.ok) {
+        onDone(res.message);
+        onClose();
+      } else setError(res.error);
+    });
+  };
+
+  return (
+    <Dialog open preventOutsideClose={false} onOpenChange={(open) => !open && !pending && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <UserPlus className="size-4" /> Invitar usuario
+          </DialogTitle>
+          <DialogDescription>
+            Se enviar� un correo de invitaci�n para que cree su contrase�a.
+          </DialogDescription>
+        </DialogHeader>
+        <form action={enviar} className="space-y-3">
+          <Input id="invitar-email" name="email" type="email" required placeholder="Correo" />
+          <Input id="invitar-nombre" name="nombre" required placeholder="Nombre" />
+          <Input id="invitar-ap" name="apellido_paterno" placeholder="Apellido paterno" />
+          <Input id="invitar-am" name="apellido_materno" placeholder="Apellido materno" />
+          {error && (
+            <p role="alert" className="rounded-lg bg-red-50 p-2 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-300">
+              {error}
+            </p>
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose} disabled={pending}>
+              Cancelar
+            </Button>
+            <Button id="invitar-enviar" type="submit" disabled={pending}>
+              {pending ? "Enviando�" : "Enviar invitaci�n"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

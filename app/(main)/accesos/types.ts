@@ -11,6 +11,7 @@ export type AccesoUsuario = {
   full_name: string | null;
   role: string | null;
   activo: boolean;
+  baneado?: boolean;
   horarios: HorarioDia[];
 };
 
