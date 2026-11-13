@@ -57,7 +57,7 @@ export const documentosConfig: TableConfig = {
     { name: "plazo", label: "Plazo", type: "number"},
     { name: "motivo_anulacion", label: "Motivo Anulacion", type: "textarea" },
     { name: "descripcion", label: "Descripción", type: "textarea" },
-    { name: "justificación", label: "Justificacion", type: "textarea" },
+    { name: "justificacion", label: "Justificación", type: "textarea" },
     {
       name: "id_usuario_generado",
       label: "Generado por",

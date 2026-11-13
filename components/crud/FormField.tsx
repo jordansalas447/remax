@@ -14,6 +14,7 @@ export function FormField({
   htmlId,
   onChange,
   onQuickCreate,
+  onQuickEdit,
 }: {
   field: FieldConfig;
   value: string | number | boolean | null | undefined;
@@ -24,6 +25,7 @@ export function FormField({
   htmlId?: string;
   onChange?: (val: string) => void;
   onQuickCreate?: (field: FieldConfig) => void;
+  onQuickEdit?: (field: FieldConfig) => void;
 }) {
   const isRequired = required ?? field.required;
   const inputId = htmlId ?? field.name;
@@ -52,6 +54,7 @@ export function FormField({
         htmlId={inputId}
         onChange={onChange}
         onQuickCreate={onQuickCreate}
+        onQuickEdit={onQuickEdit}
       />
     </div>
   );

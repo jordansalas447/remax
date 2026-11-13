@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,52 @@ export interface FieldInputProps {
   htmlId?: string;
   onChange?: (val: string) => void;
   onQuickCreate?: (field: FieldConfig) => void;
+  onQuickEdit?: (field: FieldConfig) => void;
+}
+
+const quickButtonClass =
+  "shrink-0 border-zinc-300 dark:border-zinc-700 transition-colors hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40";
+
+function QuickActionButtons({
+  field,
+  targetLabel,
+  hasValue,
+  onQuickCreate,
+  onQuickEdit,
+}: {
+  field: FieldConfig;
+  targetLabel: string;
+  hasValue: boolean;
+  onQuickCreate?: (field: FieldConfig) => void;
+  onQuickEdit?: (field: FieldConfig) => void;
+}) {
+  return (
+    <>
+      {onQuickEdit ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          disabled={!hasValue}
+          onClick={() => onQuickEdit(field)}
+          title={hasValue ? `Editar (${targetLabel})` : `Selecciona un registro para editar (${targetLabel})`}
+          className={quickButtonClass}
+        >
+          <Pencil className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
+        </Button>
+      ) : null}
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        onClick={() => onQuickCreate?.(field)}
+        title={`Crear nuevo (${targetLabel})`}
+        className={quickButtonClass}
+      >
+        <Plus className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
+      </Button>
+    </>
+  );
 }
 
 export type CustomFieldRenderer = (props: FieldInputProps) => ReactNode;
@@ -80,7 +126,7 @@ function normalizeInputValue(field: FieldConfig, value: string | number | boolea
 
 
 export function FieldInput(props: FieldInputProps) {
-  const { field, value, options, onChange, onQuickCreate } = props;
+  const { field, value, options, onChange, onQuickCreate, onQuickEdit } = props;
   const disabled = Boolean(props.disabled || field.disabled);
   const required = props.required ?? field.required;
   const inputName = props.htmlName ?? field.name;
@@ -150,16 +196,13 @@ export function FieldInput(props: FieldInputProps) {
       return (
         <div className="flex items-center gap-2">
           {selectElement}
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={() => onQuickCreate?.(field)}
-            title={`Crear nuevo (${targetLabel})`}
-            className="shrink-0 border-zinc-300 dark:border-zinc-700 transition-colors hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
-          >
-            <Plus className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
-          </Button>
+          <QuickActionButtons
+            field={field}
+            targetLabel={targetLabel}
+            hasValue={inputValue !== ""}
+            onQuickCreate={onQuickCreate}
+            onQuickEdit={onQuickEdit}
+          />
         </div>
       );
     }
@@ -215,16 +258,13 @@ export function FieldInput(props: FieldInputProps) {
       return (
         <div className="flex items-center gap-2">
           {selectElement}
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={() => onQuickCreate?.(field)}
-            title={`Crear nuevo (${targetLabel})`}
-            className="shrink-0 border-zinc-300 dark:border-zinc-700 transition-colors hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
-          >
-            <Plus className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
-          </Button>
+          <QuickActionButtons
+            field={field}
+            targetLabel={targetLabel}
+            hasValue={inputValue !== ""}
+            onQuickCreate={onQuickCreate}
+            onQuickEdit={onQuickEdit}
+          />
         </div>
       );
     }
@@ -349,16 +389,13 @@ export function FieldInput(props: FieldInputProps) {
         <div className="flex items-center gap-2">
           {textInput}
           {hiddenInput}
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={() => onQuickCreate?.(field)}
-            title={`Crear nuevo (${targetLabel})`}
-            className="shrink-0 border-zinc-300 dark:border-zinc-700 transition-colors hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40"
-          >
-            <Plus className="h-4 w-4 text-zinc-700 dark:text-zinc-300" />
-          </Button>
+          <QuickActionButtons
+            field={field}
+            targetLabel={targetLabel}
+            hasValue={inputValue !== ""}
+            onQuickCreate={onQuickCreate}
+            onQuickEdit={onQuickEdit}
+          />
         </div>
       );
     }

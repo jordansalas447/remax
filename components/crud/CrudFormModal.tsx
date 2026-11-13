@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import {
   fetchDetailRows,
   fetchFieldOptions,
   fetchOptionsForTable,
+  fetchRecordByField,
   type SelectOption,
   updateRecord,
 } from "@/lib/crud/actions";
@@ -59,6 +61,19 @@ function isWideForm(config: TableConfig): boolean {
   return false;
 }
 
+function FormLoadingState() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-48 flex-col items-center justify-center gap-3 py-10 text-sm text-muted-foreground"
+    >
+      <Loader2 className="size-8 animate-spin" />
+      <span>Cargando formulario…</span>
+    </div>
+  );
+}
+
 // ── Componente principal ──────────────────────────────────────────────────────
 
 export function CrudFormModal<T extends TableName>({
@@ -69,6 +84,7 @@ export function CrudFormModal<T extends TableName>({
   options,
   onClose,
   onCreated,
+  onUpdated,
 }: {
   table: T;
   config: TableConfig;
@@ -77,6 +93,7 @@ export function CrudFormModal<T extends TableName>({
   options: Record<string, SelectOption[]>;
   onClose: () => void;
   onCreated?: (insertedRow: Record<string, unknown>) => void;
+  onUpdated?: () => void;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -110,6 +127,7 @@ export function CrudFormModal<T extends TableName>({
   // ── Quick-create (modal anidado) ────────────────────────────────────────
   const [quickCreateField, setQuickCreateField] = useState<FieldConfig | null>(null);
   const [quickCreateOptions, setQuickCreateOptions] = useState<Record<string, SelectOption[]>>({});
+  const [quickEdit, setQuickEdit] = useState<{ field: FieldConfig; row: Record<string, unknown> } | null>(null);
 
   // ── Master / Detail state ───────────────────────────────────────────────
   const detailCollections = getDetailCollections(config);
@@ -128,6 +146,21 @@ export function CrudFormModal<T extends TableName>({
   /** Opciones FK para campos de cada tabla hija: { [detail.name]: { [fieldName]: SelectOption[] } } */
   const [detailOptions, setDetailOptions] = useState<Record<string, Record<string, SelectOption[]>>>({});
 
+  // ── Estado de carga del modal ───────────────────────────────────────────
+  // `contentReady` deja que el modal pinte primero (con spinner) y monte
+  // el formulario pesado en el siguiente frame.
+  const [contentReady, setContentReady] = useState(false);
+  const [detailsLoading, setDetailsLoading] = useState(hasDetails);
+  const [quickCreateLoading, setQuickCreateLoading] = useState(false);
+  const isFormLoading = !contentReady || detailsLoading;
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setTimeout(() => setContentReady(true), 0);
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   // Flag para evitar doble-carga en React StrictMode
   const detailsLoadedRef = useRef(false);
 
@@ -136,6 +169,14 @@ export function CrudFormModal<T extends TableName>({
     detailsLoadedRef.current = true;
 
     async function loadDetails() {
+      try {
+        await loadDetailsInner();
+      } finally {
+        setDetailsLoading(false);
+      }
+    }
+
+    async function loadDetailsInner() {
       // 1. Cargar opciones FK de las tablas hijas
       const newDetailOptions: Record<string, Record<string, SelectOption[]>> = {};
       for (const detail of detailCollections) {
@@ -201,12 +242,49 @@ export function CrudFormModal<T extends TableName>({
 
   async function handleOpenQuickCreate(field: FieldConfig) {
     if (!field.foreignKey) return;
+    setQuickCreateLoading(true);
     try {
       const opts = await fetchOptionsForTable(field.foreignKey.table);
       setQuickCreateOptions(opts);
       setQuickCreateField(field);
     } catch {
       toast.add({ title: "Error", description: "No se pudieron cargar las opciones.", type: "error" });
+    } finally {
+      setQuickCreateLoading(false);
+    }
+  }
+
+  async function handleOpenQuickEdit(field: FieldConfig) {
+    if (!field.foreignKey) return;
+    const selected = formValues[field.name];
+    if (selected === undefined || selected === null || selected === "") return;
+
+    setQuickCreateLoading(true);
+    try {
+      const fk = field.foreignKey;
+      const [opts, record] = await Promise.all([
+        fetchOptionsForTable(fk.table),
+        fetchRecordByField(fk.table, fk.valueField, selected as string | number),
+      ]);
+      if (!record) {
+        toast.add({ title: "Error", description: "No se encontró el registro seleccionado.", type: "error" });
+        return;
+      }
+      setQuickCreateOptions(opts);
+      setQuickEdit({ field, row: record as Record<string, unknown> });
+    } catch {
+      toast.add({ title: "Error", description: "No se pudo cargar el registro.", type: "error" });
+    } finally {
+      setQuickCreateLoading(false);
+    }
+  }
+
+  async function handleQuickEditUpdated(field: FieldConfig) {
+    try {
+      const updatedFieldOpts = await fetchFieldOptions(table, field.name);
+      setOptionOverrides((prev) => ({ ...prev, [field.name]: updatedFieldOpts }));
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -316,6 +394,7 @@ export function CrudFormModal<T extends TableName>({
       if (mode === "create" && onCreated && result.data) {
         onCreated(result.data as Record<string, unknown>);
       }
+      if (mode === "edit") onUpdated?.();
       router.refresh();
 
       if (isSaveAndContinue) {
@@ -372,17 +451,27 @@ export function CrudFormModal<T extends TableName>({
               Object.entries(primaryKeys).map(([key, value]) => (
                 <input key={key} type="hidden" name={`__pk__${key}`} value={String(value)} />
               ))}
-            <DynamicForm
-              config={config}
-              mode={mode}
-              values={formValues}
-              options={optionsState}
-              details={detailRows}
-              detailOptions={detailOptions}
-              onChange={handleFieldChange}
-              onDetailChange={handleDetailChange}
-              onQuickCreate={handleOpenQuickCreate}
-            />
+            {isFormLoading ? (
+              <FormLoadingState />
+            ) : (
+              <DynamicForm
+                config={config}
+                mode={mode}
+                values={formValues}
+                options={optionsState}
+                details={detailRows}
+                detailOptions={detailOptions}
+                onChange={handleFieldChange}
+                onDetailChange={handleDetailChange}
+                onQuickCreate={handleOpenQuickCreate}
+                onQuickEdit={handleOpenQuickEdit}
+              />
+            )}
+            {quickCreateLoading && (
+              <div className="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-background/70 backdrop-blur-[1px]">
+                <Loader2 className="size-8 animate-spin text-muted-foreground" aria-label="Cargando" />
+              </div>
+            )}
             {error && (
               <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
                 {error}
@@ -407,7 +496,7 @@ export function CrudFormModal<T extends TableName>({
               )}
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isPending || isFormLoading}
                 onClick={() => {
                   submitActionRef.current = "save_and_close";
                 }}
@@ -426,6 +515,17 @@ export function CrudFormModal<T extends TableName>({
           options={quickCreateOptions}
           onClose={() => setQuickCreateField(null)}
           onCreated={(createdRow) => handleQuickCreateCreated(quickCreateField, createdRow)}
+        />
+      )}
+      {quickEdit && quickEdit.field.foreignKey && (
+        <CrudFormModal
+          table={quickEdit.field.foreignKey.table}
+          config={getTableConfig(quickEdit.field.foreignKey.table)!}
+          mode="edit"
+          row={quickEdit.row as TableRow<typeof quickEdit.field.foreignKey.table>}
+          options={quickCreateOptions}
+          onClose={() => setQuickEdit(null)}
+          onUpdated={() => handleQuickEditUpdated(quickEdit.field)}
         />
       )}
     </>

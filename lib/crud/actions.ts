@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getCachedFkRecords, invalidateCrudTable } from "@/lib/crud/cache";
 import {
   TABLE_CONFIGS,
   type FieldConfig,
@@ -128,18 +129,7 @@ export async function fetchTableData<T extends TableName>(
     if (!field.foreignKey) continue;
 
     const fkTable = field.foreignKey.table;
-    const { data: fkData, error: fkError } = await supabase
-      .from(fkTable)
-      .select("*")
-      .is("eliminado", false)
-      .order(field.foreignKey.labelField, { ascending: false });
-
-
-    //console.log({ data: fkData, error: fkError })
-
-    if (fkError) {
-      throw new Error(fkError.message);
-    }
+    const fkData = await getCachedFkRecords(supabase, fkTable, field.foreignKey.labelField);
 
     const fk = field.foreignKey!;
     let optionsForField: SelectOption[] = [];
@@ -265,13 +255,12 @@ export async function fetchFieldOptions<T extends TableName>(
   const fkTable = field.foreignKey.table;
   const fk = field.foreignKey;
 
-  const { data: fkData, error: fkError } = await supabase
-    .from(fkTable)
-    .select("*")
-    .is("eliminado", false)
-    .order(fk.labelField, { ascending: false });
-
-  if (fkError || !fkData) return [];
+  let fkData: Array<Record<string, any>>;
+  try {
+    fkData = await getCachedFkRecords(supabase, fkTable, fk.labelField);
+  } catch {
+    return [];
+  }
 
   const records = fkData as Array<Record<string, any>>;
   const tableConfigsMap = TABLE_CONFIGS as Record<string, TableConfig>;
@@ -523,6 +512,31 @@ export async function fetchDetailRows(
   return data as DetailRow[];
 }
 
+/** Obtiene un registro activo por el valor de una columna (p. ej. la FK seleccionada). */
+export async function fetchRecordByField<T extends TableName>(
+  table: T,
+  fieldName: string,
+  value: string | number,
+): Promise<TableRow<T> | null> {
+  const config = TABLE_CONFIGS[table];
+  if (!config) return null;
+
+  const supabase = await createClient();
+  const field = config.fields.find((f) => f.name === fieldName);
+  const coerced = coerceFieldValue(field, value);
+
+  const { data, error } = await supabase
+    .from(table)
+    .select("*")
+    .eq(fieldName, coerced as string | number)
+    .is("eliminado", false)
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return data as TableRow<T>;
+}
+
 export async function createRecord<T extends TableName>(
   table: T,
   formData: FormData,
@@ -551,6 +565,7 @@ export async function createRecord<T extends TableName>(
       };
     }
 
+    invalidateCrudTable(table);
     revalidatePath(`/${table}`);
     return { success: true, data: inserted };
   } catch (error) {
@@ -598,6 +613,7 @@ export async function updateRecord<T extends TableName>(
       };
     }
 
+    invalidateCrudTable(table);
     revalidatePath(`/${table}`);
     return { success: true };
   } catch (error) {
@@ -637,6 +653,7 @@ export async function deleteRecord<T extends TableName>(
       };
     }
 
+    invalidateCrudTable(table);
     revalidatePath(`/${table}`);
 
     return {

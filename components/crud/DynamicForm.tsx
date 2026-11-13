@@ -31,6 +31,7 @@ interface DynamicFormProps {
   onChange: (fieldName: string, value: string) => void;
   onDetailChange?: (name: string, rows: DetailRow[]) => void;
   onQuickCreate: (field: FieldConfig, sourceTable?: TableName) => void;
+  onQuickEdit?: (field: FieldConfig) => void;
   onDetailQuickCreate?: (collection: string, index: number, field: FieldConfig) => void;
 }
 
@@ -158,6 +159,7 @@ function SectionFields({
   allDisabled,
   onChange,
   onQuickCreate,
+  onQuickEdit,
 }: {
   config: TableConfig;
   mode: FormMode;
@@ -167,6 +169,7 @@ function SectionFields({
   allDisabled?: boolean;
   onChange: DynamicFormProps["onChange"];
   onQuickCreate: DynamicFormProps["onQuickCreate"];
+  onQuickEdit?: DynamicFormProps["onQuickEdit"];
 }) {
   return (
     <>
@@ -184,6 +187,7 @@ function SectionFields({
             required={state.required}
             onChange={(val) => onChange(field.name, val)}
             onQuickCreate={disabled ? undefined : onQuickCreate}
+            onQuickEdit={disabled ? undefined : onQuickEdit}
           />
         );
       })}
@@ -230,6 +234,7 @@ export function DynamicForm({
   onChange,
   onDetailChange,
   onQuickCreate,
+  onQuickEdit,
   onDetailQuickCreate,
 }: DynamicFormProps) {
   const sections = resolveSections(config, mode).filter(
@@ -257,6 +262,7 @@ export function DynamicForm({
             allDisabled={section.allDisabled}
             onChange={onChange}
             onQuickCreate={onQuickCreate}
+            onQuickEdit={onQuickEdit}
           />
           {section.collapsedFields.length > 0 ? (
             <CollapsedFields      
@@ -275,6 +281,7 @@ export function DynamicForm({
                   allDisabled={section.allDisabled}
                   onChange={onChange}
                   onQuickCreate={onQuickCreate}
+                  onQuickEdit={onQuickEdit}
                 />
               </FormSection>
             </CollapsedFields>
