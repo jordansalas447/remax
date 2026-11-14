@@ -31,6 +31,9 @@ export async function getHistorialObservacionById(id: number): Promise<Historial
 }
 
 export async function getHistorialObservacionByIdInmueblePropietarioContrato(id_inmueble_propietario_contrato: number[] | null): Promise<HistorialObservacionesDetalle[] | null> {
+
+  console.log(id_inmueble_propietario_contrato)
+
   if (typeof id_inmueble_propietario_contrato !== 'object' || id_inmueble_propietario_contrato === null) {
     // Puedes lanzar error o retornar null según la lógica de tu app
     return null;
