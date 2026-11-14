@@ -1,3 +1,4 @@
+import VistaJerarquicaLlamadas from '@/components/llamadas-gestion/vista-jerarquica-llamadas';
 import TablaLlamadasGestion from '@/components/llamadas-gestion/tabla-llamadas-gestion';
 import { getEstadoLlamadas } from '@/lib/supabase/queries/estado_llamada';
 import { getLlamadasPropietarios } from '@/lib/supabase/queries/llamadas';
@@ -18,6 +19,8 @@ export default async function LlamadasPage() {
 
   return (
     <main className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Gestión de llamadas por propietario</h1>
+      {/* <VistaJerarquicaLlamadas /> */}
 
       <TablaLlamadasGestion Llamadas={llamadas} EstadoLlamadas={estado_llamadas} />
       {/* <h1 className="text-2xl font-bold mb-4">Llamadas a propietarios</h1>
