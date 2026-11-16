@@ -9,14 +9,21 @@ import {
   getLlamadasByIdLlamada,
   type PropietarioResumen,
   type ContratoInmuebleResumen,
+  LlamadasDetalle,
 } from '@/lib/supabase/queries/gestion_llamadas_jerarquia';
-import type { LlamadasRow } from '@/lib/supabase/queries/llamadas';
+import {
+  getPropietarioEstadoLlamadas,
+  type LlamadasRow,
+  type PropietarioLlamadasEstado,
+} from '@/lib/supabase/queries/llamadas';
+import { getEstadoLlamadas } from '@/lib/supabase/queries/estado_llamada';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Badge, BadgeVariant } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { getDate } from 'date-fns';
 
 const cn = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(' ');
 
@@ -33,14 +40,38 @@ function ListSkeleton({ rows = 5 }: { rows?: number }) {
 export default function VistaJerarquicaLlamadas() {
   const [propietarios, setPropietarios] = useState<PropietarioResumen[]>([]);
   const [contratos, setContratos] = useState<ContratoInmuebleResumen[]>([]);
-  const [llamadas, setLlamadas] = useState<LlamadasRow[]>([]);
+  const [llamadas, setLlamadas] = useState<LlamadasDetalle[]>([]);
+  const [propietarioLlamadasEstado, setpropietarioLlamadasEstado] = useState<PropietarioLlamadasEstado[]>([]);
+  const [coloresEstado, setColoresEstado] = useState<Record<string, BadgeVariant>>({});
+  const [loadingEstados, setLoadingEstados] = useState<boolean>(true);
   const [selProp, setSelProp] = useState<PropietarioResumen | null>(null);
   const [selContrato, setSelContrato] = useState<number | null>(null);
   const [loading, setLoading] = useState<'prop' | 'cont' | 'lla' | null>('prop');
   const [error, setError] = useState<string | null>(null);
   const [busqueda, setBusqueda] = useState('');
+  const [estadoActivo, setEstadoActivo] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [llamadaEdit, setLlamadaEdit] = useState<LlamadasRow | null>(null);
+
+  const cargarEstadosPropietarios = () => {
+    setLoadingEstados(true);
+    Promise.all([
+      getPropietarioEstadoLlamadas(),
+      getEstadoLlamadas().catch(() => []),
+    ])
+      .then(([estados, catalogoEstados]) => {
+        setpropietarioLlamadasEstado(estados);
+        const mapaColor: Record<string, BadgeVariant> = {};
+        for (const item of catalogoEstados) {
+          if (item.estado_llamada && item.color) {
+            mapaColor[item.estado_llamada] = item.color as BadgeVariant;
+          }
+        }
+        setColoresEstado(mapaColor);
+      })
+      .catch(() => { })
+      .finally(() => setLoadingEstados(false));
+  };
 
   const abrirDialogo = (l: LlamadasRow | null) => {
     setLlamadaEdit(l);
@@ -60,24 +91,65 @@ export default function VistaJerarquicaLlamadas() {
       const existe = prev.some((l) => l.id === guardada.id);
       return existe ? prev.map((l) => (l.id === guardada.id ? guardada : l)) : [...prev, guardada];
     });
+    cargarEstadosPropietarios();
   };
 
   useEffect(() => {
     getPropietariosConPropiedades()
-      .then(setPropietarios)
+      .then((props) => {
+        setPropietarios(props);
+        // Carga progresiva en segundo plano una vez listados los propietarios
+        cargarEstadosPropietarios();
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(null));
   }, []);
 
+  const estadosPorPropietario = useMemo(() => {
+    const map = new Map<number, PropietarioLlamadasEstado[]>();
+    for (const item of propietarioLlamadasEstado) {
+      if (item.id_propietario == null) continue;
+      const lista = map.get(item.id_propietario) ?? [];
+      lista.push(item);
+      map.set(item.id_propietario, lista);
+    }
+    return map;
+  }, [propietarioLlamadasEstado]);
+
+  const estadosResumen = useMemo(() => {
+    const map = new Map<string, { count: number; color?: BadgeVariant }>();
+    for (const item of propietarioLlamadasEstado) {
+      const key = item.estado_llamada ?? 'Pendiente';
+      const prev = map.get(key);
+      const color =
+        (item.color as BadgeVariant) ||
+        coloresEstado[key] ||
+        prev?.color ||
+        'secondary';
+      map.set(key, {
+        count: (prev?.count ?? 0) + (item.total_llamadas ?? 1),
+        color,
+      });
+    }
+    return Array.from(map.entries()).sort((a, b) => b[1].count - a[1].count);
+  }, [propietarioLlamadasEstado, coloresEstado]);
+
   const filtrados = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
-    if (!q) return propietarios;
-    return propietarios.filter((p) =>
-      [p.nombre_completo, p.documento_identidad, p.numero_telefono].some((v) =>
+    return propietarios.filter((p) => {
+      if (estadoActivo) {
+        const estadosProp = estadosPorPropietario.get(p.id_propietario) ?? [];
+        const tieneEstado = estadosProp.some(
+          (e) => (e.estado_llamada ?? 'Pendiente') === estadoActivo
+        );
+        if (!tieneEstado) return false;
+      }
+      if (!q) return true;
+      return [p.nombre_completo, p.documento_identidad, p.numero_telefono].some((v) =>
         v?.toLowerCase().includes(q)
-      )
-    );
-  }, [propietarios, busqueda]);
+      );
+    });
+  }, [propietarios, busqueda, estadoActivo, estadosPorPropietario]);
 
   const cerrarPropietario = () => {
     setSelProp(null);
@@ -110,6 +182,7 @@ export default function VistaJerarquicaLlamadas() {
     setError(null);
     try {
       setLlamadas(await getLlamadasByIdLlamada(idLlamada));
+      console.log(llamadas)
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -154,6 +227,49 @@ export default function VistaJerarquicaLlamadas() {
                 className="pl-8"
               />
             </div>
+            {!loadingEstados && estadosResumen.length > 0 && (
+              <div
+                className="flex flex-wrap gap-2 pt-1"
+                role="group"
+                aria-label="Filtrar por estado de llamada"
+              >
+                <button
+                  type="button"
+                  onClick={() => setEstadoActivo(null)}
+                  aria-pressed={estadoActivo === null}
+                  className={cn(
+                    'rounded-full border px-3 py-1 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                    estadoActivo === null
+                      ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
+                      : 'border-zinc-200 text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
+                  )}
+                >
+                  Todas <span className="ml-1 tabular-nums opacity-70">{propietarios.length}</span>
+                </button>
+                {estadosResumen.map(([estado, { count, color }]) => {
+                  const activo = estadoActivo === estado;
+                  return (
+                    <button
+                      key={estado}
+                      type="button"
+                      onClick={() => setEstadoActivo(activo ? null : estado)}
+                      aria-pressed={activo}
+                      className={cn(
+                        'flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                        activo
+                          ? 'border-zinc-900 bg-zinc-50 dark:border-zinc-100 dark:bg-zinc-800'
+                          : 'border-zinc-200 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800'
+                      )}
+                    >
+                      <Badge variant={color as BadgeVariant} className="rounded-full px-2 py-0.5">
+                        {estado}
+                      </Badge>
+                      <span className="tabular-nums text-zinc-600 dark:text-zinc-300">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             {loading === 'prop' ? (
@@ -162,27 +278,47 @@ export default function VistaJerarquicaLlamadas() {
               <div className="max-h-[65vh] space-y-1 overflow-y-auto">
                 {filtrados.map((p) => {
                   const activo = selProp?.id_propietario === p.id_propietario;
+                  const estados = estadosPorPropietario.get(p.id_propietario) ?? [];
                   return (
                     <button
                       key={`${p.id_propietario}-${p.create_at}`}
                       onClick={() => seleccionarPropietario(p)}
                       className={cn(
-                        'flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm transition-colors hover:bg-accent',
+                        'flex w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-left text-sm transition-colors hover:bg-accent',
                         activo && 'border-primary bg-accent'
                       )}
                     >
-                      <span className="truncate">{p.nombre_completo}</span>
+                      <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                        <span className="truncate">{p.nombre_completo}</span>
+                        {loadingEstados ? (
+                          <Skeleton className="h-4 w-12 rounded-full" />
+                        ) : (
+                          estados.map((est, i) => (
+                            <Badge
+                              key={`${est.estado_llamada}-${i}`}
+                              variant={
+                                (est.color as BadgeVariant) ||
+                                (est.estado_llamada ? coloresEstado[est.estado_llamada] : undefined) ||
+                                'secondary'
+                              }
+                            >
+                              {est.estado_llamada ?? 'Sin estado'}: {est.total_llamadas ?? 0}
+                            </Badge>
+                          ))
+                        )}
+                      </div>
                       <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
                     </button>
                   );
                 })}
               </div>
             ) : (
-              <div className="max-h-[70vh] overflow-y-auto">
+              <div className="max-h-[70vh] overflow-y-auto [&_[data-slot=table-container]]:overflow-visible">
                 <Table>
-                  <TableHeader>
-                    <TableRow>
+                  <TableHeader className="sticky top-0 z-10 bg-card shadow-xs">
+                    <TableRow className="hover:bg-card">
                       <TableHead>Propietario</TableHead>
+                      <TableHead>Estado de llamada</TableHead>
                       <TableHead>Documento</TableHead>
                       <TableHead>Teléfono</TableHead>
                       <TableHead>Fecha</TableHead>
@@ -190,26 +326,59 @@ export default function VistaJerarquicaLlamadas() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filtrados.map((p) => (
-                      <TableRow
-                        key={`${p.id_propietario}-${p.create_at}`}
-                        onClick={() => seleccionarPropietario(p)}
-                        className="cursor-pointer"
-                      >
-                        <TableCell className="font-medium">{p.nombre_completo}</TableCell>
-                        <TableCell>{p.documento_identidad}</TableCell>
-                        <TableCell>{p.numero_telefono}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{p.create_at}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <ChevronRight className="size-4 text-muted-foreground" />
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {filtrados.map((p) => {
+                      const estados = estadosPorPropietario.get(p.id_propietario) ?? [];
+                      return (
+                        <TableRow
+                          key={`${p.id_propietario}-${p.create_at}`}
+                          onClick={() => seleccionarPropietario(p)}
+                          className="cursor-pointer"
+                        >
+                          <TableCell className="font-medium">{p.nombre_completo}</TableCell>
+                          <TableCell>
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              {loadingEstados ? (
+                                <Skeleton className="h-5 w-16 rounded-full" />
+                              ) : estados.length > 0 ? (
+                                estados.map((est, i) => {
+                                  const nombreEstado = est.estado_llamada ?? 'Pendiente';
+                                  return (
+                                    <Badge
+                                      key={`${nombreEstado}-${i}`}
+                                      variant={
+                                        (est.color as BadgeVariant) ||
+                                        coloresEstado[nombreEstado] ||
+                                        'secondary'
+                                      }
+                                    >
+                                      {nombreEstado}: {est.total_llamadas ?? 0}
+                                    </Badge>
+                                  );
+                                })
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>{p.documento_identidad}</TableCell>
+                          <TableCell>{p.numero_telefono}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{p.create_at}</Badge>
+                            {p.create_at === new Date().toLocaleDateString() ?
+                              <Badge className='mx-2' variant={p.create_at === new Date().toLocaleDateString() ? "green" : "outline"}>
+                                {p.create_at === new Date().toLocaleDateString() ? "Nuevo" : ""}</Badge>
+                              : <></>
+                            }
+                          </TableCell>
+                          <TableCell>
+                            <ChevronRight className="size-4 text-muted-foreground" />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                     {filtrados.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        <TableCell colSpan={6} className="text-center text-muted-foreground">
                           Sin resultados.
                         </TableCell>
                       </TableRow>
@@ -311,8 +480,9 @@ export default function VistaJerarquicaLlamadas() {
                     <Phone className="size-4" /> Llamadas realizadas
                     <Badge variant="secondary">{llamadas.length}</Badge>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className='mt-2'>
                     Contrato {contratoSel.nro_contrato} · partida {contratoSel.n_partida ?? '—'}
+                    {contratoSel.id_remax != null && <Badge className='mx-2' variant="outline">ID Remax {contratoSel.id_remax}</Badge>}
                   </CardDescription>
                 </div>
                 {loading !== 'lla' &&
@@ -338,10 +508,18 @@ export default function VistaJerarquicaLlamadas() {
                     return (
                       <div key={l.id} className="space-y-2 rounded-md border p-3">
                         <div className="flex flex-wrap items-center gap-2">
-                          {/* {l.id != null && <small className='text-gray-500'># {l.id}</small>} */}
-                          {l.id_remax != null && <Badge variant="outline">ID Remax {l.id_remax}</Badge>}
+                          {l.id != null && <small className='text-gray-500'># {l.id}</small>}
+
                         </div>
                         <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+                          {l.estado_llamada?.estado_llamada && (
+                            <div className="contents">
+                              <dt className="text-muted-foreground">Estado</dt>
+                              <dd className="whitespace-pre-line break-words">
+                                <Badge variant={l.estado_llamada?.color as BadgeVariant}>{l.estado_llamada?.estado_llamada}</Badge>
+                              </dd>
+                            </div>
+                          )}
                           {l.fecha_bienvenida && (
                             <div className="contents">
                               <dt className="text-muted-foreground">Fecha Bienvenida</dt>

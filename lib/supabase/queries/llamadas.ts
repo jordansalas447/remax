@@ -49,6 +49,13 @@ export type LlamadaType = {
   id?: number;
 }
 
+export type PropietarioLlamadasEstado = {
+  id_propietario: number | null;
+  estado_llamada: string | null;
+  total_llamadas: number | null;
+  color?: string | null;
+}
+
 /**
  * Obtiene llamadas propietarios con filtros opcionales de id_asociado y/o fecha_registro.
  * Si no se proporciona fecha_registro, retorna todos los registros.
@@ -73,6 +80,26 @@ export async function getLlamadasPropietarios(filtros?: { fecha_registro?: strin
 
   return data ?? [];
 }
+
+export async function getPropietarioEstadoLlamadas(id?: number): Promise<PropietarioLlamadasEstado[]> {
+  const supabase = createClient();
+  let query = supabase
+    .from("vista_propietarios_estado_llamadas" as any)
+    .select("*")
+    .order("id_propietario", { ascending: true });
+
+  if (id !== undefined) {
+    query = query.eq("id_propietario", id);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw new Error(error.message);
+
+  return (data as unknown as PropietarioLlamadasEstado[]) ?? [];
+}
+
+
 
 
 export async function getResumenLlamadas(): Promise<LlamadasRowDetalle[]> {

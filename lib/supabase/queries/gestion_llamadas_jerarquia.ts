@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client';
 import type { LlamadasRow } from '@/lib/supabase/queries/llamadas';
+import { EstadoLlamadaRow } from './estado_llamada';
 
 export type PropietarioResumen = {
   id_propietario: number;
@@ -8,6 +9,10 @@ export type PropietarioResumen = {
   numero_telefono: string | null;
   create_at: string | null; // fecha (YYYY-MM-DD)
 };
+
+export type LlamadasDetalle = LlamadasRow & {
+  estado_llamada? : EstadoLlamadaRow | null
+}
 
 export type ContratoInmuebleResumen = {
   id_propiedad_propietario: number;
@@ -50,8 +55,9 @@ export async function getPropietariosConPropiedades(): Promise<PropietarioResume
   for (const row of (data ?? []) as any[]) {
     const pr = one<any>(row.propietarios);
     const pe = one<any>(pr?.personas);
+    //console.log(new Date(row.create_at).toLocaleDateString())
     if (!pr) continue;
-    const fecha = toDate(row.create_at);
+    const fecha = new Date(row.create_at).toLocaleDateString();
     const key = `${pr.id_propietario}|${fecha}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -64,10 +70,20 @@ export async function getPropietariosConPropiedades(): Promise<PropietarioResume
     });
   }
 
+  //console.log(result)
+
   result.sort((a, b) => {
-    const d = (b.create_at ?? '').localeCompare(a.create_at ?? '');
-    return d !== 0 ? d : (a.nombre_completo ?? '').localeCompare(b.nombre_completo ?? '');
-  });
+    const fechaA = a.create_at ? new Date(a.create_at).getTime() : 0;
+    const fechaB = b.create_at ? new Date(b.create_at).getTime() : 0;
+
+    const d = fechaB - fechaA;
+
+    return d !== 0
+        ? d
+        : (a.nombre_completo ?? '').localeCompare(b.nombre_completo ?? '');
+});
+  //console.log(result)
+
   return result;
 }
 
@@ -107,19 +123,23 @@ export async function getContratosInmueblesByPropietario(
 /**
  * Query 3: llamadas realizadas asociadas a un id_llamada.
  */
-export async function getLlamadasByIdLlamada(idLlamada: number): Promise<LlamadasRow[]> {
+export async function getLlamadasByIdLlamada(idLlamada: number): Promise<LlamadasDetalle[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('propiedad_propietario')
-    .select('llamadas:id_llamada!inner (*)')
+    .select(`llamadas:id_llamada!inner (
+      *,
+      estado_llamada:id_estado_llamada!inner (*)
+      )
+      `)
     .eq('id_llamada', idLlamada);
 
   if (error) throw new Error(error.message);
 
   // DISTINCT por id de llamada
-  const map = new Map<number, LlamadasRow>();
-  for (const row of (data ?? []) as unknown as { llamadas: LlamadasRow | LlamadasRow[] | null }[]) {
-    const l = one<LlamadasRow>(row.llamadas);
+  const map = new Map<number, LlamadasDetalle>();
+  for (const row of (data ?? []) as unknown as { llamadas: LlamadasDetalle | LlamadasDetalle[] | null }[]) {
+    const l = one<LlamadasDetalle>(row.llamadas);
     if (l) map.set(l.id, l);
   }
   return Array.from(map.values());

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/database.types';
 
-type EstadoLlamadaRow = Database['public']['Tables']['estado_llamada']['Row'];
+export type EstadoLlamadaRow = Database['public']['Tables']['estado_llamada']['Row'];
 
 export type EstadoLlamadas = EstadoLlamadaRow & {
   estado_llamadas:[] | []
