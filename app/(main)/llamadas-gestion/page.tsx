@@ -20,9 +20,9 @@ export default async function LlamadasPage() {
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4">Gestión de llamadas por propietario</h1>
-      <VistaJerarquicaLlamadas /> 
+      {/* <VistaJerarquicaLlamadas />  */}
 
-      {/* <TablaLlamadasGestion Llamadas={llamadas} EstadoLlamadas={estado_llamadas} /> */}
+       <TablaLlamadasGestion Llamadas={llamadas} EstadoLlamadas={estado_llamadas} /> 
       {/* <h1 className="text-2xl font-bold mb-4">Llamadas a propietarios</h1>
       {errorMsg ? (
         <div className="bg-red-100 text-red-800 p-2 rounded">{errorMsg}</div>
