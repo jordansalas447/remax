@@ -54,6 +54,13 @@ export type Database = {
             referencedColumns: ["id_asociado"]
           },
           {
+            foreignKeyName: "aceptaciones_documento_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "vista_limite_diario_documentos"
+            referencedColumns: ["id_asociado"]
+          },
+          {
             foreignKeyName: "aceptaciones_documento_id_documento_fkey"
             columns: ["id_documento"]
             isOneToOne: false
@@ -194,6 +201,13 @@ export type Database = {
             columns: ["id_asociado"]
             isOneToOne: false
             referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "asistencias_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "vista_limite_diario_documentos"
             referencedColumns: ["id_asociado"]
           },
           {
@@ -480,6 +494,59 @@ export type Database = {
         }
         Relationships: []
       }
+      contrato_propietario_inmueble: {
+        Row: {
+          created_at: string
+          eliminado: boolean | null
+          id: number
+          id_contrato_propietario: number | null
+          id_inmueble: number | null
+        }
+        Insert: {
+          created_at?: string
+          eliminado?: boolean | null
+          id?: number
+          id_contrato_propietario?: number | null
+          id_inmueble?: number | null
+        }
+        Update: {
+          created_at?: string
+          eliminado?: boolean | null
+          id?: number
+          id_contrato_propietario?: number | null
+          id_inmueble?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_propietario_inmueble_contrato_propietario_id_fkey"
+            columns: ["id_contrato_propietario"]
+            isOneToOne: false
+            referencedRelation: "propiedad_propietario"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_propietario_inmueble_contrato_propietario_id_fkey"
+            columns: ["id_contrato_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_propietario_inmueble_inmueble_id_fkey"
+            columns: ["id_inmueble"]
+            isOneToOne: false
+            referencedRelation: "inmuebles"
+            referencedColumns: ["id_propiedad"]
+          },
+          {
+            foreignKeyName: "contrato_propietario_inmueble_inmueble_id_fkey"
+            columns: ["id_inmueble"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propiedad"]
+          },
+        ]
+      }
       contratos: {
         Row: {
           comision: number | null
@@ -604,6 +671,13 @@ export type Database = {
             columns: ["id_asociado"]
             isOneToOne: false
             referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "contratos_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "vista_limite_diario_documentos"
             referencedColumns: ["id_asociado"]
           },
           {
@@ -906,10 +980,24 @@ export type Database = {
             referencedColumns: ["id_asociado"]
           },
           {
+            foreignKeyName: "documentos_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "vista_limite_diario_documentos"
+            referencedColumns: ["id_asociado"]
+          },
+          {
             foreignKeyName: "documentos_id_asociado_generado_fkey"
             columns: ["id_usuario_generado"]
             isOneToOne: false
             referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "documentos_id_asociado_generado_fkey"
+            columns: ["id_usuario_generado"]
+            isOneToOne: false
+            referencedRelation: "vista_limite_diario_documentos"
             referencedColumns: ["id_asociado"]
           },
           {
@@ -1119,6 +1207,7 @@ export type Database = {
           comision: number | null
           created_at: string
           duracionMeses: number | null
+          eliminado: boolean | null
           id: number
           id_documento: number | null
           id_formulario: number | null
@@ -1129,10 +1218,10 @@ export type Database = {
           inmuebleProvincia: string | null
           mesFirma: string | null
           nombreAsesor: string | null
-          propietariocelular: number | null
-          propietariodepartamento: number | null
-          propietariodistrito: number | null
-          propietariodni: number | null
+          propietariocelular: string | null
+          propietariodepartamento: string | null
+          propietariodistrito: string | null
+          propietariodni: string | null
           propietariodomicilio: string | null
           propietarioestadoCivil: string | null
           propietarionombre: string | null
@@ -1143,6 +1232,7 @@ export type Database = {
           comision?: number | null
           created_at?: string
           duracionMeses?: number | null
+          eliminado?: boolean | null
           id?: number
           id_documento?: number | null
           id_formulario?: number | null
@@ -1153,10 +1243,10 @@ export type Database = {
           inmuebleProvincia?: string | null
           mesFirma?: string | null
           nombreAsesor?: string | null
-          propietariocelular?: number | null
-          propietariodepartamento?: number | null
-          propietariodistrito?: number | null
-          propietariodni?: number | null
+          propietariocelular?: string | null
+          propietariodepartamento?: string | null
+          propietariodistrito?: string | null
+          propietariodni?: string | null
           propietariodomicilio?: string | null
           propietarioestadoCivil?: string | null
           propietarionombre?: string | null
@@ -1167,6 +1257,7 @@ export type Database = {
           comision?: number | null
           created_at?: string
           duracionMeses?: number | null
+          eliminado?: boolean | null
           id?: number
           id_documento?: number | null
           id_formulario?: number | null
@@ -1177,10 +1268,10 @@ export type Database = {
           inmuebleProvincia?: string | null
           mesFirma?: string | null
           nombreAsesor?: string | null
-          propietariocelular?: number | null
-          propietariodepartamento?: number | null
-          propietariodistrito?: number | null
-          propietariodni?: number | null
+          propietariocelular?: string | null
+          propietariodepartamento?: string | null
+          propietariodistrito?: string | null
+          propietariodni?: string | null
           propietariodomicilio?: string | null
           propietarioestadoCivil?: string | null
           propietarionombre?: string | null
@@ -1316,6 +1407,13 @@ export type Database = {
             columns: ["id_propietarios"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "historial_observaciones_id_propietarios_fkey"
+            columns: ["id_propietarios"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_estado_llamadas"
             referencedColumns: ["id_propietario"]
           },
         ]
@@ -1586,6 +1684,7 @@ export type Database = {
           id: number
           id_estado_llamada: number | null
           id_llamadas: number | null
+          id_propietario: number | null
           id_remax: number | null
           id_seguimiento: number | null
           observacion: string | null
@@ -1600,6 +1699,7 @@ export type Database = {
           id?: number
           id_estado_llamada?: number | null
           id_llamadas?: number | null
+          id_propietario?: number | null
           id_remax?: number | null
           id_seguimiento?: number | null
           observacion?: string | null
@@ -1614,6 +1714,7 @@ export type Database = {
           id?: number
           id_estado_llamada?: number | null
           id_llamadas?: number | null
+          id_propietario?: number | null
           id_remax?: number | null
           id_seguimiento?: number | null
           observacion?: string | null
@@ -1633,6 +1734,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "llamadas"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "llamadas_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "llamadas_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "llamadas_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_estado_llamadas"
+            referencedColumns: ["id_propietario"]
           },
         ]
       }
@@ -1709,6 +1831,13 @@ export type Database = {
             columns: ["id_asociado"]
             isOneToOne: false
             referencedRelation: "asociados"
+            referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "multas_id_asociado_fkey"
+            columns: ["id_asociado"]
+            isOneToOne: false
+            referencedRelation: "vista_limite_diario_documentos"
             referencedColumns: ["id_asociado"]
           },
           {
@@ -2210,6 +2339,13 @@ export type Database = {
             referencedRelation: "vista_llamadas_propietarios"
             referencedColumns: ["id_propietario"]
           },
+          {
+            foreignKeyName: "propiedad_propietario_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_estado_llamadas"
+            referencedColumns: ["id_propietario"]
+          },
         ]
       }
       propietarios: {
@@ -2420,6 +2556,13 @@ export type Database = {
             columns: ["id_propietario"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "revisiones_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_estado_llamadas"
             referencedColumns: ["id_propietario"]
           },
           {
@@ -2793,6 +2936,18 @@ export type Database = {
         }
         Relationships: []
       }
+      total_registros: {
+        Row: {
+          count: number | null
+        }
+        Insert: {
+          count?: number | null
+        }
+        Update: {
+          count?: number | null
+        }
+        Relationships: []
+      }
       versiones_declaraciones: {
         Row: {
           created_at: string
@@ -2845,6 +3000,16 @@ export type Database = {
           },
         ]
       }
+      vista_limite_diario_documentos: {
+        Row: {
+          disponibles: number | null
+          id_asociado: number | null
+          limite_alcanzado: boolean | null
+          limite_diario: number | null
+          total_generados: number | null
+        }
+        Relationships: []
+      }
       vista_llamadas_propietarios: {
         Row: {
           asociado: string | null
@@ -2892,6 +3057,14 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vista_propietarios_estado_llamadas: {
+        Row: {
+          estado_llamada: string | null
+          id_propietario: number | null
+          total_llamadas: number | null
+        }
+        Relationships: []
       }
       vista_resumen_llamadas: {
         Row: {

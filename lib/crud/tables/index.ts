@@ -49,6 +49,7 @@ import { plantillasDocumentosConfig } from "./plantillas_documentos";
 import { clausulasConfig } from "./clausulas";
 import { numerosTelefonicosConfig } from "./numeros_telefonicos";
 import { formularioConfig } from "./formulario";
+import { contratoPropietarioInmuebleConfig } from "./contrato-propietario-inmueble";
 
 export const tableConfigs: Record<string, TableConfig> = {
   tablas: tablasConfig,
@@ -77,6 +78,7 @@ export const tableConfigs: Record<string, TableConfig> = {
   areas: areasConfig,
   empresas: empresasConfig,
   formulario: formularioConfig,
+  contrato_propietario_inmueble:contratoPropietarioInmuebleConfig,
   operacion: operacionConfig,
   personas: personasConfig,
   inmuebles: inmueblesConfig,

@@ -211,10 +211,10 @@ export default function ContratosDashboard() {
           <p>No hay contratos que coincidan con tu búsqueda.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-xl border border-zinc-200 dark:border-zinc-800">
+        <div className="overflow-x-auto bg-white rounded-xl border border-zinc-200 dark:border-zinc-800 max-h-[70vh] overflow-y-auto [&_[data-slot=table-container]]:overflow-visible">
           <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500 dark:bg-zinc-900">
-              <tr>
+            <thead className="bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500 dark:bg-zinc-900 sticky top-0 z-10 bg-card shadow-xs">
+              <tr >
                 <th className="whitespace-nowrap px-4 py-3 font-medium">Nº contrato</th>
                 <th className="whitespace-nowrap px-4 py-3 font-medium">Fecha</th>
                 <th className="whitespace-nowrap px-4 py-3 font-medium">Asociado</th>
