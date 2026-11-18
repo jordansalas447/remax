@@ -277,7 +277,7 @@ const handleConsultarDNI = async (index: number, dni: string) => {
                     disabled={disabled}
                     onChange={(e) => onPropietarioChange(i, c.key, e.target.value)}
                   />
-                    <Button type="button" size="lg"  title="Consultar DNI" variant="blue" disabled={disabled || cargandoDni === i || (p[c.key] ?? "").length !== 8} size="sm" onClick={() => handleConsultarDNI(i,p[c.key] ?? "")}>
+                    <Button type="button" size="lg"  title="Consultar DNI" variant="blue" disabled={disabled || cargandoDni === i || (p[c.key] ?? "").length !== 8} onClick={() => handleConsultarDNI(i,p[c.key] ?? "")}>
                     {cargandoDni === i ? <Ellipsis /> : <Search />}
                     </Button>
                     </div>
