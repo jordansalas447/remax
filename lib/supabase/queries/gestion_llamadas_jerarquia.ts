@@ -23,6 +23,33 @@ export type ContratoInmuebleResumen = {
   create_at: string | null;
 };
 
+export type VistaPropietarioContratoLlamada = {
+  id_contrato: number;
+  nro_contrato: string | null;
+  id_remax: string | number | null;
+  id_propietario: number;
+  nombre_completo: string | null;
+  fecha_registro: string | null;
+  fecha_bienvenida: string | null;
+  curso_llamada: string | null;
+  observacion: string | null;
+  fecha_seguimiento_llamada: string | null;
+  observacion_seguimiento: string | null;
+  id_estado_llamada: number | null;
+};
+
+/** Carga inicial: propietarios, contratos y llamadas en una sola vista. */
+export async function getVistaPropietariosContratosLlamadas(): Promise<VistaPropietarioContratoLlamada[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('vista_propietarios_contratos_llamadas' as any)
+    .select('*')
+    .order('fecha_registro',{ ascending: false });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []) as unknown as VistaPropietarioContratoLlamada[];
+}
+
 const toDate = (v?: string | null) => (v ? v.slice(0, 10) : null);
 const one = <T,>(v: T | T[] | null | undefined): T | null =>
   Array.isArray(v) ? (v[0] ?? null) : (v ?? null);
@@ -34,6 +61,7 @@ const one = <T,>(v: T | T[] | null | undefined): T | null =>
  *  pe.numero_telefono, pp.create_at::date
  *  from propietarios pr join personas pe ... join propiedad_propietario pp ...
  */
+
 export async function getPropietariosConPropiedades(): Promise<PropietarioResumen[]> {
   const supabase = createClient();
   const { data, error } = await supabase

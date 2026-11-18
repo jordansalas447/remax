@@ -52,6 +52,8 @@ export const propiedadPropietarioConfig: TableConfig = {
         labelField: "nombre_completo"
       },
     },
+    // { name: "observacion", label: "Observacion", type: "textarea"},
+    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true, hiddenInForm: true },
     {
       name: "id_llamada",
       label: "Llamada",
@@ -64,8 +66,6 @@ export const propiedadPropietarioConfig: TableConfig = {
         labelField: "observacion"
       },
     },
-    // { name: "observacion", label: "Observacion", type: "textarea"},
-    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true, hiddenInForm: true },
   ],
   details: [
     {

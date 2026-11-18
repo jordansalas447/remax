@@ -238,6 +238,33 @@ export async function guardarLlamada(
 }
 
 /**
+ * Crea una llamada ligada al propietario y al contrato elegidos en
+ * vista_propietarios_contratos_llamadas.
+ */
+export async function insertarLlamadaPorPropietarioContrato(
+  record: Omit<LlamadaType, 'id'>,
+  idPropietario: number,
+  idContrato: number,
+): Promise<LlamadasRow> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('llamadas')
+    .insert([
+      {
+        ...record,
+        id_propietario: idPropietario,
+        id_contrato: idContrato,
+      } as Database['public']['Tables']['llamadas']['Insert'],
+    ])
+    .select()
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('No se pudo crear la llamada.');
+  return data;
+}
+
+/**
  * Inserta un nuevo registro en la tabla 'llamadas' (mantenido por retrocompatibilidad).
  */
 export async function insertarLlamada(

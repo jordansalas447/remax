@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { ChevronRight, FileText, RefreshCw, Search, X } from "lucide-react";
+import { ChevronRight, Download, FileText, RefreshCw, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import {
@@ -12,6 +12,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DocumentosRowDetalle, getDocumentosxEmitidos } from "@/lib/supabase/queries/documentos";
+import * as XLSX from "xlsx";
+
 
 const COLORES: BadgeVariant[] = [
   "blue", "green", "red", "yellow", "amber", "pink",
@@ -90,6 +92,29 @@ export default function ContratosDashboard() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+
+  const handleExport = () => {
+    // Preparar los datos que aparecerán en Excel
+    const datos = documentos.map((p: DocumentosRowDetalle) => ({
+      "NRO CONTRATO": p.nro_contrato,
+      "FECHA": new Date(p.fecha_generacion ?? "").toLocaleDateString(),
+      "ASOCIADO": p.asociados?.nombre_completo,
+      "ESTADO": p.estado_documento?.estado
+    }));
+
+    // Crear una hoja de Excel
+    const hoja = XLSX.utils.json_to_sheet(datos);
+
+    // Crear el libro
+    const libro = XLSX.utils.book_new();
+
+    // Agregar la hoja al libro
+    XLSX.utils.book_append_sheet(libro, hoja, "llamadas");
+
+    // Descargar el archivo
+    XLSX.writeFile(libro, "llamadas.xlsx");
+  };
 
   // Conteo por estado, para los filtros rápidos
   const estados = useMemo(() => {
@@ -187,6 +212,16 @@ export default function ContratosDashboard() {
           )}
         </div>
       )}
+
+<button
+          className="flex items-center gap-2 rounded bg-emerald-500 px-4 py-2 text-white font-semibold shadow hover:bg-emerald-600 transition-colors"
+          // Aquí puedes definir el handler de exportación, por ahora solo un alert como placeholder
+          onClick={() => handleExport()}
+        >
+          {/* Icono download, puedes cambiar por cualquiera de lucide-react o FontAwesome */}
+          <Download />
+          <span>Exportar</span>
+        </button>
 
       {isLoading ? (
         <div className="space-y-2" aria-busy="true">

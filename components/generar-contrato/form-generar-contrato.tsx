@@ -662,11 +662,13 @@ export default function FormGenerarContrato({
               <div className="flex flex-row gap-2 justify-end border-t-1 py-2">
                 {paso === 2 ? (
                   <>
-                    <Button type="button" variant="outline" onClick={handleCancelar}>
+                    <Button type="button" size="lg" variant="outline" onClick={handleCancelar}>
                       Cancelar
                     </Button>
                     <Button
                       id="btn-siguiente-datos"
+                           size="lg"
+                      variant="default"
                       type="submit"
                       disabled={enviando || !tipoContratoId || !tipoOperacionId || form.nro_propietarios == 0}
                     >
@@ -677,6 +679,7 @@ export default function FormGenerarContrato({
                   <>
                     <Button
                       id="btn-atras-tipo"
+                      size="lg"
                       type="button"
                       variant="outline"
                       onClick={() => { setError(null); setPaso(2); }}
@@ -686,6 +689,8 @@ export default function FormGenerarContrato({
                     </Button>
                     <Button
                       id="btn-generar-descargar"
+                      size="lg"
+                      variant="default"
                       type="submit"
                       disabled={enviando}
                     >

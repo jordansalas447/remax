@@ -13,7 +13,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { guardarLlamada, type LlamadasRow } from '@/lib/supabase/queries/llamadas';
+import {
+  guardarLlamada,
+  insertarLlamadaPorPropietarioContrato,
+  type LlamadasRow,
+} from '@/lib/supabase/queries/llamadas';
 import { getEstadoLlamadas } from '@/lib/supabase/queries/estado_llamada';
 
 type Estado = Awaited<ReturnType<typeof getEstadoLlamadas>>[number];
@@ -22,6 +26,8 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   idPropiedadPropietario: number;
+  /** Si viene, el alta se inserta en llamadas con estos ids de la vista. */
+  vinculo?: { id_propietario: number; id_contrato: number };
   /** Llamada a editar; si es null se crea una nueva */
   llamada: LlamadasRow | null;
   descripcion?: string;
@@ -41,6 +47,7 @@ export default function DialogLlamada({
   open,
   onOpenChange,
   idPropiedadPropietario,
+  vinculo,
   llamada,
   descripcion,
   onSaved,
@@ -78,18 +85,24 @@ export default function DialogLlamada({
     setSaving(true);
     setError(null);
     try {
-      const { data } = await guardarLlamada(
-        {
-          fecha_bienvenida: form.fecha_bienvenida || null,
-          id_estado_llamada: form.id_estado_llamada ? Number(form.id_estado_llamada) : null,
-          curso_llamada: form.curso_llamada || null,
-          observacion: form.observacion || null,
-          fecha_seguimiento_llamada: form.fecha_seguimiento_llamada || null,
-          observacion_seguimiento: form.observacion_seguimiento || null,
-        },
-        idPropiedadPropietario,
-        llamada?.id ?? null
-      );
+      const payload = {
+        fecha_bienvenida: form.fecha_bienvenida || null,
+        id_estado_llamada: form.id_estado_llamada ? Number(form.id_estado_llamada) : null,
+        curso_llamada: form.curso_llamada || null,
+        observacion: form.observacion || null,
+        fecha_seguimiento_llamada: form.fecha_seguimiento_llamada || null,
+        observacion_seguimiento: form.observacion_seguimiento || null,
+      };
+      const data =
+        !llamada && vinculo
+          ? await insertarLlamadaPorPropietarioContrato(
+              payload,
+              vinculo.id_propietario,
+              vinculo.id_contrato
+            )
+          : (
+              await guardarLlamada(payload, idPropiedadPropietario, llamada?.id ?? null)
+            ).data;
       onSaved(data as LlamadasRow);
       onOpenChange(false);
     } catch (e: any) {

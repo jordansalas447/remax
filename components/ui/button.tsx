@@ -27,7 +27,7 @@ const buttonVariants = cva(
       
         // Colores adicionales
         blue:
-          "bg-blue-700 text-white hover:bg-blue-900 focus-visible:ring-blue-500/50",
+          "bg-blue-800 text-white hover:bg-blue-900 focus-visible:ring-blue-500/50",
       
         sky:
           "bg-sky-500 text-white hover:bg-sky-600 focus-visible:ring-sky-500/50",
