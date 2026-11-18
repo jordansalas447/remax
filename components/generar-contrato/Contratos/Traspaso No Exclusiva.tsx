@@ -89,7 +89,8 @@ export function TraspasoExlusivaPDF({
         <View style={styles.section}>
           <Text style={styles.clauseTitle}><Text style={styles.bold}><Text>TERCERA:</Text></Text></Text>
           <Text style={styles.justified}>
-            Por medio del presente acuerdo, <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> otorga a <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}><Text>TRASPASO</Text></Text> de <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> descrito en la cláusula primera del presente contrato, en la modalidad de <Text style={styles.bold}><Text>NO  EXCLUSIVIDAD</Text></Text>, gestión que será realizada por El Asesor Sr./Sra./Srta.:<Text style={styles.dataInput}>{nombreAsesor}</Text> , <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato.
+            Por medio del presente acuerdo, <Text style={styles.bold}><Text>EL CLIENTE</Text></Text> otorga a <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> a partir de la firma del presente documento, la representación comercial para el <Text style={styles.bold}><Text>TRASPASO</Text></Text> de <Text style={styles.bold}><Text>EL INMUEBLE</Text></Text> descrito en la cláusula primera del presente contrato, en la modalidad de 
+            {"\n"}<Text style={styles.bold}><Text>NO  EXCLUSIVIDAD</Text></Text>, gestión que será realizada por El Asesor Sr./Sra./Srta.:<Text style={styles.dataInput}>{nombreAsesor}</Text> , <Text style={styles.bold}><Text>EL COMISIONISTA</Text></Text> iniciará el proceso de búsqueda de posibles compradores, de acuerdo con los términos que se establezcan en las cláusulas del presente contrato.
           </Text>
         </View>
 

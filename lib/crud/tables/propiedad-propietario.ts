@@ -55,9 +55,9 @@ export const propiedadPropietarioConfig: TableConfig = {
     {
       name: "id_llamada",
       label: "Llamada",
-      type: "textplus",
-      hiddenInForm:true,
-      selectplus:true,
+      type: "text",
+      hiddenInForm: true, // <-- evita que se envíe en el INSERT/UPDATE del formulario
+      selectplus: true,
       foreignKey: {
         table: "llamadas",
         valueField: "id",
@@ -65,7 +65,7 @@ export const propiedadPropietarioConfig: TableConfig = {
       },
     },
     // { name: "observacion", label: "Observacion", type: "textarea"},
-    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true ,hiddenInForm:true },
+    { name: "resumen_operacion", readOnlyOnEdit: true, label: "Resumen Operacion", type: "text", disabled: true, hiddenInForm: true },
   ],
   details: [
     {

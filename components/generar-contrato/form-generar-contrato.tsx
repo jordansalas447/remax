@@ -48,10 +48,10 @@ function aplanarDatosExtra(
   return lista.map((p) => ({
     id_documento: id_documento,
     id_formulario: null,
-    anofirma: aNumero(datos.anoFirma),
+    anofirma: String(datos.anoFirma),
     mesFirma: datos.mesFirma ?? null,
-    comision: aNumero(datos.comision),
-    duracionMeses: aNumero(datos.duracionMeses),
+    comision: String(datos.comision),
+    duracionMeses: String(datos.duracionMeses),
     nombreAsesor: datos.nombreAsesor ?? null,
     inmuebleDepartamento: datos.inmuebleDepartamento ?? null,
     inmuebleProvincia: datos.inmuebleProvincia ?? null,
@@ -59,13 +59,14 @@ function aplanarDatosExtra(
     inmuebleDireccion: datos.inmuebleDireccion ?? null,
     inmueblePartida: datos.inmueblePartida ?? null,
     propietarionombre: p.nombre ?? null,
-    propietariodni: aNumero(p.dni),
+    propietariodni: String(p.dni),
     propietarioestadoCivil: p.estadoCivil ?? null,
-    propietariocelular: aNumero(p.celular),
+    propietariocelular: String(p.celular),
     propietariodomicilio: p.domicilio ?? null,
-    propietariodistrito: aNumero(p.distrito),
+    propietariodistrito: String(p.distrito),
     propietarioprovincia: p.provincia ?? null,
-    propietariodepartamento: aNumero(p.departamento),
+    propietariodepartamento: String(p.departamento),
+    eliminado:false
   }));
 }
 

@@ -494,52 +494,59 @@ export type Database = {
         }
         Relationships: []
       }
-      contrato_propietario_inmueble: {
+      contrato_inmueble: {
         Row: {
           created_at: string
           eliminado: boolean | null
           id: number
-          id_contrato_propietario: number | null
+          id_contrato: number | null
           id_inmueble: number | null
         }
         Insert: {
           created_at?: string
           eliminado?: boolean | null
           id?: number
-          id_contrato_propietario?: number | null
+          id_contrato?: number | null
           id_inmueble?: number | null
         }
         Update: {
           created_at?: string
           eliminado?: boolean | null
           id?: number
-          id_contrato_propietario?: number | null
+          id_contrato?: number | null
           id_inmueble?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "contrato_propietario_inmueble_contrato_propietario_id_fkey"
-            columns: ["id_contrato_propietario"]
+            foreignKeyName: "contrato_propietario_inmueble_id_contrato_fkey"
+            columns: ["id_contrato"]
             isOneToOne: false
-            referencedRelation: "propiedad_propietario"
-            referencedColumns: ["id"]
+            referencedRelation: "contratos"
+            referencedColumns: ["id_contrato"]
           },
           {
-            foreignKeyName: "contrato_propietario_inmueble_contrato_propietario_id_fkey"
-            columns: ["id_contrato_propietario"]
+            foreignKeyName: "contrato_propietario_inmueble_id_contrato_fkey"
+            columns: ["id_contrato"]
             isOneToOne: false
-            referencedRelation: "vista_llamadas_propietarios"
-            referencedColumns: ["id"]
+            referencedRelation: "vista_revisiones"
+            referencedColumns: ["id_contrato"]
           },
           {
-            foreignKeyName: "contrato_propietario_inmueble_inmueble_id_fkey"
+            foreignKeyName: "contrato_propietario_inmueble_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vw_revisiones_detalle"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "contrato_propietario_inmueble_id_inmueble_fkey"
             columns: ["id_inmueble"]
             isOneToOne: false
             referencedRelation: "inmuebles"
             referencedColumns: ["id_propiedad"]
           },
           {
-            foreignKeyName: "contrato_propietario_inmueble_inmueble_id_fkey"
+            foreignKeyName: "contrato_propietario_inmueble_id_inmueble_fkey"
             columns: ["id_inmueble"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
@@ -1203,10 +1210,10 @@ export type Database = {
       }
       formulario: {
         Row: {
-          anofirma: number | null
-          comision: number | null
+          anofirma: string | null
+          comision: string | null
           created_at: string
-          duracionMeses: number | null
+          duracionMeses: string | null
           eliminado: boolean | null
           id: number
           id_documento: number | null
@@ -1228,10 +1235,10 @@ export type Database = {
           propietarioprovincia: string | null
         }
         Insert: {
-          anofirma?: number | null
-          comision?: number | null
+          anofirma?: string | null
+          comision?: string | null
           created_at?: string
-          duracionMeses?: number | null
+          duracionMeses?: string | null
           eliminado?: boolean | null
           id?: number
           id_documento?: number | null
@@ -1253,10 +1260,10 @@ export type Database = {
           propietarioprovincia?: string | null
         }
         Update: {
-          anofirma?: number | null
-          comision?: number | null
+          anofirma?: string | null
+          comision?: string | null
           created_at?: string
-          duracionMeses?: number | null
+          duracionMeses?: string | null
           eliminado?: boolean | null
           id?: number
           id_documento?: number | null

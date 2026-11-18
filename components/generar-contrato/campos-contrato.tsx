@@ -16,6 +16,7 @@ import {
   type CampoTextoContratoKey,
   type SeccionCampo,
 } from "./Contratos/shared/campos";
+import { Ellipsis, Search } from "lucide-react";
 
 export type DatosContrato = Partial<Record<CampoTextoContratoKey, string>>;
 
@@ -181,7 +182,7 @@ const handleConsultarDNI = async (index: number, dni: string) => {
     
             <Button
               type="button"
-              variant="outline"
+              variant="blue"
               title="Agregar nombre de asesor"
               size="sm"
               disabled={disabled || !NombreAsociado}
@@ -276,8 +277,8 @@ const handleConsultarDNI = async (index: number, dni: string) => {
                     disabled={disabled}
                     onChange={(e) => onPropietarioChange(i, c.key, e.target.value)}
                   />
-                    <Button type="button" title="Consultar DNI" variant="outline" disabled={disabled || cargandoDni === i || (p[c.key] ?? "").length !== 8} size="sm" onClick={() => handleConsultarDNI(i,p[c.key] ?? "")}>
-                    {cargandoDni === i ? "Consultando..." : "..."}
+                    <Button type="button" size="lg"  title="Consultar DNI" variant="blue" disabled={disabled || cargandoDni === i || (p[c.key] ?? "").length !== 8} size="sm" onClick={() => handleConsultarDNI(i,p[c.key] ?? "")}>
+                    {cargandoDni === i ? <Ellipsis /> : <Search />}
                     </Button>
                     </div>
                   </Campo>

@@ -30,7 +30,6 @@ type SupportedTableName =
   | "eventos"
   | "multas"
   | "plantillas_documentos"
-  | "contrato_propietario_inmueble"
   | "areas"
   | "alcances"
   | "documentos"
@@ -77,7 +76,6 @@ export type Areas = TableRow<"areas">
 export type Eventos = TableRow<"eventos">
 export type PlantillasDocumentos = TableRow<"plantillas_documentos">
 export type Multas = TableRow<"multas">
-export type ContratoPropietarioInmueble = TableRow<"contrato_propietario_inmueble">
 export type Control_Acceso = TableRow<"control_acceso">
 export type Sesiones_Acceso = TableRow<"sesiones_acceso">
 export type Horarios_Acceso = TableRow<"horarios_acceso">

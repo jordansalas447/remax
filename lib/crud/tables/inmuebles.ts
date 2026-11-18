@@ -38,7 +38,7 @@ export const inmueblesConfig: TableConfig = {
       name: "id_inmueble",
       label: "inmuebles",
       type: "inputsearch",
-      selectplus: false,
+      selectplus: true,
       foreignKey: {
         table: "inmuebles",
         valueField: "id_propiedad",
