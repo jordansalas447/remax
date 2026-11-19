@@ -5,6 +5,8 @@ import { ChevronRight, FileText, Pencil, Phone, Plus, Search, User, X, type Luci
 import DialogLlamada from '@/components/llamadas-gestion/dialog-llamada';
 import {
   getVistaPropietariosContratosLlamadas,
+  getPartidasPorContrato,
+  type PartidaContrato,
   type VistaPropietarioContratoLlamada,
 } from '@/lib/supabase/queries/gestion_llamadas_jerarquia';
 import { getEstadoLlamadas, type EstadoLlamadaRow } from '@/lib/supabase/queries/estado_llamada';
@@ -14,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const cn = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(' ');
 
@@ -57,6 +60,8 @@ type Item = {
   detalle: string | null;
   fecha_registro: string | null;
   hijos: Set<number>;
+  remax: string | number | null;
+  asociado: string | null;
   /** id_estado_llamada -> llamadas distintas con ese estado */
   estados: Map<number, Set<number | string>>;
 };
@@ -77,10 +82,20 @@ function agrupar(rows: VistaPropietarioContratoLlamada[], tipo: Tipo): Item[] {
     const id = idDe(row, tipo);
     const titulo = tipo === 'contrato' ? row.nro_contrato : row.nombre_completo;
     const detalle = tipo === 'contrato' && row.id_remax != null ? `Remax ${row.id_remax}` : null;
+    const asociado = tipo === 'contrato' ? row.asociado : row.asociado
     const fechaRow = fecha(row.fecha_registro);
     let actual = map.get(id);
     if (!actual) {
-      actual = { id, titulo, detalle, fecha_registro: fechaRow, hijos: new Set(), estados: new Map() };
+      actual = {
+        id,
+        titulo,
+        detalle,
+        fecha_registro: fechaRow,
+        hijos: new Set(),
+        estados: new Map(),
+        remax: tipo === 'contrato' ? row.id_remax : null,
+        asociado
+      };
       map.set(id, actual);
     }
     actual.hijos.add(idDe(row, otro(tipo)));
@@ -101,6 +116,7 @@ const porTitulo = (a: Item, b: Item) => (a.titulo ?? '').localeCompare(b.titulo 
 export default function VistaLlamadasV2() {
   const [filas, setFilas] = useState<VistaPropietarioContratoLlamada[]>([]);
   const [estados, setEstados] = useState<EstadoLlamadaRow[]>([]);
+  const [partidas, setPartidas] = useState<PartidaContrato[]>([]);
   const [modo, setModo] = useState<Modo>('contratos');
   const [sel1Id, setSel1Id] = useState<number | null>(null);
   const [sel2Id, setSel2Id] = useState<number | null>(null);
@@ -153,10 +169,12 @@ export default function VistaLlamadasV2() {
     return Promise.all([
       getVistaPropietariosContratosLlamadas(),
       getEstadoLlamadas().catch(() => [] as EstadoLlamadaRow[]),
+      getPartidasPorContrato().catch(() => [] as PartidaContrato[]),
     ])
-      .then(([vista, catalogo]) => {
+      .then(([vista, catalogo, listaPartidas]) => {
         setFilas(vista);
         setEstados(catalogo);
+        setPartidas(listaPartidas);
       })
       .catch((e: unknown) => {
         setError(e instanceof Error ? e.message : 'No se pudo cargar la vista.');
@@ -204,6 +222,28 @@ export default function VistaLlamadasV2() {
     [filas, tipo1]
   );
 
+  // Partidas agrupadas por el id del nivel 1 (contrato o propietario)
+  const partidasPorId = useMemo(() => {
+    const map = new Map<number, Set<string>>();
+    for (const p of partidas) {
+      const id = tipo1 === 'contrato' ? p.id_contrato : p.id_propietario;
+      const set = map.get(id) ?? new Set<string>();
+      set.add(p.n_partida);
+      map.set(id, set);
+    }
+    return map;
+  }, [partidas, tipo1]);
+
+  const renderPartidas = (id: number) => {
+    const lista = Array.from(partidasPorId.get(id) ?? []).sort();
+    if (lista.length === 0) return <span className="text-muted-foreground">—</span>;
+    return lista.map((n) => (
+      <Badge key={n} variant="outline" className="tabular-nums">
+        {n}
+      </Badge>
+    ));
+  };
+
   const filtrados = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
     if (!q) return nivel1;
@@ -214,8 +254,13 @@ export default function VistaLlamadasV2() {
       );
       if (coincide) ids.add(idDe(row, tipo1));
     }
+    for (const [id, set] of partidasPorId) {
+      if (Array.from(set).some((n) => n.toLowerCase().includes(q))) ids.add(id);
+    }
     return nivel1.filter((i) => ids.has(i.id));
-  }, [filas, nivel1, busqueda, tipo1]);
+  }, [filas, nivel1, busqueda, tipo1, partidasPorId]);
+
+  console.log(nivel1)
 
   // Nivel 2
   const nivel2 = useMemo(() => {
@@ -296,7 +341,7 @@ export default function VistaLlamadasV2() {
               <Input
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                placeholder="Buscar por contrato, Remax o propietario"
+                placeholder="Buscar por contrato, Remax, propietario o partida"
                 className="pl-8"
               />
             </div>
@@ -307,34 +352,80 @@ export default function VistaLlamadasV2() {
             ) : filtrados.length === 0 ? (
               <p className="text-sm text-muted-foreground">Sin {meta1.plural}.</p>
             ) : (
-              <div className="max-h-[70vh] space-y-1 overflow-y-auto">
-                {filtrados.map((i) => (
-                  <button
-                    key={i.id}
-                    type="button"
-                    onClick={() => {
-                      setSel1Id(i.id);
-                      setSel2Id(null);
-                    }}
-                    className={cn(
-                      'flex w-full items-center justify-between gap-2 rounded-none border px-3 py-2 text-left text-sm transition-colors hover:bg-accent',
-                      sel1Id === i.id && 'border-primary bg-accent'
-                    )}
-                  >
-                    <span className="min-w-0">
-                      <span className="flex flex-wrap items-center gap-1.5 font-medium">
-                        <span className="truncate">{i.titulo ?? meta1.sinTitulo}</span>
-                        {i.detalle && <span className="truncate text-muted-foreground">| {i.detalle}</span>}
-                        {renderEstados(i.estados)}
-                      </span>
-                      <span className="block truncate text-xs text-muted-foreground">
-                        Registro {i.fecha_registro ?? '—'} · {i.hijos.size}{' '}
-                        {i.hijos.size === 1 ? meta2.singular : meta2.plural}
-                      </span>
-                    </span>
-                    <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-                  </button>
-                ))}
+              <div className="max-h-[70vh] overflow-y-auto border">
+                <Table>
+                  <TableHeader className="sticky top-0 z-10 bg-card">
+                    <TableRow>
+                      <TableHead>{tipo1 === 'contrato' ? 'Contrato' : 'Propietario'}</TableHead>
+                      {!item1 && (
+                        <>
+                          {tipo1 === 'contrato' && <TableHead>Remax</TableHead>}
+                          <TableHead>Asociado</TableHead>
+                          <TableHead className="text-right">{meta2.label}</TableHead>
+                        </>
+                      )}
+                      <TableHead>Estados</TableHead>
+                      {!item1 && <TableHead>Partidas</TableHead>}
+                      {!item1 && <TableHead>Registro</TableHead>}
+                      <TableHead className="w-8" />
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filtrados.map((i) => {
+                      const seleccionar = () => {
+                        setSel1Id(i.id);
+                        setSel2Id(null);
+                      };
+                      return (
+                        <TableRow
+                          key={i.id}
+                          tabIndex={0}
+                          data-state={sel1Id === i.id ? 'selected' : undefined}
+                          onClick={seleccionar}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              seleccionar();
+                            }
+                          }}
+                          className="cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
+                        >
+                          <TableCell className="max-w-56 font-medium">
+                            <span className="block truncate">{i.titulo ?? meta1.sinTitulo}</span>
+                            {item1 && (i.detalle || i.asociado) && (
+                              <span className="block truncate text-xs font-normal text-muted-foreground">
+                                {[i.detalle, i.asociado].filter(Boolean).join(' · ')}
+                              </span>
+                            )}
+                          </TableCell>
+                          {!item1 && (
+                            <>
+                              {tipo1 === 'contrato' && <TableCell>{i.remax ?? '—'}</TableCell>}
+                              <TableCell className="max-w-48 truncate">{i.asociado ?? '—'}</TableCell>
+                              <TableCell className="text-right tabular-nums">{i.hijos.size}</TableCell>
+                            </>
+                          )}
+                          <TableCell className="whitespace-normal">
+                            <div className="flex flex-wrap gap-1">{renderEstados(i.estados)}</div>
+                          </TableCell>
+                          {!item1 && (
+                            <TableCell className="whitespace-normal">
+                              <div className="flex flex-wrap gap-1">{renderPartidas(i.id)}</div>
+                            </TableCell>
+                          )}
+                          {!item1 && (
+                            <TableCell className="text-muted-foreground tabular-nums">
+                              {i.fecha_registro ?? '—'}
+                            </TableCell>
+                          )}
+                          <TableCell>
+                            <ChevronRight className="size-4 text-muted-foreground" />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
               </div>
             )}
           </CardContent>
@@ -419,7 +510,7 @@ export default function VistaLlamadasV2() {
                   {llamadas.map((l, idx) => {
                     const estado = l.id_estado_llamada ? estadoPorId.get(l.id_estado_llamada) : null;
                     return (
-                      <div key={l.id ?? `${l.id_contrato}-${idx}`} className="space-y-2 rounded-none border p-3">
+                      <div key={`${l.id_contrato}-${idx}`} className="space-y-2 rounded-none border p-3">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex flex-wrap items-center gap-2">
                             {l.id != null && <small className="text-muted-foreground">#{l.id}</small>}
@@ -508,6 +599,7 @@ export default function VistaLlamadasV2() {
                   id_propietario: propId,
                   nombre_completo: vinculo.nombre_completo,
                   fecha_registro: vinculo.fecha_registro,
+                  asociado: vinculo.asociado,
                   ...camposLlamada,
                 },
               ];

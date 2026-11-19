@@ -43,6 +43,7 @@ export type VistaPropietarioContratoLlamada = {
   fecha_seguimiento_llamada: string | null;
   observacion_seguimiento: string | null;
   id_estado_llamada: number | null;
+  asociado:string;
 };
 
 export type LlamadasEstado = Pick<LlamadasRow, 'id'> & {
@@ -188,6 +189,36 @@ export async function getLlamadasByIdLlamada(idLlamada: number): Promise<Llamada
     if (l) map.set(l.id, l);
   }
   return Array.from(map.values());
+}
+
+export type PartidaContrato = {
+  id_contrato: number;
+  id_propietario: number;
+  n_partida: string;
+};
+
+/**
+ * Números de partida por contrato/propietario.
+ * Equivale a:
+ *  select i.*, pp.id_contrato from inmuebles i
+ *  inner join propiedad_propietario pp on i.id_propiedad = pp.id_propiedad
+ */
+export async function getPartidasPorContrato(): Promise<PartidaContrato[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('propiedad_propietario')
+    .select('id_contrato, id_propietario, inmuebles:id_propiedad!inner ( n_partida )');
+
+  if (error) throw new Error(error.message);
+
+  const result: PartidaContrato[] = [];
+  for (const row of (data ?? []) as any[]) {
+    const i = one<any>(row.inmuebles);
+    const partida = i?.n_partida?.toString().trim();
+    if (row.id_contrato == null || !partida) continue;
+    result.push({ id_contrato: row.id_contrato, id_propietario: row.id_propietario, n_partida: partida });
+  }
+  return result;
 }
 
 export async function getLlamadasEstadoLlamada(): Promise<EstadosLLamadas[]> {
