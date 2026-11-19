@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   guardarLlamada,
-  insertarLlamadaPorPropietarioContrato,
+  guardarLlamadaPorPropietarioContrato,
   type LlamadasRow,
 } from '@/lib/supabase/queries/llamadas';
 import { getEstadoLlamadas } from '@/lib/supabase/queries/estado_llamada';
@@ -67,11 +67,11 @@ export default function DialogLlamada({
     setForm(
       llamada
         ? {
-          fecha_bienvenida: llamada.fecha_bienvenida?.slice(0, 10) ?? '',
+          fecha_bienvenida: llamada.fecha_bienvenida ?? '',
           id_estado_llamada: llamada.id_estado_llamada?.toString() ?? '',
           curso_llamada: llamada.curso_llamada ?? '',
           observacion: llamada.observacion ?? '',
-          fecha_seguimiento_llamada: llamada.fecha_seguimiento_llamada?.slice(0, 10) ?? '',
+          fecha_seguimiento_llamada: llamada.fecha_seguimiento_llamada ?? '',
           observacion_seguimiento: llamada.observacion_seguimiento ?? '',
         }
         : vacio
@@ -85,24 +85,29 @@ export default function DialogLlamada({
     setSaving(true);
     setError(null);
     try {
+      const ahora = new Date().toISOString();
       const payload = {
-        fecha_bienvenida: form.fecha_bienvenida || null,
+        fecha_bienvenida: llamada?.fecha_bienvenida || form.fecha_bienvenida || ahora,
         id_estado_llamada: form.id_estado_llamada ? Number(form.id_estado_llamada) : null,
         curso_llamada: form.curso_llamada || null,
         observacion: form.observacion || null,
-        fecha_seguimiento_llamada: form.fecha_seguimiento_llamada || null,
+        fecha_seguimiento_llamada:
+          llamada?.fecha_seguimiento_llamada ||
+          form.fecha_seguimiento_llamada ||
+          (form.observacion_seguimiento.trim() ? ahora : null),
         observacion_seguimiento: form.observacion_seguimiento || null,
       };
-      const data =
-        !llamada && vinculo
-          ? await insertarLlamadaPorPropietarioContrato(
-              payload,
-              vinculo.id_propietario,
-              vinculo.id_contrato
-            )
-          : (
-              await guardarLlamada(payload, idPropiedadPropietario, llamada?.id ?? null)
-            ).data;
+      const idLlamada = llamada?.id || null;
+      const data = vinculo
+        ? await guardarLlamadaPorPropietarioContrato(
+            payload,
+            vinculo.id_propietario,
+            vinculo.id_contrato,
+            idLlamada
+          )
+        : (
+            await guardarLlamada(payload, idPropiedadPropietario, idLlamada)
+          ).data;
       onSaved(data as LlamadasRow);
       onOpenChange(false);
     } catch (e: any) {
@@ -118,7 +123,9 @@ export default function DialogLlamada({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{llamada ? `Editar llamada #${llamada.id}` : 'Agregar llamada'}</DialogTitle>
+          <DialogTitle>
+            {llamada ? (llamada.id ? `Editar llamada #${llamada.id}` : 'Editar llamada') : 'Agregar llamada'}
+          </DialogTitle>
           {descripcion && <DialogDescription>{descripcion}</DialogDescription>}
         </DialogHeader>
 

@@ -1,6 +1,11 @@
 import { createClient } from '@/lib/supabase/client';
 import type { LlamadasRow } from '@/lib/supabase/queries/llamadas';
 import { EstadoLlamadaRow } from './estado_llamada';
+import { Database } from '@/database.types';
+
+
+type PropietarioRow = Database["public"]["Tables"]["propietarios"]["Row"];
+
 
 export type PropietarioResumen = {
   id_propietario: number;
@@ -11,7 +16,7 @@ export type PropietarioResumen = {
 };
 
 export type LlamadasDetalle = LlamadasRow & {
-  estado_llamada? : EstadoLlamadaRow | null
+  estado_llamada?: EstadoLlamadaRow | null
 }
 
 export type ContratoInmuebleResumen = {
@@ -24,6 +29,8 @@ export type ContratoInmuebleResumen = {
 };
 
 export type VistaPropietarioContratoLlamada = {
+  id?: number | null;
+  id_llamada?: number | null;
   id_contrato: number;
   nro_contrato: string | null;
   id_remax: string | number | null;
@@ -38,13 +45,23 @@ export type VistaPropietarioContratoLlamada = {
   id_estado_llamada: number | null;
 };
 
+export type LlamadasEstado = Pick<LlamadasRow, 'id'> & {
+  estado_llamada: EstadoLlamadaRow[] | EstadoLlamadaRow | null;
+}
+
+
+export type EstadosLLamadas = {
+  id_propietario: number;
+  llamadas: LlamadasEstado[];
+}
+
 /** Carga inicial: propietarios, contratos y llamadas en una sola vista. */
 export async function getVistaPropietariosContratosLlamadas(): Promise<VistaPropietarioContratoLlamada[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('vista_propietarios_contratos_llamadas' as any)
     .select('*')
-    .order('fecha_registro',{ ascending: false });
+    .order('fecha_registro', { ascending: false });
 
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as VistaPropietarioContratoLlamada[];
@@ -107,9 +124,9 @@ export async function getPropietariosConPropiedades(): Promise<PropietarioResume
     const d = fechaB - fechaA;
 
     return d !== 0
-        ? d
-        : (a.nombre_completo ?? '').localeCompare(b.nombre_completo ?? '');
-});
+      ? d
+      : (a.nombre_completo ?? '').localeCompare(b.nombre_completo ?? '');
+  });
   //console.log(result)
 
   return result;
@@ -172,3 +189,21 @@ export async function getLlamadasByIdLlamada(idLlamada: number): Promise<Llamada
   }
   return Array.from(map.values());
 }
+
+export async function getLlamadasEstadoLlamada(): Promise<EstadosLLamadas[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('propietarios')
+    .select(`
+    id_propietario,
+    llamadas (
+      id,
+      estado_llamada(*)
+    )
+  `);
+
+  if (error) throw new Error(error.message);
+
+  return data || [];
+}
+
