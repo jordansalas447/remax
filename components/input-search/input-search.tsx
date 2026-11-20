@@ -100,8 +100,10 @@ export function InputSearch<T>({
           flex
           h-9
           w-full
+          min-w-0
           items-center
           justify-between
+          overflow-hidden
           rounded-lg
           border
           px-3
@@ -109,23 +111,24 @@ export function InputSearch<T>({
           text-sm
           shadow-xs
         "
+          title={selectedLabel ? [selectedLabel, selectedSublabel].filter(Boolean).join(" — ") : undefined}
           aria-expanded={popoverOpen}
           role="combobox">
 
-          <span className="flex min-w-0 flex-col items-start leading-tight">
+          <span className="flex min-w-0 flex-1 flex-col items-stretch text-left leading-tight">
             {loading ? (
               "Cargando..."
             ) : selectedLabel ? (
               <>
-                <span className="truncate">{selectedLabel}</span>
+                <span className="block truncate">{selectedLabel}</span>
                 {selectedSublabel && (
-                  <span className="truncate text-xs text-muted-foreground">
+                  <span className="block truncate text-xs text-muted-foreground">
                     {selectedSublabel}
                   </span>
                 )}
               </>
             ) : (
-              <span className="text-muted-foreground">{selectPlaceholder}</span>
+              <span className="block truncate text-muted-foreground">{selectPlaceholder}</span>
             )}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -169,10 +172,10 @@ export function InputSearch<T>({
                           isSelected ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      <span className="flex flex-col">
-                        <span>{label}</span>
+                      <span className="flex min-w-0 flex-col break-words">
+                        <span className="line-clamp-2">{label}</span>
                         {sublabel && (
-                          <span className="text-xs text-muted-foreground">
+                          <span className="line-clamp-1 text-xs text-muted-foreground">
                             {sublabel}
                           </span>
                         )}

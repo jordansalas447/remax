@@ -182,7 +182,7 @@ export function FieldInput(props: FieldInputProps) {
     const selectElement = (<InputSearchWrapper
       name={inputName}
       selectedValue={inputValue}
-      className={baseClass}
+      className={`${baseClass} min-w-0`}
       options={options}
       disabled={disabled}
       placeholder={placeholder}
@@ -409,7 +409,7 @@ export function FieldInput(props: FieldInputProps) {
     );
   }
 
-  
+
   return (
     <Input
       id={inputId}
@@ -475,9 +475,10 @@ function InputSearchWrapper({
         <input
           type="text"
           value={selectedLabel || placeholder || ""}
+          title={selectedLabel || undefined}
           disabled
           readOnly
-          className="border-input bg-background flex h-9 w-full rounded-lg border px-3 py-0 text-sm shadow-xs opacity-60 cursor-not-allowed"
+          className="border-input bg-background flex h-9 w-full min-w-0 truncate rounded-lg border px-3 py-0 text-sm shadow-xs opacity-60 cursor-not-allowed"
         />
       </div>
     );
