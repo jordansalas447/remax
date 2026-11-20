@@ -43,6 +43,7 @@ export type VistaPropietarioContratoLlamada = {
   fecha_seguimiento_llamada: string | null;
   observacion_seguimiento: string | null;
   id_estado_llamada: number | null;
+  numero_telefono:string | null;
   asociado:string;
 };
 

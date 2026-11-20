@@ -64,6 +64,7 @@ type Item = {
   asociado: string | null;
   /** id_estado_llamada -> llamadas distintas con ese estado */
   estados: Map<number, Set<number | string>>;
+  numero_telefono: string | null;
 };
 
 const META: Record<Tipo, { label: string; icon: LucideIcon; singular: string; plural: string; sinTitulo: string }> = {
@@ -83,6 +84,7 @@ function agrupar(rows: VistaPropietarioContratoLlamada[], tipo: Tipo): Item[] {
     const titulo = tipo === 'contrato' ? row.nro_contrato : row.nombre_completo;
     const detalle = tipo === 'contrato' && row.id_remax != null ? `Remax ${row.id_remax}` : null;
     const asociado = tipo === 'contrato' ? row.asociado : row.asociado
+    const numero_telefono = tipo === 'propietario' ? row.numero_telefono?.trim() || null : null;
     const fechaRow = fecha(row.fecha_registro);
     let actual = map.get(id);
     if (!actual) {
@@ -94,7 +96,8 @@ function agrupar(rows: VistaPropietarioContratoLlamada[], tipo: Tipo): Item[] {
         hijos: new Set(),
         estados: new Map(),
         remax: tipo === 'contrato' ? row.id_remax : null,
-        asociado
+        asociado,
+        numero_telefono
       };
       map.set(id, actual);
     }
@@ -107,8 +110,23 @@ function agrupar(rows: VistaPropietarioContratoLlamada[], tipo: Tipo): Item[] {
     if (fechaRow && (!actual.fecha_registro || fechaRow > actual.fecha_registro)) actual.fecha_registro = fechaRow;
     if (!actual.titulo && titulo) actual.titulo = titulo;
     if (!actual.detalle && detalle) actual.detalle = detalle;
+    if (!actual.numero_telefono && numero_telefono) actual.numero_telefono = numero_telefono;
   }
   return Array.from(map.values());
+}
+
+function Telefono({ numero }: { numero: string | null | undefined }) {
+  if (!numero) return null;
+  const numeroSanitizado = typeof numero === "string"
+  ? numero.replace(/[^\d]/g, "")
+  : "";
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 border rounded-lg p-1 text-xs text-white bg-green-600 tabular-nums">
+      <Phone className="size-3" />
+
+      <a href={`https://wa.me/${numeroSanitizado}`} target="_blank" className="cursor-pointer hover:underline">{numero}</a>
+    </span>
+  );
 }
 
 const porTitulo = (a: Item, b: Item) => (a.titulo ?? '').localeCompare(b.titulo ?? '');
@@ -249,7 +267,7 @@ export default function VistaLlamadasV2() {
     if (!q) return nivel1;
     const ids = new Set<number>();
     for (const row of filas) {
-      const coincide = [row.nro_contrato, row.id_remax?.toString(), row.nombre_completo].some((v) =>
+      const coincide = [row.nro_contrato, row.id_remax?.toString(), row.nombre_completo, row.numero_telefono].some((v) =>
         v?.toLowerCase().includes(q)
       );
       if (coincide) ids.add(idDe(row, tipo1));
@@ -391,7 +409,10 @@ export default function VistaLlamadasV2() {
                           className="cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
                         >
                           <TableCell className="max-w-56 font-medium">
-                            <span className="block truncate">{i.titulo ?? meta1.sinTitulo}</span>
+                            <span className="flex min-w-0 items-center gap-2">
+                              <span className="truncate">{i.titulo ?? meta1.sinTitulo}</span>
+                              <Telefono numero={i.numero_telefono} />
+                            </span>
                             {item1 && (i.detalle || i.asociado) && (
                               <span className="block truncate text-xs font-normal text-muted-foreground">
                                 {[i.detalle, i.asociado].filter(Boolean).join(' · ')}
@@ -468,6 +489,7 @@ export default function VistaLlamadasV2() {
                       <span className="min-w-0">
                         <span className="flex flex-wrap items-center gap-1.5 font-medium">
                           <span className="truncate">{i.titulo ?? meta2.sinTitulo}</span>
+                          <Telefono numero={i.numero_telefono} />
                           {renderEstados(i.estados)}
                         </span>
                         <span className="block truncate text-xs text-muted-foreground">
@@ -493,8 +515,9 @@ export default function VistaLlamadasV2() {
                     <Phone className="size-4" /> Llamadas
                     <Badge variant="secondary">{llamadas.length}</Badge>
                   </CardTitle>
-                  <CardDescription className="truncate">
-                    {nombreProp} · contrato {nroContrato}
+                  <CardDescription className="flex flex-wrap items-center gap-x-2">
+                    <span className="truncate">{nombreProp} · contrato {nroContrato}</span>
+                    <Telefono numero={vinculo.numero_telefono} />
                   </CardDescription>
                 </div>
                 <Button size="sm" onClick={() => abrirDialogo(null)}>
@@ -600,6 +623,7 @@ export default function VistaLlamadasV2() {
                   nombre_completo: vinculo.nombre_completo,
                   fecha_registro: vinculo.fecha_registro,
                   asociado: vinculo.asociado,
+                  numero_telefono: vinculo.numero_telefono,
                   ...camposLlamada,
                 },
               ];
