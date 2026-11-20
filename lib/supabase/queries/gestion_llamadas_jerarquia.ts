@@ -31,20 +31,20 @@ export type ContratoInmuebleResumen = {
 export type VistaPropietarioContratoLlamada = {
   id?: number | null;
   id_llamada?: number | null;
-  id_contrato: number;
-  nro_contrato: string | null;
-  id_remax: string | number | null;
-  id_propietario: number;
-  nombre_completo: string | null;
-  fecha_registro: string | null;
-  fecha_bienvenida: string | null;
-  curso_llamada: string | null;
-  observacion: string | null;
-  fecha_seguimiento_llamada: string | null;
-  observacion_seguimiento: string | null;
-  id_estado_llamada: number | null;
-  numero_telefono:string | null;
-  asociado:string;
+  id_contrato?: number;
+  nro_contrato?: string | null;
+  id_remax?: string | number | null;
+  id_propietario?: number;
+  nombre_completo?: string | null;
+  fecha_registro?: string | null;
+  fecha_bienvenida?: string | null;
+  curso_llamada?: string | null;
+  observacion?: string | null;
+  fecha_seguimiento_llamada?: string | null;
+  observacion_seguimiento?: string | null;
+  id_estado_llamada?: number | null;
+  numero_telefono?:string | null;
+  asociado?:string;
 };
 
 export type LlamadasEstado = Pick<LlamadasRow, 'id'> & {

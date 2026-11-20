@@ -528,6 +528,13 @@ export type Database = {
             foreignKeyName: "contrato_propietario_inmueble_id_contrato_fkey"
             columns: ["id_contrato"]
             isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "contrato_propietario_inmueble_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
             referencedRelation: "vista_revisiones"
             referencedColumns: ["id_contrato"]
           },
@@ -741,6 +748,13 @@ export type Database = {
             columns: ["id_renovacion_contrato"]
             isOneToOne: false
             referencedRelation: "contratos"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "contratos_id_renovacion_contrato_fkey"
+            columns: ["id_renovacion_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id_contrato"]
           },
           {
@@ -1364,6 +1378,13 @@ export type Database = {
             foreignKeyName: "historial_observaciones_id_contratos_fkey"
             columns: ["id_contratos"]
             isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "historial_observaciones_id_contratos_fkey"
+            columns: ["id_contratos"]
+            isOneToOne: false
             referencedRelation: "vista_revisiones"
             referencedColumns: ["id_contrato"]
           },
@@ -1414,6 +1435,13 @@ export type Database = {
             columns: ["id_propietarios"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "historial_observaciones_id_propietarios_fkey"
+            columns: ["id_propietarios"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id_propietario"]
           },
           {
@@ -1495,6 +1523,7 @@ export type Database = {
           id_tipo_propiedad: number | null
           n_partida: string | null
           observacion: string | null
+          resumen: string | null
           timestamp: string | null
         }
         Insert: {
@@ -1521,6 +1550,7 @@ export type Database = {
           id_tipo_propiedad?: number | null
           n_partida?: string | null
           observacion?: string | null
+          resumen?: string | null
           timestamp?: string | null
         }
         Update: {
@@ -1547,6 +1577,7 @@ export type Database = {
           id_tipo_propiedad?: number | null
           n_partida?: string | null
           observacion?: string | null
+          resumen?: string | null
           timestamp?: string | null
         }
         Relationships: [
@@ -1689,13 +1720,15 @@ export type Database = {
           fecha_bienvenida: string | null
           fecha_seguimiento_llamada: string | null
           id: number
+          id_contrato: number | null
           id_estado_llamada: number | null
-          id_llamadas: number | null
+          id_llamada: number | null
           id_propietario: number | null
           id_remax: number | null
           id_seguimiento: number | null
           observacion: string | null
           observacion_seguimiento: string | null
+          version: number | null
         }
         Insert: {
           create_at?: string | null
@@ -1704,13 +1737,15 @@ export type Database = {
           fecha_bienvenida?: string | null
           fecha_seguimiento_llamada?: string | null
           id?: number
+          id_contrato?: number | null
           id_estado_llamada?: number | null
-          id_llamadas?: number | null
+          id_llamada?: number | null
           id_propietario?: number | null
           id_remax?: number | null
           id_seguimiento?: number | null
           observacion?: string | null
           observacion_seguimiento?: string | null
+          version?: number | null
         }
         Update: {
           create_at?: string | null
@@ -1719,15 +1754,45 @@ export type Database = {
           fecha_bienvenida?: string | null
           fecha_seguimiento_llamada?: string | null
           id?: number
+          id_contrato?: number | null
           id_estado_llamada?: number | null
-          id_llamadas?: number | null
+          id_llamada?: number | null
           id_propietario?: number | null
           id_remax?: number | null
           id_seguimiento?: number | null
           observacion?: string | null
           observacion_seguimiento?: string | null
+          version?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_revisiones"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vw_revisiones_detalle"
+            referencedColumns: ["id_contrato"]
+          },
           {
             foreignKeyName: "llamadas_id_estado_llamada_fkey"
             columns: ["id_estado_llamada"]
@@ -1737,9 +1802,16 @@ export type Database = {
           },
           {
             foreignKeyName: "llamadas_id_llamadas_fkey"
-            columns: ["id_llamadas"]
+            columns: ["id_llamada"]
             isOneToOne: false
             referencedRelation: "llamadas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "llamadas_id_llamadas_fkey"
+            columns: ["id_llamada"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id"]
           },
           {
@@ -1754,6 +1826,13 @@ export type Database = {
             columns: ["id_propietario"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "llamadas_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id_propietario"]
           },
           {
@@ -1791,42 +1870,48 @@ export type Database = {
       }
       multas: {
         Row: {
+          codigo: string | null
           created_at: string | null
-          descripcion: string
+          descripcion: string | null
           eliminado: boolean | null
           estado: string | null
           fecha: string | null
           fecha_multa: string | null
           id: number
           id_asociado: number | null
+          id_contrato: number | null
           id_justificacion: number | null
           id_tipo_multa: number | null
           monto: number | null
           tipo: string | null
         }
         Insert: {
+          codigo?: string | null
           created_at?: string | null
-          descripcion: string
+          descripcion?: string | null
           eliminado?: boolean | null
           estado?: string | null
           fecha?: string | null
           fecha_multa?: string | null
           id?: number
           id_asociado?: number | null
+          id_contrato?: number | null
           id_justificacion?: number | null
           id_tipo_multa?: number | null
           monto?: number | null
           tipo?: string | null
         }
         Update: {
+          codigo?: string | null
           created_at?: string | null
-          descripcion?: string
+          descripcion?: string | null
           eliminado?: boolean | null
           estado?: string | null
           fecha?: string | null
           fecha_multa?: string | null
           id?: number
           id_asociado?: number | null
+          id_contrato?: number | null
           id_justificacion?: number | null
           id_tipo_multa?: number | null
           monto?: number | null
@@ -1846,6 +1931,34 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "vista_limite_diario_documentos"
             referencedColumns: ["id_asociado"]
+          },
+          {
+            foreignKeyName: "multas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "multas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "multas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vista_revisiones"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "multas_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
+            referencedRelation: "vw_revisiones_detalle"
+            referencedColumns: ["id_contrato"]
           },
           {
             foreignKeyName: "multas_id_justificacion_fkey"
@@ -2301,6 +2414,13 @@ export type Database = {
             foreignKeyName: "propiedad_propietario_id_contrato_fkey"
             columns: ["id_contrato"]
             isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "propiedad_propietario_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
             referencedRelation: "vista_revisiones"
             referencedColumns: ["id_contrato"]
           },
@@ -2316,6 +2436,13 @@ export type Database = {
             columns: ["id_llamada"]
             isOneToOne: false
             referencedRelation: "llamadas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "propiedad_propietario_id_llamada_fkey"
+            columns: ["id_llamada"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id"]
           },
           {
@@ -2344,6 +2471,13 @@ export type Database = {
             columns: ["id_propietario"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "propiedad_propietario_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id_propietario"]
           },
           {
@@ -2513,6 +2647,13 @@ export type Database = {
             foreignKeyName: "revisiones_id_contrato_fkey"
             columns: ["id_contrato"]
             isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "revisiones_id_contrato_fkey"
+            columns: ["id_contrato"]
+            isOneToOne: false
             referencedRelation: "vista_revisiones"
             referencedColumns: ["id_contrato"]
           },
@@ -2563,6 +2704,13 @@ export type Database = {
             columns: ["id_propietario"]
             isOneToOne: false
             referencedRelation: "vista_llamadas_propietarios"
+            referencedColumns: ["id_propietario"]
+          },
+          {
+            foreignKeyName: "revisiones_id_propietario_fkey"
+            columns: ["id_propietario"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id_propietario"]
           },
           {
@@ -2681,6 +2829,13 @@ export type Database = {
             columns: ["id_llamadas"]
             isOneToOne: false
             referencedRelation: "llamadas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seguimientos_id_llamadas_fkey"
+            columns: ["id_llamadas"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
             referencedColumns: ["id"]
           },
         ]
@@ -3061,6 +3216,78 @@ export type Database = {
             columns: ["id_llamada"]
             isOneToOne: false
             referencedRelation: "llamadas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "propiedad_propietario_id_llamada_fkey"
+            columns: ["id_llamada"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vista_propietarios_contratos_llamadas: {
+        Row: {
+          asociado: string | null
+          curso_llamada: string | null
+          estado_llamada: string | null
+          fecha_bienvenida: string | null
+          fecha_registro: string | null
+          fecha_seguimiento_llamada: string | null
+          id: number | null
+          id_contrato: number | null
+          id_contrato_llamada: number | null
+          id_estado_llamada: number | null
+          id_propietario: number | null
+          id_remax: number | null
+          nombre_completo: string | null
+          nro_contrato: string | null
+          numero_telefono: string | null
+          observacion: string | null
+          observacion_seguimiento: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contratos_nro_contrato_fkey"
+            columns: ["nro_contrato"]
+            isOneToOne: true
+            referencedRelation: "documentos"
+            referencedColumns: ["nro_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato_llamada"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato_llamada"]
+            isOneToOne: false
+            referencedRelation: "vista_propietarios_contratos_llamadas"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato_llamada"]
+            isOneToOne: false
+            referencedRelation: "vista_revisiones"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_contrato_fkey"
+            columns: ["id_contrato_llamada"]
+            isOneToOne: false
+            referencedRelation: "vw_revisiones_detalle"
+            referencedColumns: ["id_contrato"]
+          },
+          {
+            foreignKeyName: "llamadas_id_estado_llamada_fkey"
+            columns: ["id_estado_llamada"]
+            isOneToOne: false
+            referencedRelation: "estado_llamada"
             referencedColumns: ["id"]
           },
         ]

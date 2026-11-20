@@ -81,9 +81,10 @@ function agrupar(rows: VistaPropietarioContratoLlamada[], tipo: Tipo): Item[] {
   const map = new Map<number, Item>();
   for (const row of rows) {
     const id = idDe(row, tipo);
-    const titulo = tipo === 'contrato' ? row.nro_contrato : row.nombre_completo;
+    if (id == null) continue;
+    const titulo = (tipo === 'contrato' ? row.nro_contrato : row.nombre_completo) ?? null;
     const detalle = tipo === 'contrato' && row.id_remax != null ? `Remax ${row.id_remax}` : null;
-    const asociado = tipo === 'contrato' ? row.asociado : row.asociado
+    const asociado = row.asociado ?? null;
     const numero_telefono = tipo === 'propietario' ? row.numero_telefono?.trim() || null : null;
     const fechaRow = fecha(row.fecha_registro);
     let actual = map.get(id);
@@ -95,13 +96,14 @@ function agrupar(rows: VistaPropietarioContratoLlamada[], tipo: Tipo): Item[] {
         fecha_registro: fechaRow,
         hijos: new Set(),
         estados: new Map(),
-        remax: tipo === 'contrato' ? row.id_remax : null,
+        remax: tipo === 'contrato' ? (row.id_remax ?? null) : null,
         asociado,
-        numero_telefono
+        numero_telefono,
       };
       map.set(id, actual);
     }
-    actual.hijos.add(idDe(row, otro(tipo)));
+    const hijoId = idDe(row, otro(tipo));
+    if (hijoId != null) actual.hijos.add(hijoId);
     if (row.id_estado_llamada) {
       const llamadasEstado = actual.estados.get(row.id_estado_llamada) ?? new Set<number | string>();
       llamadasEstado.add(row.id ?? `${row.id_contrato}-${row.id_propietario}-${llamadasEstado.size}`);
@@ -165,17 +167,19 @@ export default function VistaLlamadasV2() {
         ? {
           id: l.id ?? 0,
           create_at: null,
-          curso_llamada: l.curso_llamada,
+          curso_llamada: l.curso_llamada ?? null,
           eliminado: false,
-          fecha_bienvenida: l.fecha_bienvenida,
-          fecha_seguimiento_llamada: l.fecha_seguimiento_llamada,
-          id_estado_llamada: l.id_estado_llamada,
-          id_llamadas: null,
-          id_propietario: l.id_propietario,
+          fecha_bienvenida: l.fecha_bienvenida ?? null,
+          fecha_seguimiento_llamada: l.fecha_seguimiento_llamada ?? null,
+          id_contrato: l.id_contrato ?? null,
+          id_estado_llamada: l.id_estado_llamada ?? null,
+          id_llamada: l.id_llamada ?? null,
+          id_propietario: l.id_propietario ?? null,
           id_remax: typeof l.id_remax === 'number' ? l.id_remax : null,
           id_seguimiento: null,
-          observacion: l.observacion,
-          observacion_seguimiento: l.observacion_seguimiento,
+          observacion: l.observacion ?? null,
+          observacion_seguimiento: l.observacion_seguimiento ?? null,
+          version: null,
         }
         : null
     );
@@ -270,7 +274,8 @@ export default function VistaLlamadasV2() {
       const coincide = [row.nro_contrato, row.id_remax?.toString(), row.nombre_completo, row.numero_telefono].some((v) =>
         v?.toLowerCase().includes(q)
       );
-      if (coincide) ids.add(idDe(row, tipo1));
+      const id = idDe(row, tipo1);
+      if (coincide && id != null) ids.add(id);
     }
     for (const [id, set] of partidasPorId) {
       if (Array.from(set).some((n) => n.toLowerCase().includes(q))) ids.add(id);

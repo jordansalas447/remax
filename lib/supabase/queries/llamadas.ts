@@ -12,28 +12,28 @@ export type LlamadasRowDetalle = {
   id?: number; // id_propiedad_propietario
   id_llamada?: number | null;
   id_remax?: string | number | null;
-  id_propiedad: number;
+  id_propiedad?: number;
   color?: string;
   asociado?: string; // a.nombre_completo
   tipo_propiedad?: string; // tp.tipo_propiedad
-  direccion: string; // i.direccion
-  tipo_negocio: string; // op.operacion
-  nro_contrato: string;
-  numero_actualizado: string;
-  modalidad: string; // tc.tipo_contrato
+  direccion?: string; // i.direccion
+  tipo_negocio?: string; // op.operacion
+  nro_contrato?: string;
+  numero_actualizado?: string;
+  modalidad?: string; // tc.tipo_contrato
   id_estado_llamada?: number;
   estado_llamada?: any;
-  id_propietario: number;
-  propietario: string; // p.nombre_completo
-  numero_telefono: string; // pe.numero_telefono
-  fecha_contrato_recibido: string | null; // c.fecha_contrato_recibido
-  fecha_bienvenida: string | null; // l.fecha_bienvenida
-  curso_llamada: string | null; // l.curso_llamada
-  observacion: string | null; // l.observacion
-  fecha_seguimiento_llamada: string | null; // l.fecha_seguimiento_llamada
-  observacion_seguimiento: string | null; // l.observacion_seguimiento
+  id_propietario?: number;
+  propietario?: string; // p.nombre_completo
+  numero_telefono?: string; // pe.numero_telefono
+  fecha_contrato_recibido?: string | null; // c.fecha_contrato_recibido
+  fecha_bienvenida?: string | null; // l.fecha_bienvenida
+  curso_llamada?: string | null; // l.curso_llamada
+  observacion?: string | null; // l.observacion
+  fecha_seguimiento_llamada?: string | null; // l.fecha_seguimiento_llamada
+  observacion_seguimiento?: string | null; // l.observacion_seguimiento
   id_seguimiento?: number | null;
-  fecha_registro: string | null;
+  fecha_registro?: string | null;
   eliminado?: boolean;
 };
 

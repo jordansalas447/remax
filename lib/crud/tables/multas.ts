@@ -7,7 +7,7 @@ export const multasConfig: TableConfig = {
   primaryKey: "id",
   fields: [
     { name: "id", label: "ID", type: "number", readOnlyOnEdit: true },
-    // { name: "monto", label: "Monto", type: "number" },
+    { name: "codigo", label: "codigo", type: "text", hiddenInForm:true },
     {
         name: "id_tipo_multa",
         label: "Multa",
