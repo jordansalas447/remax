@@ -31,8 +31,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import MultaPDF, { type MultaPDFProps } from '@/components/multas/MultaPDF';
+import { fechaPeru } from '@/lib/utils/fecha';
 
-const fecha = (v?: string | null) => (v ? v.slice(0, 10) : '—');
+//const fecha = (v?: string | null) => (v ? v.slice(0, 10) : '—');
 const moneda = (v?: number | null) =>
   v == null ? '—' : `$ ${Number(v).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`;
 
@@ -58,7 +59,8 @@ export default function MultasAsociadoPage() {
     setPreviewData({
       codigo: `${String(m.codigo)}`,
       logo: '/LogoRemax.png',
-      fecha: fecha(m.fecha_multa ?? m.fecha),
+      firma: '/Firma.png',
+      fecha: m.fecha ?? "",
       responsable: m.asociado?.nombre_completo ?? 'Administración RE/MAX Adelante',
       cargo: m.asociado ? 'Asociado' : 'Administrador',
       detalles: [{ descripcion: descripcionMulta(m), monto: montoMulta(m) }],
@@ -70,13 +72,14 @@ export default function MultasAsociadoPage() {
     setPreviewData({
       codigo: `MULT-${new Date().getFullYear()}-${String(asoc?.id_asociado ?? 0).padStart(4, '0')}`,
       logo: '/LogoRemax.png',
+      firma: '/Firma.png',
       fecha: new Date().toISOString().slice(0, 10),
       responsable: asoc?.nombre_completo ?? 'Administración RE/MAX Adelante',
       cargo: asoc ? 'Asociado' : 'Administrador',
       detalles:
         filtradas.length > 0
           ? filtradas.map((m) => ({
-              descripcion: `#${m.id} (${fecha(m.fecha_multa ?? m.fecha)}) · ${descripcionMulta(m)}`,
+              descripcion: `(${fechaPeru(m.fecha, "date")}) · ${descripcionMulta(m)}`,
               monto: montoMulta(m),
             }))
           : [{ descripcion: 'Sin multas registradas', monto: 0 }],
@@ -254,7 +257,7 @@ export default function MultasAsociadoPage() {
                       <TableCell className="text-muted-foreground tabular-nums">#{m.id}</TableCell>
                       <TableCell className="text-muted-foreground tabular-nums">{m.codigo}</TableCell>
                       <TableCell className="tabular-nums">
-                        {fecha(m.fecha_multa ?? m.fecha)}
+                        {fechaPeru(m.fecha, "date")}
                       </TableCell>
                       <TableCell className="font-medium">
                         {m.asociado?.nombre_completo ?? (m.id_asociado ? `#${m.id_asociado}` : '—')}

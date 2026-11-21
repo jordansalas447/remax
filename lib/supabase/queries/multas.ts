@@ -21,7 +21,7 @@ export type MultasFiltros = {
   id_asociado?: number;
   id_tipo_multa?: number;
   estado?: string;
-  /** Rango sobre fecha_multa, formato 'YYYY-MM-DD' (inclusive). */
+  /** Rango sobre fecha, formato 'YYYY-MM-DD' (inclusive). */
   desde?: string;
   hasta?: string;
 };
@@ -40,14 +40,14 @@ export async function getMultas(filtros: MultasFiltros = {}): Promise<MultaDetal
     .from('multas')
     .select(SELECT_DETALLE)
     .or('eliminado.is.null,eliminado.eq.false')
-    .order('fecha_multa', { ascending: false, nullsFirst: false })
+    .order('fecha', { ascending: false, nullsFirst: false })
     .order('id', { ascending: false });
 
   if (filtros.id_asociado != null) query = query.eq('id_asociado', filtros.id_asociado);
   if (filtros.id_tipo_multa != null) query = query.eq('id_tipo_multa', filtros.id_tipo_multa);
   if (filtros.estado) query = query.eq('estado', filtros.estado);
-  if (filtros.desde) query = query.gte('fecha_multa', filtros.desde);
-  if (filtros.hasta) query = query.lte('fecha_multa', filtros.hasta);
+  if (filtros.desde) query = query.gte('fecha', filtros.desde);
+  if (filtros.hasta) query = query.lte('fecha', filtros.hasta);
 
   const { data, error } = await query;
   if (error) throw new Error(error.message);

@@ -31,6 +31,16 @@ export const multasConfig: TableConfig = {
         },
       },
       { name: "fecha", label: "Fecha", type: "datenative" },
+      {
+        name: "id_contrato",
+        label: "contratos",
+        type: "inputsearch",
+        foreignKey: {
+          table: "contratos",
+          valueField: "id_contrato",
+          labelField: "nro_contrato",
+        },
+      },
       { name: "descripcion", label: "Descripción", type: "textarea" },
       {
         name: "id_justificacion",
